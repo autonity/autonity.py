@@ -1,5 +1,7 @@
 
 
+install:
+	pipenv install -d
 
 check: check-types check-syntax check-tests
 
