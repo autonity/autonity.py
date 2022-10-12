@@ -1,20 +1,21 @@
 [MESSAGES CONTROL]
 disable=
+    wrong-import-order,
+    too-few-public-methods,
+    fixme,
 
-    # too-many-arguments,
     # missing-class-docstring,
+    # missing-module-docstring,
     # missing-function-docstring,
+    # too-many-arguments,
     # too-many-locals,
     # too-many-statements,
-    # too-few-public-methods,
-    # wrong-import-order,
-    # missing-module-docstring,
     # broad-except,
     # too-many-function-args,
     # duplicate-code,
-    # fixme,
     # invalid-name,
 
+good-names=w3
 max-attributes=10
 
 [REPORTS]

@@ -38,7 +38,7 @@ class TestAutonityModule(TestCase):
     def test_aut_module(self) -> None:
         w3 = create_web3()
         assert hasattr(w3, "aut")
-        aut = w3.aut
+        aut = w3.aut  # pylint: disable=no-member
         assert isinstance(aut, Autonity)
 
         autonity = aut.autonity_contract()

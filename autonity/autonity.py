@@ -1,5 +1,9 @@
 # Copyright (C) 2015-2022 Clearmatics Technologies Ltd - All Rights Reserved.
 
+"""
+Python module holding the Autonity Web3.py external module
+"""
+
 from autonity.tendermint import Tendermint
 
 from web3 import Web3
