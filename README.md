@@ -20,8 +20,10 @@ Web3 object with the appropriate extensions enabled:
 from web3 import HTTPProvider
 from autonity import create_web3
 
-w3 = create_web3(HTTPProvider("https://rpc1.autonity.org:8545/"))
+w3 = create_web3(HTTPProvider("https://rpc1.<NETWORK>.autonity.org:8545/"))
 ```
+
+Where`<NETWORK>` is the name of the Autonity Network being connected to. For example, `https://rpc1.bakerloo.autonity.org:8545/` to connect to the public endpoint on the Bakerloo Testnet.
 
 Alternatively the caller can attach these modules manually:
 
@@ -30,7 +32,7 @@ from web3 import Web3, HTTPProvider
 from autonity import Tendermint, Autonity
 
 w3 = Web3(
-    HTTPProvider("https://rpc1.autonity.org:8545/"),
+    HTTPProvider("https://rpc1.bakerloo.autonity.org:8545/"),
     external_modules={
         "aut": Autonity,
         "tendermint": Tendermint,
@@ -39,7 +41,7 @@ w3 = Web3(
 
 These modules can then be used as any other extension.
 
-For example, the *Autonity contract* (a special contract providing much of Autonity-specific functionality [TODO: ref to Autonity.sol reference docs]), can be accessed as any other [web3.py contract object](https://web3py.readthedocs.io/en/latest/contracts.html#contracts) as follows.
+For example, the *Autonity contract* (a special contract providing much of Autonity-specific functionality [docs.autonity.org, Autonity Contract Interface](https://docs.autonity.org/reference/api/aut/)), can be accessed as any other [web3.py contract object](https://web3py.readthedocs.io/en/latest/contracts.html#contracts) as follows.
 
 ```python
 aut_contract = web3.aut.autonity_contract()
