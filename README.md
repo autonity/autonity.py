@@ -51,7 +51,6 @@ ntn_supply = autonity_contract.functions.totalSupply().call()
 To query the autonity-specific RPC interface:
 
 ```python
-
 # Get the current enodes belonging to the consensus committee
 committee_enodes = web3.tendermint.get_committee_enodes()
 ```
@@ -60,8 +59,8 @@ committee_enodes = web3.tendermint.get_committee_enodes()
 
 ```console
 # Install for development in a virtual env
-make install
+$ make install
 
 # Execute all code checks
-make check
+$ make check
 ```
