@@ -6,13 +6,6 @@ disable=
     missing-class-docstring,
     missing-module-docstring,
     missing-function-docstring,
-    # too-many-arguments,
-    # too-many-locals,
-    # too-many-statements,
-    # broad-except,
-    # too-many-function-args,
-    # duplicate-code,
-    # invalid-name,
 
 good-names=w3
 
