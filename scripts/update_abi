@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+#Path to the autonity source code
+AUTONITY_PATH=../autonity-internal
+
+mkdir -p autonity/abi
+solc --abi -o autonity/abi --overwrite ${AUTONITY_PATH}/autonity/solidity/contracts/Autonity.sol
+
+echo
+echo "============================================================"
+echo "ABI files written to directory abi.  Test and commit to git."
+echo "============================================================"
