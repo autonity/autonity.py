@@ -4,6 +4,8 @@
 Python module holding the Autonity Web3.py external module
 """
 
+from __future__ import annotations
+
 from autonity.tendermint import Tendermint
 
 from web3 import Web3
