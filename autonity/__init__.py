@@ -15,7 +15,7 @@ from autonity.autonity import Autonity
 from autonity.tendermint import Tendermint
 
 
-DEFAULT_URI = "https://rpc1.bakerloo.autonity.org:8545/"
+DEFAULT_URI = "https://rpc1.piccadilly.autonity.org:8545/"
 
 
 class Web3WithAut(Web3):
