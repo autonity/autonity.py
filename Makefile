@@ -15,4 +15,4 @@ check-syntax:
 	pipenv run pylint --rcfile=pylintrc-tests tests
 
 check-tests test:
-	pipenv run pytest tests
+	pipenv run python -m unittest discover tests
