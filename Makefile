@@ -11,8 +11,7 @@ check-types:
 
 check-syntax:
 	pipenv run flake8 autonity tests
-	pipenv run pylint autonity
-	pipenv run pylint --rcfile=pylintrc-tests tests
+	pipenv run pylint autonity tests
 
 check-tests test:
 	pipenv run python -m unittest discover tests
