@@ -12,3 +12,5 @@ mypy = "0.931"
 pylint = "2.6.0"
 flake8 = "3.8.3"
 black = "19.3b0"
+
+# TODO: how to package the abi data files?
