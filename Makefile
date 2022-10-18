@@ -14,5 +14,5 @@ check-syntax:
 	pipenv run pylint autonity
 	pipenv run pylint --rcfile=pylintrc-tests tests
 
-check-tests:
+check-tests test:
 	pipenv run pytest tests
