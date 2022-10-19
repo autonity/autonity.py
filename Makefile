@@ -1,10 +1,10 @@
 
+.PHONY: install check check-types check-syntax check-tests test
 
 install:
 	pipenv install -d
 
 check: check-types check-syntax check-tests
-
 
 check-types:
 	pipenv run mypy autonity tests
