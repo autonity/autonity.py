@@ -41,6 +41,11 @@ class TestERC20(TestCase):
 
         token = ERC20(w3, autonity.address)
 
+        name = token.name()
+        symbol = token.symbol()
+        decimals = token.decimals()
+        print(f"Token '{name}' ({symbol}) ({decimals} decimals)")
+
         supply = token.total_supply()
         self.assertNotEqual(0, supply)
 
