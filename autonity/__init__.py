@@ -11,7 +11,7 @@ from web3.providers import BaseProvider
 from web3.module import Module
 from typing import Dict, Sequence, Union, Optional, Type, Any, cast
 
-from autonity.autonity import Autonity
+from autonity.aut import Aut
 from autonity.tendermint import Tendermint
 
 
@@ -24,14 +24,14 @@ class Web3WithAut(Web3):
     checker of the existence and types of the modules.
     """
 
-    aut: Autonity
+    aut: Aut
     tendermint: Tendermint
 
 
 def create_web3(
     provider: Optional[BaseProvider] = None,
     external_modules: Optional[Dict[str, Union[Type[Module], Sequence[Any]]]] = None,
-    **kwArgs: Any
+    **kwArgs: Any,
 ) -> Web3WithAut:
     """
     Convenience function to create a Web3 instance with the Autonity
@@ -41,15 +41,15 @@ def create_web3(
 
     provider = provider or HTTPProvider(DEFAULT_URI)
     external_modules = external_modules or {}
-    external_modules["aut"] = Autonity
+    external_modules["aut"] = Aut
     external_modules["tendermint"] = Tendermint
     web3 = Web3(
         provider,
         external_modules={
-            "aut": Autonity,
+            "aut": Aut,
             "tendermint": Tendermint,
         },
-        **kwArgs
+        **kwArgs,
     )
 
     # Check the chain ID

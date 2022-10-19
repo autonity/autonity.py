@@ -4,7 +4,7 @@
 Autonity module tests
 """
 
-from autonity import create_web3, Autonity
+from autonity import create_web3, Aut
 from autonity.validator import Validator
 
 from unittest import TestCase
@@ -26,7 +26,7 @@ class TestAutonityModule(TestCase):
         w3 = create_web3()
         assert hasattr(w3, "aut")
         aut = w3.aut  # pylint: disable=no-member
-        assert isinstance(aut, Autonity)
+        assert isinstance(aut, Aut)
 
         autonity = aut.autonity_contract()
         # print(f"autonity = {autonity}")

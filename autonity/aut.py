@@ -17,7 +17,7 @@ from typing import Optional, cast
 AUTONITY_CONTRACT_ADDRESS = "0xBd770416a3345F91E4B34576cb804a576fa48EB1"
 
 
-class Autonity(Module):
+class Aut(Module):
     """
     Web3 module representing Autonity-specific API.
     """
