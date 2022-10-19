@@ -4,20 +4,49 @@
 Python module containing the Tendermint Web3 external module.
 """
 
+from __future__ import annotations
+from dataclasses import dataclass
 import json
-from web3.types import ABI, RPCEndpoint, Address
+from web3.types import ABI, RPCEndpoint, ChecksumAddress
 from web3.module import Module
 from web3.method import Method
 from typing import Sequence, TypedDict, Tuple, Any, cast
 
 
-class CommitteeMember(TypedDict):
+class CommitteeMemberDict(TypedDict):
     """
-    Data structure representing a member of the consensus committee.
+    Dictionary representing a member of the consensus committee.
     """
 
-    address: Address
+    address: ChecksumAddress
     votingPower: int
+
+
+@dataclass
+class CommitteeMember:
+    """
+    Model class for a committee member.
+    """
+
+    address: ChecksumAddress
+    voting_power: int
+
+    @staticmethod
+    def from_dict(value: CommitteeMemberDict) -> CommitteeMember:
+        """
+        From JSON RPC result
+        """
+        return CommitteeMember(value["address"], value["votingPower"])
+
+    @staticmethod
+    def from_tuple(value: Tuple[ChecksumAddress, int]) -> CommitteeMember:
+        """
+        From Web3 tuple
+        """
+        assert len(value) == 2
+        assert isinstance(value[0], str)
+        assert isinstance(value[1], int)
+        return CommitteeMember(value[0], value[1])
 
 
 class Tendermint(Module):
@@ -68,10 +97,7 @@ class Tendermint(Module):
         """
         result = self._getCommittee(block_height)
         assert isinstance(result, list)
-        committee_members = cast(Sequence[CommitteeMember], result)
-        assert isinstance(result[0].address, str)
-        assert isinstance(result[0].votingPower, int)
-        return committee_members
+        return [CommitteeMember.from_dict(cm) for cm in result]
 
     def get_committee_at_hash(self, block_hash: bytes) -> Sequence[CommitteeMember]:
         """
