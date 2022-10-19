@@ -43,7 +43,7 @@ def create_web3(
     external_modules = external_modules or {}
     external_modules["aut"] = Autonity
     external_modules["tendermint"] = Tendermint
-    w3 = Web3(
+    web3 = Web3(
         provider,
         external_modules={
             "aut": Autonity,
@@ -51,4 +51,30 @@ def create_web3(
         },
         **kwArgs
     )
-    return cast(Web3WithAut, w3)
+
+    # Check the chain ID
+    chain_id = web3.eth.chain_id
+    chain_id_str = parse_autonity_chain_id(chain_id)
+    print(f"Connected to {chain_id_str}")
+
+    return cast(Web3WithAut, web3)
+
+
+def parse_autonity_chain_id(chain_id: int) -> str:
+    """
+    Parse a chain ID according to the Autonity scheme and return a
+    human-readable version.  Raise an exception if the chain ID is not
+    recognised.
+    """
+
+    # As a decimal: '65xxyyyy' where 'xx' = network type and 'yyyy' =
+    # identifier.
+
+    digits = str(chain_id)
+    if len(digits) != 8 or digits[:2] != "65":
+        raise ValueError("chain ID does not match the Autonity scheme")
+
+    net_type = digits[2:4]
+    net_id = digits[4:]
+
+    return f"Autonity (type: {net_type}, id: {net_id})"
