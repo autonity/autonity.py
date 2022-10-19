@@ -1,0 +1,27 @@
+# Build actions for every push
+name: onpush
+
+on:
+  push:
+
+jobs:
+  check:
+    strategy:
+      matrix:
+        pythonver: ['3.8', '3.9', '3.10']
+        os: [ubuntu-20.04, macos-10.15]
+
+    runs-on: ${{matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: recursive
+    - uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.pythonver }}
+    - name: Install and check
+      run: |
+        pip install --progress-bar off pipenv
+        make install
+        make check
