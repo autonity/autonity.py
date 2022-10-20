@@ -29,8 +29,6 @@ class TestAutonityModule(TestCase):
         assert isinstance(aut, Aut)
 
         autonity = aut.autonity_contract()
-        # print(f"autonity = {autonity}")
-        # print(f"autonity.abi = {autonity.abi}")
         self.assertTrue(autonity)
         self.assertTrue(autonity.functions)
         self.assertTrue(autonity.functions.totalSupply)
@@ -44,7 +42,7 @@ class TestAutonityModule(TestCase):
         self.assertTrue(isinstance(validators[0], str))
 
         validator_0 = Validator.from_tuple(
-            autonity.functions.getValidator(validators[0]).call()
+            w3, autonity.functions.getValidator(validators[0]).call()
         )
         print(f"validator_0={validator_0}")
         print(f"type(validator_0)={type(validator_0)}")

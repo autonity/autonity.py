@@ -5,10 +5,17 @@ Model holding Validator information.
 """
 
 from __future__ import annotations
+
+from autonity.liquid_newton import LiquidNewton
+
 from enum import IntEnum
 from dataclasses import dataclass
+from web3 import Web3
 from web3.types import ChecksumAddress
-from typing import Tuple
+from typing import NewType, Tuple
+
+
+ValidatorAddress = NewType("ValidatorAddress", ChecksumAddress)
 
 
 class ValidatorState(IntEnum):
@@ -27,21 +34,22 @@ class Validator:
     """
 
     treasury: ChecksumAddress
-    addr: ChecksumAddress
+    addr: ValidatorAddress
     enode: str
     commission_rate: int
     bonded_stake: int
     total_slashed: int
-    liquid_contract: ChecksumAddress  # TODO: address -> Contract -> ValidatorContract
+    liquid_contract: LiquidNewton
     liquid_supply: int
     registration_block: int
     state: ValidatorState
 
     @staticmethod
     def from_tuple(
+        web3: Web3,
         value: Tuple[
             ChecksumAddress,
-            ChecksumAddress,
+            ValidatorAddress,
             str,
             int,
             int,
@@ -50,7 +58,7 @@ class Validator:
             int,
             int,
             ValidatorState,
-        ]
+        ],
     ) -> Validator:
         """
         Create an instance from the tuple returned by Web3 contract calls.
@@ -74,7 +82,7 @@ class Validator:
             value[3],
             value[4],
             value[5],
-            value[6],
+            LiquidNewton(web3, value[6]),
             value[7],
             value[8],
             ValidatorState(value[9]),

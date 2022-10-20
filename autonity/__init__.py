@@ -5,7 +5,6 @@ Top-level autonity module containing the Web3.py external modules
 and helper functions.
 """
 
-
 from web3 import Web3, HTTPProvider
 from web3.providers import BaseProvider
 from web3.module import Module
@@ -43,7 +42,7 @@ def create_web3(
     external_modules = external_modules or {}
     external_modules["aut"] = Aut
     external_modules["tendermint"] = Tendermint
-    web3 = Web3(
+    w3 = Web3(
         provider,
         external_modules={
             "aut": Aut,
@@ -53,11 +52,11 @@ def create_web3(
     )
 
     # Check the chain ID
-    chain_id = web3.eth.chain_id
+    chain_id = w3.eth.chain_id
     chain_id_str = parse_autonity_chain_id(chain_id)
     print(f"Connected to {chain_id_str}")
 
-    return cast(Web3WithAut, web3)
+    return cast(Web3WithAut, w3)
 
 
 def parse_autonity_chain_id(chain_id: int) -> str:

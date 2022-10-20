@@ -5,7 +5,7 @@ Autonity contract tests
 """
 
 from autonity import create_web3
-from autonity.autonity import Autonity, Config
+from autonity.autonity import Autonity, Config, Validator
 from autonity.tendermint import CommitteeMember
 
 from unittest import TestCase
@@ -17,12 +17,18 @@ class TestAutonity(TestCase):
     """
 
     def test_autonity_queries(self) -> None:
+        """
+        Test all query functions.
+        """
 
         w3 = create_web3()
         autonity = Autonity(w3)
 
         self.assertIsInstance(autonity.commission_rate_precision(), int)
-        self.assertIsInstance(autonity.config(), Config)
+        config = autonity.config()
+        self.assertIsInstance(config, Config)
+        print(f"Autonity config: {config}")
+
         self.assertIsInstance(autonity.epoch_id(), int)
         self.assertIsInstance(autonity.last_epoch_block(), int)
         self.assertIsInstance(autonity.epoch_total_bonded_stake(), int)
@@ -44,3 +50,14 @@ class TestAutonity(TestCase):
         validators = autonity.get_validators()
         self.assertIsInstance(validators, list)
         self.assertIsInstance(validators[0], str)
+        self.assertIsInstance(autonity.get_validator(validators[0]), Validator)
+
+        self.assertIsInstance(autonity.get_max_committee_size(), int)
+        committee_enodes = autonity.get_committee_enodes()
+        self.assertIsInstance(committee_enodes, list)
+        self.assertIsInstance(committee_enodes[0], str)
+        self.assertIsInstance(autonity.get_minimum_base_fee(), int)
+        self.assertIsInstance(autonity.get_operator(), str)
+        self.assertIsInstance(autonity.get_proposer(1, 1), str)
+        self.assertIsInstance(autonity.get_bonding_req(0, 100), list)
+        self.assertIsInstance(autonity.get_unbonding_req(0, 100), list)

@@ -5,12 +5,10 @@ ERC20 token tests
 """
 
 from autonity import create_web3
-from autonity.validator import Validator
+from autonity.autonity import Autonity
 from autonity.erc20 import ERC20
 
 from unittest import TestCase
-from web3.types import ChecksumAddress
-from typing import List, cast
 
 
 class TestERC20(TestCase):
@@ -24,22 +22,15 @@ class TestERC20(TestCase):
         """
 
         w3 = create_web3()
-        aut = w3.aut  # pylint: disable=no-member
+        autonity = Autonity(w3)
 
         # Get some NTN holders
-        autonity = aut.autonity_contract()
-        validator_addrs: List[ChecksumAddress] = cast(
-            List[ChecksumAddress], autonity.functions.getValidators().call()
-        )
-
-        def get_treasury_addr(v_addr: ChecksumAddress) -> ChecksumAddress:
-            val = Validator.from_tuple(autonity.functions.getValidator(v_addr).call())
-            return val.treasury
-
-        holders = [get_treasury_addr(addr) for addr in validator_addrs]
+        validator_addrs = autonity.get_validators()
+        holders = [autonity.get_validator(val).treasury for val in validator_addrs]
         print(f"holders={holders}")
 
-        token = ERC20(w3, autonity.address)
+        # Use the autonity contract as an ERC20 token (Newton)
+        token = ERC20(w3, autonity.contract.address)
 
         name = token.name()
         symbol = token.symbol()

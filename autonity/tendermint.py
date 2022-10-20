@@ -5,48 +5,14 @@ Python module containing the Tendermint Web3 external module.
 """
 
 from __future__ import annotations
-from dataclasses import dataclass
+
+from autonity.committee_member import CommitteeMember
+
 import json
-from web3.types import ABI, RPCEndpoint, ChecksumAddress
+from web3.types import ABI, RPCEndpoint
 from web3.module import Module
 from web3.method import Method
-from typing import Sequence, TypedDict, Tuple, Any, cast
-
-
-class CommitteeMemberDict(TypedDict):
-    """
-    Dictionary representing a member of the consensus committee.
-    """
-
-    address: ChecksumAddress
-    votingPower: int
-
-
-@dataclass
-class CommitteeMember:
-    """
-    Model class for a committee member.
-    """
-
-    address: ChecksumAddress
-    voting_power: int
-
-    @staticmethod
-    def from_dict(value: CommitteeMemberDict) -> CommitteeMember:
-        """
-        From JSON RPC result
-        """
-        return CommitteeMember(value["address"], value["votingPower"])
-
-    @staticmethod
-    def from_tuple(value: Tuple[ChecksumAddress, int]) -> CommitteeMember:
-        """
-        From Web3 tuple
-        """
-        assert len(value) == 2
-        assert isinstance(value[0], str)
-        assert isinstance(value[1], int)
-        return CommitteeMember(value[0], value[1])
+from typing import Sequence, Tuple, Any, cast
 
 
 class Tendermint(Module):

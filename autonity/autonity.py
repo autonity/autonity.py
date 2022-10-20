@@ -6,66 +6,51 @@ Python module holding the Autonity Web3.py external module
 
 from __future__ import annotations
 
+from autonity.config import Config
+from autonity.validator import Validator, ValidatorAddress
 from autonity.tendermint import CommitteeMember
 from autonity.erc20 import ERC20
 from autonity.abi_manager import ABIManager
+from autonity.utils import unsigned_tx_from_contract_call
 
 from dataclasses import dataclass
 from web3 import Web3
-from web3.types import ChecksumAddress
-from typing import Sequence, Tuple
+from web3.types import ChecksumAddress, Wei, TxParams
+from typing import Sequence, Tuple, cast
+
+# pylint: disable=too-many-public-methods
+
 
 # TODO: use the tendermint RPC call for this?
 AUTONITY_CONTRACT_ADDRESS = "0xBd770416a3345F91E4B34576cb804a576fa48EB1"
 
 
 @dataclass
-class Config:
+class Staking:
     """
-    Autonity configuration.
+    Queued staking operations
     """
 
-    operator_account: ChecksumAddress
-    treasury_account: ChecksumAddress
-    treasury_fee: int
-    min_basefee: int
-    delegation_rate: int
-    epoch_period: int
-    unbonding_period: int
-    committee_size: int
-    contract_version: int
-    block_period: int
+    delegator: ChecksumAddress
+    delegatee: ChecksumAddress
+    amount: int
+    start_block: int
 
     @staticmethod
-    def from_tuple(
-        value: Tuple[
-            ChecksumAddress, ChecksumAddress, int, int, int, int, int, int, int, int
-        ]
-    ) -> Config:
+    def from_tuple(value: Tuple[str, str, int, int]) -> Staking:
         """
-        Create from web3 tuple
+        Create from a Web3 tuple.
         """
+        assert len(value) == 4
         assert isinstance(value[0], str)
         assert isinstance(value[1], str)
         assert isinstance(value[2], int)
         assert isinstance(value[3], int)
-        assert isinstance(value[4], int)
-        assert isinstance(value[5], int)
-        assert isinstance(value[6], int)
-        assert isinstance(value[7], int)
-        assert isinstance(value[8], int)
-        assert isinstance(value[9], int)
-        return Config(
-            value[0],
-            value[1],
+        return Staking(
+            cast(ChecksumAddress, value[0]),
+            cast(ChecksumAddress, value[1]),
             value[2],
             value[3],
-            value[4],
-            value[5],
-            value[6],
-            value[7],
-            value[8],
-            value[9],
         )
 
 
@@ -78,116 +63,233 @@ class Autonity(ERC20):
         super().__init__(
             web3,
             web3.toChecksumAddress(AUTONITY_CONTRACT_ADDRESS),
+            # web3.tendermint.get_contract_abi(),
             ABIManager.load_abi("Autonity"),
         )
 
     def commission_rate_precision(self) -> int:
-        """See `COMMISSION_RATE_PRECISION` on Autonity contract."""
+        """
+        See `COMMISSION_RATE_PRECISION` on the Autonity contract.
+        """
         return self.contract.functions.COMMISSION_RATE_PRECISION().call()
 
     def config(self) -> Config:
-        """See `config` on Autonity contract."""
+        """
+        See `config` on the Autonity contract.
+        """
         return Config.from_tuple(self.contract.functions.config().call())
 
     def epoch_id(self) -> int:
-        """See `epochID` on Autonity contract."""
+        """
+        See `epochID` on the Autonity contract.
+        """
         return self.contract.functions.epochID().call()
 
     def last_epoch_block(self) -> int:
-        """See `lastEpochBlock` on Autonity contract."""
+        """
+        See `lastEpochBlock` on the Autonity contract.
+        """
         return self.contract.functions.lastEpochBlock().call()
 
     def epoch_total_bonded_stake(self) -> int:
-        """See `epochTotalBondedStake` on Autonity contract."""
+        """
+        See `epochTotalBondedStake` on the Autonity contract.
+        """
         return self.contract.functions.epochTotalBondedStake().call()
 
     def total_redistributed(self) -> int:
-        """See `totalRedistributed` on Autonity contract."""
+        """
+        See `totalRedistributed` on the Autonity contract.
+        """
         return self.contract.functions.totalRedistributed().call()
 
     def epoch_reward(self) -> int:
-        """See `epochReward` on Autonity contract."""
+        """
+        See `epochReward` on the Autonity contract.
+        """
         return self.contract.functions.epochReward().call()
 
     def tail_bonding_id(self) -> int:
-        """See `tailBondingID` on Autonity contract."""
+        """
+        See `tailBondingID` on the Autonity contract.
+        """
         return self.contract.functions.tailBondingID().call()
 
     def head_bonding_id(self) -> int:
-        """See `headBondingID` on Autonity contract."""
+        """
+        See `headBondingID` on the Autonity contract.
+        """
         return self.contract.functions.headBondingID().call()
 
     def tail_unbonding_id(self) -> int:
-        """See `tailUnbondingID` on Autonity contract."""
+        """
+        See `tailUnbondingID` on the Autonity contract.
+        """
         return self.contract.functions.tailUnbondingID().call()
 
     def head_unbonding_id(self) -> int:
-        """See `headUnbondingID` on Autonity contract."""
+        """
+        See `headUnbondingID` on the Autonity contract.
+        """
         return self.contract.functions.headUnbondingID().call()
 
     def deployer(self) -> ChecksumAddress:
-        """See `deployer` on Autonity contract."""
+        """
+        See `deployer` on the Autonity contract.
+        """
         return self.contract.functions.deployer().call()
 
     def get_last_epoch_block(self) -> int:
-        """See `getLastEpochBlock` on Autonity contract."""
+        """
+        See `getLastEpochBlock` on the Autonity contract.
+        """
         return self.contract.functions.getLastEpochBlock().call()
 
     def get_version(self) -> int:
-        """See `getVersion` on Autonity contract."""
+        """
+        See `getVersion` on the Autonity contract.
+        """
         return self.contract.functions.getVersion().call()
 
     def get_committee(self) -> Sequence[CommitteeMember]:
-        """See `getCommittee` on Autonity contract."""
+        """
+        See `getCommittee` on the Autonity contract.
+        """
         cms = self.contract.functions.getCommittee().call()
         return [CommitteeMember.from_tuple(cm) for cm in cms]
 
     def get_validators(self) -> Sequence[ChecksumAddress]:
-        """See `getValidators` on Autonity contract."""
+        """
+        See `getValidators` on the Autonity contract.
+        """
         return self.contract.functions.getValidators().call()
 
-    # function getValidator(address _addr) external view returns (Validator memory) {
-    # function getMaxCommitteeSize() external view returns (uint256) {
-    # function getCommitteeEnodes() external view returns (string[] memory) {
-    # function getMinimumBaseFee() external view returns (uint256) {
-    # function getOperator() external view returns (address) {
+    def get_validator(self, addr: ChecksumAddress) -> Validator:
+        """
+        See `getValidator` on the Autonity contract.
+        """
+        assert isinstance(addr, str)
+        value = self.contract.functions.getValidator(addr).call()
+        return Validator.from_tuple(self.contract.web3, value)
 
-    # function getProposer(uint256 height, uint256 round) external view returns (address)
-    # function getBondingReq(uint256 startId, uint256 lastId) external view returns (Staking[] memory) {
-    # function getUnbondingReq(uint256 startId, uint256 lastId) external view returns (Staking[] memory) {
+    def get_max_committee_size(self) -> int:
+        """
+        See `getMaxCommitteeSize` on the Autonity contract.
+        """
+        return self.contract.functions.getMaxCommitteeSize().call()
 
-    # function bond(address _validator, uint256 _amount) public {
-    # function unbond(address _validator, uint256 _amount) public {
+    def get_committee_enodes(self) -> Sequence[str]:
+        """
+        See `getCommitteeEnodes` on the Autonity contract.
+        """
+        return self.contract.functions.getCommitteeEnodes().call()
 
-    # function registerValidator(string memory _enode, bytes memory _proof) public {
-    # function pauseValidator(address _address) public {
-    # function activateValidator(address _address) public {
-    # function changeCommissionRate(address _validator, uint256 _rate) public {
+    def get_minimum_base_fee(self) -> int:
+        """
+        See `getMinimumBaseFee` on the Autonity contract.
+        """
+        return self.contract.functions.getMinimumBaseFee().call()
 
+    def get_operator(self) -> ChecksumAddress:
+        """
+        See `getOperator` on the Autonity contract.
+        """
+        return self.contract.functions.getOperator().call()
 
-# def autonity_contract(self) -> Contract:
-#     """
-#     Returns the Autonity contract. See docs.autonity.org for details of the
-#     methods available.
-#     """
-#     if not self._autonity_contract:
-#         if not hasattr(self._w3, "tendermint"):
-#             self._w3.attach_modules({"tendermint": Tendermint})
+    def get_proposer(self, height: int, round_idx: int) -> ChecksumAddress:
+        """
+        See `getProposer` on the Autonity contract.
+        """
+        return self.contract.functions.getProposer(height, round_idx).call()
 
-#         tendermint = cast(Tendermint, self._w3.tendermint)  # type: ignore
-#         abi = tendermint.get_contract_abi()
-#         eth = self._w3.eth
-#         autonity_contract_addr = self._w3.toChecksumAddress(
-#             AUTONITY_CONTRACT_ADDRESS
-#         )
-#         self._autonity_contract = eth.contract(autonity_contract_addr, abi=abi)
+    def get_bonding_req(self, start_id: int, last_id: int) -> Sequence[Staking]:
+        """
+        See `getBondingReq` on the Autonity contract.
+        """
+        result = self.contract.functions.getBondingReq(start_id, last_id).call()
+        assert isinstance(result, list)
+        return [Staking.from_tuple(staking) for staking in result]
 
-#     assert self._autonity_contract
-#     return self._autonity_contract
+    def get_unbonding_req(self, start_id: int, last_id: int) -> Sequence[Staking]:
+        """
+        See `getUnbondingReq` on the Autonity contract.
+        """
+        result = self.contract.functions.getUnbondingReq(start_id, last_id).call()
+        assert isinstance(result, list)
+        return [Staking.from_tuple(staking) for staking in result]
 
-# event MintedStake(address addr, uint256 amount);
-# event BurnedStake(address addr, uint256 amount);
-# event CommissionRateChange(address validator, uint256 rate);
-# event RegisteredValidator(address treasury, address addr, string enode, address liquidContract);
-# event PausedValidator(address treasury, address addr, uint256 effectiveBlock);
-# event Rewarded(address addr, uint256 amount);
+    def bond(
+        self, from_addr: ChecksumAddress, validator_addr: ValidatorAddress, amount: Wei
+    ) -> TxParams:
+        """
+        Create a TxParams calling the `bond` method.  See `bond` on the
+        Autonity contract.
+        """
+        return unsigned_tx_from_contract_call(
+            self.contract.functions.bond(validator_addr, amount), from_addr=from_addr
+        )
+
+    def unbond(
+        self, from_addr: ChecksumAddress, validator_addr: ValidatorAddress, amount: int
+    ) -> TxParams:
+        """
+        Create a TxParams calling the `unbond` method.  See `unbond` on
+        the Autonity contract.
+        """
+        return unsigned_tx_from_contract_call(
+            self.contract.functions.unbond(validator_addr, amount), from_addr=from_addr
+        )
+
+    def register_validator(self, from_addr: ChecksumAddress, enode: str) -> TxParams:
+        """
+        Create a TxParams calling the `registerValidator` method.  See
+        `registerValidator` on the Autonity contract.
+        """
+        return unsigned_tx_from_contract_call(
+            self.contract.functions.registerValidator(enode), from_addr=from_addr
+        )
+
+    def pause_validator(
+        self, from_addr: ChecksumAddress, validator_addr: ValidatorAddress
+    ) -> TxParams:
+        """
+        Create a TxParams calling the `pauseValidator` method.  See
+        `pauseValidator` on the Autonity contract.
+        """
+        return unsigned_tx_from_contract_call(
+            self.contract.functions.pauseValidator(validator_addr), from_addr=from_addr
+        )
+
+    def activate_validator(
+        self, from_addr: ChecksumAddress, validator_addr: ValidatorAddress
+    ) -> TxParams:
+        """
+        Create a TxParams calling the `activateValidator` method.  See
+        `activateValidator` on the Autonity contract.
+        """
+        return unsigned_tx_from_contract_call(
+            self.contract.functions.activateValidator(validator_addr),
+            from_addr=from_addr,
+        )
+
+    def change_commissionrate(
+        self, from_addr: ChecksumAddress, validator: ValidatorAddress, rate: int
+    ) -> TxParams:
+        """
+        Create a TxParams calling the `changeCommissionRate` method.  See
+        `changeCommissionRate` on the Autonity contract.
+        """
+        return unsigned_tx_from_contract_call(
+            self.contract.functions.changeCommissionRate(validator, rate),
+            from_addr=from_addr,
+        )
+
+    # TODO: events
+
+    # event MintedStake(address addr, uint256 amount);
+    # event BurnedStake(address addr, uint256 amount);
+    # event CommissionRateChange(address validator, uint256 rate);
+    # event RegisteredValidator(
+    #   address treasury, address addr, string enode, address liquidContract);
+    # event PausedValidator(address treasury, address addr, uint256 effectiveBlock);
+    # event Rewarded(address addr, uint256 amount);

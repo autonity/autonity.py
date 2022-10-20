@@ -4,7 +4,6 @@
 LiquidNewton token tests
 """
 
-from autonity.liquid_newton import LiquidNewton
 from autonity import create_web3
 from autonity.validator import Validator
 
@@ -34,7 +33,7 @@ class TestLiquidNewton(TestCase):
         validators = cast(
             List[Validator],
             [
-                Validator.from_tuple(autonity.functions.getValidator(v_addr).call())
+                Validator.from_tuple(w3, autonity.functions.getValidator(v_addr).call())
                 for v_addr in validator_addrs
             ],
         )
@@ -42,7 +41,7 @@ class TestLiquidNewton(TestCase):
         # Get the LiquidNewton contract for the first validator, and
         # check the unclaimed fees of all validators.
 
-        lnew = LiquidNewton(w3, validators[0].liquid_contract)
+        lnew = validators[0].liquid_contract
         print(f"LNEW({validators[0].addr}):")
         for validator in validators:
             account = validator.treasury
