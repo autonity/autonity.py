@@ -4,9 +4,11 @@
 Autonity contract tests
 """
 
-from autonity import create_web3
-from autonity.autonity import Autonity, Config, Validator
-from autonity.tendermint import CommitteeMember
+from autonity.autonity import Autonity
+from autonity.config import Config
+from autonity.committee_member import CommitteeMember
+from autonity.utils import create_web3
+from autonity.validator import Validator
 
 from unittest import TestCase
 

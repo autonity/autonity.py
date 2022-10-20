@@ -4,12 +4,10 @@
 LiquidNewton token tests
 """
 
-from autonity import create_web3
-from autonity.validator import Validator
+from autonity.autonity import Autonity
+from autonity.utils import create_web3
 
 from unittest import TestCase
-from web3.types import ChecksumAddress
-from typing import List, cast
 
 
 class TestLiquidNewton(TestCase):
@@ -23,27 +21,17 @@ class TestLiquidNewton(TestCase):
         """
 
         w3 = create_web3()
-        aut = w3.aut  # pylint: disable=no-member
+        autonity = Autonity(w3)
 
         # Get some NTN holders
-        autonity = aut.autonity_contract()
-        validator_addrs = cast(
-            List[ChecksumAddress], autonity.functions.getValidators().call()
-        )
-        validators = cast(
-            List[Validator],
-            [
-                Validator.from_tuple(w3, autonity.functions.getValidator(v_addr).call())
-                for v_addr in validator_addrs
-            ],
-        )
+        validator_addrs = autonity.get_validators()
+        validators = [autonity.get_validator(val) for val in validator_addrs]
+        holders = [val.treasury for val in validators]
 
         # Get the LiquidNewton contract for the first validator, and
         # check the unclaimed fees of all validators.
-
         lnew = validators[0].liquid_contract
-        print(f"LNEW({validators[0].addr}):")
-        for validator in validators:
-            account = validator.treasury
+        print(f"LNEW({lnew.contract.address}):")
+        for account in holders:
             unclaimed_fees = lnew.unclaimed_rewards(account)
             print(f"  {account}: unclaimed fees: {unclaimed_fees}")
