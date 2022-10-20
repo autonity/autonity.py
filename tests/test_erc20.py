@@ -6,7 +6,7 @@ ERC20 token tests
 
 from autonity.autonity import Autonity
 from autonity.erc20 import ERC20
-from autonity.utils import create_web3
+from autonity.utils.web3 import create_web3
 
 from unittest import TestCase
 

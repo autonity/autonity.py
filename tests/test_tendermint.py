@@ -5,7 +5,7 @@ Tendermint module tests
 """
 
 from autonity import Tendermint
-from autonity.utils import create_web3
+from autonity.utils.web3 import create_web3
 
 from unittest import TestCase
 

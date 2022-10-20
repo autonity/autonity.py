@@ -5,7 +5,7 @@ LiquidNewton token tests
 """
 
 from autonity.autonity import Autonity
-from autonity.utils import create_web3
+from autonity.utils.web3 import create_web3
 
 from unittest import TestCase
 

@@ -7,7 +7,7 @@ that this contract also exposes functionality for claiming fees.
 
 from autonity.abi_manager import ABIManager
 from autonity.erc20 import ERC20
-from autonity.utils import unsigned_tx_from_contract_call
+from autonity.utils.tx import unsigned_tx_from_contract_call
 
 from web3 import Web3
 from web3.types import Wei, ChecksumAddress, TxParams

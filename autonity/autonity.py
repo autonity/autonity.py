@@ -11,7 +11,7 @@ from autonity.validator import Validator, ValidatorAddress
 from autonity.tendermint import CommitteeMember
 from autonity.erc20 import ERC20
 from autonity.abi_manager import ABIManager
-from autonity.utils import unsigned_tx_from_contract_call
+from autonity.utils.tx import unsigned_tx_from_contract_call
 
 from dataclasses import dataclass
 from web3 import Web3

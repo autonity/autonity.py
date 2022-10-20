@@ -4,7 +4,7 @@
 Model for an ERC20 token
 """
 
-from autonity.utils import unsigned_tx_from_contract_call
+from autonity.utils.tx import unsigned_tx_from_contract_call
 from autonity.abi_manager import ABIManager
 
 from web3.contract import Contract, ABI
