@@ -7,12 +7,14 @@ Utility functions
 
 from autonity.tendermint import Tendermint
 
+from eth_keyfile import create_keyfile_json, decode_keyfile_json  # type: ignore
+import json
 from web3 import Web3, HTTPProvider
 from web3.providers import BaseProvider
 from web3.module import Module
 from web3.contract import ContractFunction
 from web3.types import ChecksumAddress, TxParams, Wei, Nonce
-from typing import Dict, Sequence, Union, Optional, Type, Any, cast
+from typing import Dict, Sequence, Union, Optional, NewType, Type, Any, cast
 
 # pylint: disable=too-many-arguments
 
@@ -101,3 +103,37 @@ def unsigned_tx_from_contract_call(
     call_tx_params = function.build_transaction(tx_params)
     call_tx_params["gas"] = gas or function.web3.eth.estimate_gas(call_tx_params)
     return call_tx_params
+
+
+EncryptedKeyFile = NewType("EncryptedKeyFile", Dict[str, Any])
+
+PrivateKey = NewType("PrivateKey", bytes)
+
+
+def keyfile_load(filename: str) -> EncryptedKeyFile:
+    """
+    Load a keyfile.
+    """
+    with open(filename, "r", encoding="utf8") as keyfile_f:
+        return cast(EncryptedKeyFile, json.load(keyfile_f))
+
+
+def keyfile_create_from_private_key(
+    private_key: PrivateKey, password: str
+) -> EncryptedKeyFile:
+    """
+    Create a keyfile (with encrypted private key) from a private key.
+    """
+    assert len(private_key) == 32
+    return create_keyfile_json(private_key, password.encode("utf8"))
+
+
+def keyfile_decrypt_private_key(
+    encrypted_key: EncryptedKeyFile, password: str
+) -> PrivateKey:
+    """
+    Decrypt the private key from a keyfile.
+    """
+    pk = decode_keyfile_json(encrypted_key, password.encode("utf8"))
+    assert isinstance(pk, bytes)
+    return cast(PrivateKey, pk)
