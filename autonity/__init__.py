@@ -7,7 +7,7 @@ Top-level Autonity module exposing primary types.
 # pylint: disable=unused-import
 # flake8: noqa
 
-from autonity.autonity import Autonity
+from autonity.autonity import Autonity, AUTONITY_CONTRACT_VERSION
 from autonity.config import Config
 from autonity.committee_member import CommitteeMember
 from autonity.validator import Validator

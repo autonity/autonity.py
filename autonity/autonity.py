@@ -20,6 +20,12 @@ from typing import Sequence, Tuple, cast
 
 # pylint: disable=too-many-public-methods
 
+AUTONITY_CONTRACT_VERSION = 2
+"""
+The version of the Autonity contract which this library is aligned
+with.
+"""
+
 
 # TODO: use the tendermint RPC call for this?
 AUTONITY_CONTRACT_ADDRESS = "0xBd770416a3345F91E4B34576cb804a576fa48EB1"
@@ -59,13 +65,20 @@ class Autonity(ERC20):
     Web3 module representing Autonity-specific API.
     """
 
-    def __init__(self, web3: Web3):
+    def __init__(self, web3: Web3, disable_version_checks: bool = False):
         super().__init__(
             web3,
             web3.toChecksumAddress(AUTONITY_CONTRACT_ADDRESS),
-            # web3.tendermint.get_contract_abi(),
             ABIManager.load_abi("Autonity"),
         )
+
+        # Check the contract version
+        if not disable_version_checks:
+            config = self.config()
+            assert AUTONITY_CONTRACT_VERSION == config.contract_version, (
+                f"Autonity contract version mismatch (chain: {config.contract_version}, "
+                f"local: {AUTONITY_CONTRACT_VERSION})"
+            )
 
     def commission_rate_precision(self) -> int:
         """
