@@ -22,6 +22,7 @@ jobs:
         python-version: ${{ matrix.pythonver }}
     - name: Install and check
       run: |
-        pip install --progress-bar off pipenv
+        python -m venv env
+        . env/bin/activate
         make install
         make check
