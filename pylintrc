@@ -15,7 +15,7 @@ disable=
     # duplicate-code,
     # invalid-name,
 
-good-names=w3
+good-names=w3,tx
 max-attributes=10
 
 [REPORTS]

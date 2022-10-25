@@ -4,8 +4,10 @@
 Transaction utility functions
 """
 
+from eth_account.account import Account, SignedTransaction  # type: ignore
 from web3.contract import ContractFunction
 from web3.types import ChecksumAddress, TxParams, Wei, Nonce
+from typing import Dict, Any
 
 # pylint: disable=too-many-arguments
 
@@ -32,3 +34,16 @@ def unsigned_tx_from_contract_call(
     call_tx_params = function.buildTransaction(tx_params)
     call_tx_params["gas"] = gas or function.web3.eth.estimate_gas(call_tx_params)
     return call_tx_params
+
+
+def sign_tx(
+    tx: TxParams, keyfile_data: Dict[Any, Any], keyfile_passphrase: str
+) -> SignedTransaction:
+    """
+    Sign a transaction using the data from an encrypted keyfile and
+    password.  Returns a SignedTx.
+    """
+    private_key = Account.decrypt(keyfile_data, keyfile_passphrase)  # type: ignore
+    return Account.sign_transaction(  # pylint: disable=no-value-for-parameter
+        tx, private_key
+    )
