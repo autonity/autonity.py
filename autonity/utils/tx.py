@@ -5,8 +5,9 @@ Transaction utility functions
 """
 
 from eth_account.account import Account, SignedTransaction  # type: ignore
+from web3 import Web3
 from web3.contract import ContractFunction
-from web3.types import ChecksumAddress, TxParams, Wei, Nonce
+from web3.types import ChecksumAddress, TxParams, Wei, Nonce, HexBytes
 from typing import Dict, Any
 
 # pylint: disable=too-many-arguments
@@ -47,3 +48,13 @@ def sign_tx(
     return Account.sign_transaction(  # pylint: disable=no-value-for-parameter
         tx, private_key
     )
+
+
+def send_tx(w3: Web3, tx_signed: SignedTransaction) -> HexBytes:
+    """
+    Send raw signed tx bytes provided by 'tx_raw' to an RPC server
+    to be validated and included in the blockchain.
+    """
+    raw_tx = tx_signed.rawTransaction
+    tx_hash = w3.eth.send_raw_transaction(raw_tx)
+    return tx_hash
