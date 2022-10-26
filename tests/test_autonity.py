@@ -4,10 +4,11 @@
 Autonity contract tests
 """
 
+from tests.common import create_test_web3
+
 from autonity.autonity import Autonity
 from autonity.config import Config
 from autonity.committee_member import CommitteeMember
-from autonity.utils.web3 import create_web3
 from autonity.validator import Validator
 
 from unittest import TestCase
@@ -23,7 +24,7 @@ class TestAutonity(TestCase):
         Test all query functions.
         """
 
-        w3 = create_web3()
+        w3 = create_test_web3()
         autonity = Autonity(w3)
 
         self.assertIsInstance(autonity.commission_rate_precision(), int)

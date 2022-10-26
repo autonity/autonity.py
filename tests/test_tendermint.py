@@ -4,8 +4,9 @@
 Tendermint module tests
 """
 
+from tests.common import create_test_web3
+
 from autonity import Tendermint
-from autonity.utils.web3 import create_web3
 
 from unittest import TestCase
 
@@ -19,7 +20,7 @@ class TestTenderming(TestCase):
         """
         test tendermint module
         """
-        w3 = create_web3()
+        w3 = create_test_web3()
         assert hasattr(w3, "tendermint")
         # tendermint = cast(Tendermint, w3.tendermint)  # pylint: disable=no-member
         tendermint = w3.tendermint

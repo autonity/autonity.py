@@ -6,12 +6,11 @@ Web3 utility functions
 
 from autonity.tendermint import Tendermint
 
-from web3 import Web3, HTTPProvider
+import re
+from web3 import Web3
 from web3.providers import BaseProvider
 from web3.module import Module
 from typing import Dict, Sequence, Union, Optional, Type, Any, cast
-
-DEFAULT_URI = "https://rpc1.piccadilly.autonity.org:8545/"
 
 
 class Web3WithAutonity(Web3):
@@ -21,6 +20,27 @@ class Web3WithAutonity(Web3):
     """
 
     tendermint: Tendermint
+
+
+def web3_provider_for_endpoint(endpoint: str) -> BaseProvider:
+    """
+    Given an rpc endpoint, return an appropriate provider (https, ws,
+    or IPC). If identifier isn't a valid format of one of these three
+    types, throws an exception.
+    """
+    regex_http = re.compile(r"^(?:http)s?://")
+    if re.match(regex_http, endpoint) is not None:
+        return Web3.HTTPProvider(endpoint)
+
+    regex_ws = re.compile(r"^(?:ws)s?://")
+    if re.match(regex_ws, endpoint) is not None:
+        return Web3.WebsocketProvider(endpoint)
+
+    regex_ipc = re.compile("([^ !$`&*()+]|(\\[ !$`&*()+]))+\\.ipc")
+    if re.match(regex_ipc, endpoint) is not None:
+        return Web3.IPCProvider(endpoint)
+
+    raise ValueError(f"cannot determine provider for: {endpoint}")
 
 
 def create_web3(
@@ -34,7 +54,6 @@ def create_web3(
     type checking.
     """
 
-    provider = provider or HTTPProvider(DEFAULT_URI)
     external_modules = external_modules or {}
     external_modules["tendermint"] = Tendermint
     w3 = Web3(
@@ -45,12 +64,20 @@ def create_web3(
         **kwArgs,
     )
 
-    # Check the chain ID
+    # Check the chain ID and ensure it conforms to the Autonity
+    # standard.
     chain_id = w3.eth.chain_id
-    chain_id_str = parse_autonity_chain_id(chain_id)
-    print(f"Connected to {chain_id_str}")
+    _ = parse_autonity_chain_id(chain_id)
 
     return cast(Web3WithAutonity, w3)
+
+
+def create_web3_for_endpoint(endpoint: str, **kwArgs: Any) -> Web3WithAutonity:
+    """
+    Convenience function to create a Web3 object for a specific
+    endpoint URL.
+    """
+    return create_web3(web3_provider_for_endpoint(endpoint, **kwArgs))
 
 
 def parse_autonity_chain_id(chain_id: int) -> str:

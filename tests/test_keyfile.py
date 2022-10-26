@@ -4,13 +4,13 @@
 Keyfile tests
 """
 
-from unittest import TestCase
-
 from autonity.utils.keyfile import (
     PrivateKey,
     keyfile_create_from_private_key,
     keyfile_decrypt_private_key,
 )
+
+from unittest import TestCase
 
 
 class TestKeyfile(TestCase):
