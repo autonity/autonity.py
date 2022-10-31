@@ -13,7 +13,8 @@ from autonity.utils.keyfile import (
 from eth_account.account import Account, SignedTransaction  # type: ignore
 from web3 import Web3
 from web3.contract import ContractFunction
-from web3.types import ChecksumAddress, TxParams, Wei, Nonce, HexBytes
+from web3.types import ChecksumAddress, TxParams, TxReceipt, Wei, Nonce, HexBytes
+from typing import Optional
 
 # pylint: disable=too-many-arguments
 
@@ -74,3 +75,16 @@ def send_tx(w3: Web3, tx_signed: SignedTransaction) -> HexBytes:
     raw_tx = tx_signed.rawTransaction
     tx_hash = w3.eth.send_raw_transaction(raw_tx)
     return tx_hash
+
+
+def wait_for_tx(w3: Web3, tx_hash: HexBytes, timeout: Optional[float]) -> TxReceipt:
+    """
+    Wait for a specific transaction.  Returns the receipts.
+
+    This simply wraps Web3.eth.wait_for_transaction_receipt, but uses
+    stricter types (accepts only a HexBytes object).
+    """
+    if timeout is None:
+        return w3.eth.wait_for_transaction_receipt(tx_hash)
+
+    return w3.eth.wait_for_transaction_receipt(tx_hash, timeout=timeout)
