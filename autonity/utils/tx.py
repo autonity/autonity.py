@@ -4,11 +4,16 @@
 Transaction utility functions
 """
 
+from autonity.utils.keyfile import (
+    EncryptedKeyData,
+    PrivateKey,
+    decrypt_keyfile,
+)
+
 from eth_account.account import Account, SignedTransaction  # type: ignore
 from web3 import Web3
 from web3.contract import ContractFunction
 from web3.types import ChecksumAddress, TxParams, Wei, Nonce, HexBytes
-from typing import Dict, Any
 
 # pylint: disable=too-many-arguments
 
@@ -37,17 +42,28 @@ def unsigned_tx_from_contract_call(
     return call_tx_params
 
 
-def sign_tx(
-    tx: TxParams, keyfile_data: Dict[Any, Any], keyfile_passphrase: str
+def sign_tx_with_private_key(
+    tx: TxParams, private_key: PrivateKey
 ) -> SignedTransaction:
     """
-    Sign a transaction using the data from an encrypted keyfile and
-    password.  Returns a SignedTx.
+    For cases where the private key has already been decrypted.  (In
+    general, for signing single transactions `sign_tx` is
+    recommended.)
     """
-    private_key = Account.decrypt(keyfile_data, keyfile_passphrase)  # type: ignore
     return Account.sign_transaction(  # pylint: disable=no-value-for-parameter
         tx, private_key
     )
+
+
+def sign_tx(
+    tx: TxParams, key_data: EncryptedKeyData, key_passphrase: str
+) -> SignedTransaction:
+    """
+    Sign a transaction using the data from an encrypted keyfile and
+    password.
+    """
+    private_key = decrypt_keyfile(key_data, key_passphrase)
+    return sign_tx_with_private_key(tx, private_key)
 
 
 def send_tx(w3: Web3, tx_signed: SignedTransaction) -> HexBytes:

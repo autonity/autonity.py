@@ -10,22 +10,24 @@ import json
 from typing import Dict, NewType, Any, cast
 
 
-EncryptedKeyFile = NewType("EncryptedKeyFile", Dict[str, Any])
+EncryptedKeyData = NewType("EncryptedKeyData", Dict[str, Any])
 
 PrivateKey = NewType("PrivateKey", bytes)
 
 
-def keyfile_load(filename: str) -> EncryptedKeyFile:
+def load_keyfile(filename: str) -> EncryptedKeyData:
     """
     Load a keyfile.
     """
     with open(filename, "r", encoding="utf8") as keyfile_f:
-        return cast(EncryptedKeyFile, json.load(keyfile_f))
+        keyfile_json = json.load(keyfile_f)
+        # TODO: validate the json
+        return cast(EncryptedKeyData, keyfile_json)
 
 
-def keyfile_create_from_private_key(
+def create_keyfile_from_private_key(
     private_key: PrivateKey, password: str
-) -> EncryptedKeyFile:
+) -> EncryptedKeyData:
     """
     Create a keyfile (with encrypted private key) from a private key.
     """
@@ -33,9 +35,7 @@ def keyfile_create_from_private_key(
     return create_keyfile_json(private_key, password.encode("utf8"))
 
 
-def keyfile_decrypt_private_key(
-    encrypted_key: EncryptedKeyFile, password: str
-) -> PrivateKey:
+def decrypt_keyfile(encrypted_key: EncryptedKeyData, password: str) -> PrivateKey:
     """
     Decrypt the private key from a keyfile.
     """
