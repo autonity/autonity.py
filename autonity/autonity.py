@@ -80,6 +80,13 @@ class Autonity(ERC20):
                 f"local: {AUTONITY_CONTRACT_VERSION})"
             )
 
+    @staticmethod
+    def address() -> ChecksumAddress:
+        """
+        Return the deterministic address of the Autonity contract.
+        """
+        return Web3.toChecksumAddress(AUTONITY_CONTRACT_ADDRESS)
+
     def commission_rate_precision(self) -> int:
         """
         See `COMMISSION_RATE_PRECISION` on the Autonity contract.
