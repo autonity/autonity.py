@@ -9,9 +9,11 @@ from autonity.abi_manager import ABIManager
 
 from web3.contract import Contract, ABI
 from web3.exceptions import BadFunctionCallOutput
-from web3.types import Address, ChecksumAddress, TxParams, Wei, ABIFunction
+from web3.types import Address, ChecksumAddress, TxParams, Wei, Nonce, ABIFunction
 from web3 import Web3
 from typing import Union, Optional
+
+# pylint: disable=too-many-arguments
 
 
 NAME_FUNCTION: ABIFunction = {
@@ -125,25 +127,45 @@ class ERC20:
         return self.contract.functions.balanceOf(owner, spender).call()
 
     def transfer(
-        self, from_addr: ChecksumAddress, recipient: ChecksumAddress, amount: Wei
+        self,
+        from_addr: ChecksumAddress,
+        recipient: ChecksumAddress,
+        amount: Wei,
+        gas: Wei = Wei(0),
+        gas_price: Wei = Wei(0),
+        nonce: Nonce = Nonce(0),
     ) -> TxParams:
         """
         Create a transaction transferring `amount` (in Wei) from
         `from_addr` to `recipient`.
         """
         return unsigned_tx_from_contract_call(
-            self.contract.functions.transfer(recipient, amount), from_addr=from_addr
+            self.contract.functions.transfer(recipient, amount),
+            from_addr=from_addr,
+            gas=gas,
+            gas_price=gas_price,
+            nonce=nonce,
         )
 
     def approve(
-        self, from_addr: ChecksumAddress, spender: ChecksumAddress, amount: Wei
+        self,
+        from_addr: ChecksumAddress,
+        spender: ChecksumAddress,
+        amount: Wei,
+        gas: Wei = Wei(0),
+        gas_price: Wei = Wei(0),
+        nonce: Nonce = Nonce(0),
     ) -> TxParams:
         """
         Create a transaction granting `spender` permission to spend
         `amount` (in Wei) of tokens held by `from_addr`.
         """
         return unsigned_tx_from_contract_call(
-            self.contract.functions.approve(spender, amount), from_addr=from_addr
+            self.contract.functions.approve(spender, amount),
+            from_addr=from_addr,
+            gas=gas,
+            gas_price=gas_price,
+            nonce=nonce,
         )
 
     def transfer_from(
@@ -152,6 +174,9 @@ class ERC20:
         spender: ChecksumAddress,
         recipient: ChecksumAddress,
         amount: Wei,
+        gas: Wei = Wei(0),
+        gas_price: Wei = Wei(0),
+        nonce: Nonce = Nonce(0),
     ) -> TxParams:
         """
         Create a transaction transferring `amount` (in Wei) of the tokens
@@ -162,6 +187,9 @@ class ERC20:
         return unsigned_tx_from_contract_call(
             self.contract.functions.transferFrom(spender, recipient, amount),
             from_addr=from_addr,
+            gas=gas,
+            gas_price=gas_price,
+            nonce=nonce,
         )
 
     # TODO: expose events?

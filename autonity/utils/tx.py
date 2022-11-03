@@ -38,8 +38,9 @@ def unsigned_tx_from_contract_call(
     w3 = function.web3
     tx_params["gasPrice"] = gas_price or w3.eth.gas_price
     tx_params["nonce"] = nonce or w3.eth.get_transaction_count(from_addr)
+    if gas:
+        tx_params["gas"] = gas
     call_tx_params = function.buildTransaction(tx_params)
-    call_tx_params["gas"] = gas or function.web3.eth.estimate_gas(call_tx_params)
     return call_tx_params
 
 
