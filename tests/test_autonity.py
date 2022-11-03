@@ -7,9 +7,6 @@ Autonity contract tests
 from tests.common import create_test_web3
 
 from autonity.autonity import Autonity
-from autonity.config import Config
-from autonity.committee_member import CommitteeMember
-from autonity.validator import Validator
 
 from unittest import TestCase
 
@@ -29,7 +26,7 @@ class TestAutonity(TestCase):
 
         self.assertIsInstance(autonity.commission_rate_precision(), int)
         config = autonity.config()
-        self.assertIsInstance(config, Config)
+        self.assertIsInstance(config, dict)
         print(f"Autonity config: {config}")
 
         self.assertIsInstance(autonity.epoch_id(), int)
@@ -49,11 +46,11 @@ class TestAutonity(TestCase):
         self.assertIsInstance(autonity.get_version(), int)
         committee = autonity.get_committee()
         self.assertIsInstance(committee, list)
-        self.assertIsInstance(committee[0], CommitteeMember)
+        self.assertIsInstance(committee[0], dict)
         validators = autonity.get_validators()
         self.assertIsInstance(validators, list)
         self.assertIsInstance(validators[0], str)
-        self.assertIsInstance(autonity.get_validator(validators[0]), Validator)
+        self.assertIsInstance(autonity.get_validator(validators[0]), dict)
 
         self.assertIsInstance(autonity.get_max_committee_size(), int)
         committee_enodes = autonity.get_committee_enodes()

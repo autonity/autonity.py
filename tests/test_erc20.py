@@ -27,7 +27,7 @@ class TestERC20(TestCase):
 
         # Get some NTN holders
         validator_addrs = autonity.get_validators()
-        holders = [autonity.get_validator(val).treasury for val in validator_addrs]
+        holders = [autonity.get_validator(val)["treasury"] for val in validator_addrs]
         print(f"holders={holders}")
 
         # Use the autonity contract as an ERC20 token (Newton)

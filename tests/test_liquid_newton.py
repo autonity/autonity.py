@@ -6,7 +6,7 @@ LiquidNewton token tests
 
 from tests.common import create_test_web3
 
-from autonity.autonity import Autonity
+from autonity import Autonity, Validator
 
 from unittest import TestCase
 
@@ -26,7 +26,9 @@ class TestLiquidNewton(TestCase):
 
         # Get some NTN holders
         validator_addrs = autonity.get_validators()
-        validators = [autonity.get_validator(val) for val in validator_addrs]
+        validators = [
+            Validator(w3, autonity.get_validator(val)) for val in validator_addrs
+        ]
         holders = [val.treasury for val in validators]
 
         # Get the LiquidNewton contract for the first validator, and

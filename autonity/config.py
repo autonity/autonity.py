@@ -6,13 +6,11 @@ Models for Autonity contract configuration
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 from web3.types import ChecksumAddress
-from typing import Tuple
+from typing import TypedDict, Tuple
 
 
-@dataclass
-class Config:
+class Config(TypedDict):
     """
     Autonity configuration.
     """
@@ -28,23 +26,36 @@ class Config:
     contract_version: int
     block_period: int
 
-    @staticmethod
-    def from_tuple(
-        value: Tuple[
-            ChecksumAddress, ChecksumAddress, int, int, int, int, int, int, int, int
-        ]
-    ) -> Config:
-        """
-        Create from a Web3 tuple.
-        """
-        assert isinstance(value[0], str)
-        assert isinstance(value[1], str)
-        assert isinstance(value[2], int)
-        assert isinstance(value[3], int)
-        assert isinstance(value[4], int)
-        assert isinstance(value[5], int)
-        assert isinstance(value[6], int)
-        assert isinstance(value[7], int)
-        assert isinstance(value[8], int)
-        assert isinstance(value[9], int)
-        return Config(*value)
+
+def config_from_tuple(
+    value: Tuple[
+        ChecksumAddress, ChecksumAddress, int, int, int, int, int, int, int, int
+    ]
+) -> Config:
+    """
+    Create from a Web3 tuple.
+    """
+    assert isinstance(value[0], str)
+    assert isinstance(value[1], str)
+    assert isinstance(value[2], int)
+    assert isinstance(value[3], int)
+    assert isinstance(value[4], int)
+    assert isinstance(value[5], int)
+    assert isinstance(value[6], int)
+    assert isinstance(value[7], int)
+    assert isinstance(value[8], int)
+    assert isinstance(value[9], int)
+    return Config(
+        {
+            "operator_account": value[0],
+            "treasury_account": value[1],
+            "treasury_fee": value[2],
+            "min_basefee": value[3],
+            "delegation_rate": value[4],
+            "epoch_period": value[5],
+            "unbonding_period": value[6],
+            "committee_size": value[7],
+            "contract_version": value[8],
+            "block_period": value[9],
+        }
+    )

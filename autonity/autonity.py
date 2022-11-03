@@ -6,17 +6,20 @@ Python module holding the Autonity Web3.py external module
 
 from __future__ import annotations
 
-from autonity.config import Config
-from autonity.validator import Validator, ValidatorAddress
-from autonity.tendermint import CommitteeMember
+from autonity.config import Config, config_from_tuple
+from autonity.validator import (
+    validator_description_from_tuple,
+    ValidatorDescription,
+    ValidatorAddress,
+)
+from autonity.committee_member import CommitteeMember, committee_member_from_tuple
 from autonity.erc20 import ERC20
 from autonity.abi_manager import ABIManager
 from autonity.utils.tx import unsigned_tx_from_contract_call
 
-from dataclasses import dataclass
 from web3 import Web3
 from web3.types import ChecksumAddress, Wei, TxParams
-from typing import Sequence, Tuple, cast
+from typing import Sequence, TypedDict, Tuple, cast
 
 # pylint: disable=too-many-public-methods
 
@@ -31,8 +34,7 @@ with.
 AUTONITY_CONTRACT_ADDRESS = "0xBd770416a3345F91E4B34576cb804a576fa48EB1"
 
 
-@dataclass
-class Staking:
+class Staking(TypedDict):
     """
     Queued staking operations
     """
@@ -42,22 +44,24 @@ class Staking:
     amount: int
     start_block: int
 
-    @staticmethod
-    def from_tuple(value: Tuple[str, str, int, int]) -> Staking:
-        """
-        Create from a Web3 tuple.
-        """
-        assert len(value) == 4
-        assert isinstance(value[0], str)
-        assert isinstance(value[1], str)
-        assert isinstance(value[2], int)
-        assert isinstance(value[3], int)
-        return Staking(
-            cast(ChecksumAddress, value[0]),
-            cast(ChecksumAddress, value[1]),
-            value[2],
-            value[3],
-        )
+
+def staking_from_tuple(value: Tuple[str, str, int, int]) -> Staking:
+    """
+    Create Staking object from a Web3 tuple.
+    """
+    assert len(value) == 4
+    assert isinstance(value[0], str)
+    assert isinstance(value[1], str)
+    assert isinstance(value[2], int)
+    assert isinstance(value[3], int)
+    return Staking(
+        {
+            "delegator": cast(ChecksumAddress, value[0]),
+            "delegatee": cast(ChecksumAddress, value[1]),
+            "amount": value[2],
+            "start_block": value[3],
+        }
+    )
 
 
 class Autonity(ERC20):
@@ -75,8 +79,8 @@ class Autonity(ERC20):
         # Check the contract version
         if not disable_version_checks:
             config = self.config()
-            assert AUTONITY_CONTRACT_VERSION == config.contract_version, (
-                f"Autonity contract version mismatch (chain: {config.contract_version}, "
+            assert AUTONITY_CONTRACT_VERSION == config["contract_version"], (
+                f"Autonity contract version mismatch (chain: {config['contract_version']}, "
                 f"local: {AUTONITY_CONTRACT_VERSION})"
             )
 
@@ -97,7 +101,7 @@ class Autonity(ERC20):
         """
         See `config` on the Autonity contract.
         """
-        return Config.from_tuple(self.contract.functions.config().call())
+        return config_from_tuple(self.contract.functions.config().call())
 
     def epoch_id(self) -> int:
         """
@@ -176,7 +180,7 @@ class Autonity(ERC20):
         See `getCommittee` on the Autonity contract.
         """
         cms = self.contract.functions.getCommittee().call()
-        return [CommitteeMember.from_tuple(cm) for cm in cms]
+        return [committee_member_from_tuple(cm) for cm in cms]
 
     def get_validators(self) -> Sequence[ChecksumAddress]:
         """
@@ -184,13 +188,15 @@ class Autonity(ERC20):
         """
         return self.contract.functions.getValidators().call()
 
-    def get_validator(self, addr: ChecksumAddress) -> Validator:
+    def get_validator(self, addr: ChecksumAddress) -> ValidatorDescription:
         """
-        See `getValidator` on the Autonity contract.
+        See `getValidator` on the Autonity contract.  To interact with
+        validators, construct a `Validator` object from the returned
+        ValidatorDescription.
         """
         assert isinstance(addr, str)
         value = self.contract.functions.getValidator(addr).call()
-        return Validator.from_tuple(self.contract.web3, value)
+        return validator_description_from_tuple(value)
 
     def get_max_committee_size(self) -> int:
         """
@@ -228,7 +234,7 @@ class Autonity(ERC20):
         """
         result = self.contract.functions.getBondingReq(start_id, last_id).call()
         assert isinstance(result, list)
-        return [Staking.from_tuple(staking) for staking in result]
+        return [staking_from_tuple(staking) for staking in result]
 
     def get_unbonding_req(self, start_id: int, last_id: int) -> Sequence[Staking]:
         """
@@ -236,7 +242,7 @@ class Autonity(ERC20):
         """
         result = self.contract.functions.getUnbondingReq(start_id, last_id).call()
         assert isinstance(result, list)
-        return [Staking.from_tuple(staking) for staking in result]
+        return [staking_from_tuple(staking) for staking in result]
 
     def bond(
         self, from_addr: ChecksumAddress, validator_addr: ValidatorAddress, amount: Wei

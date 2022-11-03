@@ -63,7 +63,7 @@ class Tendermint(Module):
         """
         result = self._getCommittee(block_height)
         assert isinstance(result, list)
-        return [CommitteeMember.from_dict(cm) for cm in result]
+        return result
 
     def get_committee_at_hash(self, block_hash: bytes) -> Sequence[CommitteeMember]:
         """
