@@ -4,8 +4,9 @@
 Keyfile utility functions
 """
 
-
 from eth_keyfile import create_keyfile_json, decode_keyfile_json  # type: ignore
+from web3 import Web3
+from web3.types import ChecksumAddress
 import json
 from typing import Dict, NewType, Any, cast
 
@@ -33,6 +34,13 @@ def create_keyfile_from_private_key(
     """
     assert len(private_key) == 32
     return create_keyfile_json(private_key, password.encode("utf8"))
+
+
+def get_address_from_keyfile(encrypted_key: EncryptedKeyData) -> ChecksumAddress:
+    """
+    Given some keyfile data, extract the address.
+    """
+    return Web3.toChecksumAddress(encrypted_key["address"])
 
 
 def decrypt_keyfile(encrypted_key: EncryptedKeyData, password: str) -> PrivateKey:
