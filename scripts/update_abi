@@ -1,10 +1,15 @@
 #!/usr/bin/env bash
 
 #Path to the autonity source code
-AUTONITY_PATH=../autonity-internal
+AUTONITY_PATH=../../../autonity-internal
+
+mkdir -p autonity/abi/temp
+solc --abi -o autonity/abi/temp --overwrite ${AUTONITY_PATH}/autonity/solidity/contracts/Autonity.sol
 
 mkdir -p autonity/abi
-solc --abi -o autonity/abi --overwrite ${AUTONITY_PATH}/autonity/solidity/contracts/Autonity.sol
+for i in `ls autonity/abi/temp/*.abi` ; do
+    cat $i | json_pp > autonity/abi/${i##*/}
+done
 
 echo
 echo "============================================================"
