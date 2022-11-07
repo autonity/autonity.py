@@ -15,13 +15,13 @@ from autonity.validator import (
 from autonity.committee_member import CommitteeMember, committee_member_from_tuple
 from autonity.erc20 import ERC20
 from autonity.abi_manager import ABIManager
-from autonity.utils.tx import unsigned_tx_from_contract_call
 
 from web3 import Web3
 from web3.types import ChecksumAddress, Wei, TxParams
-from typing import Sequence, TypedDict, Tuple, cast
+from typing import Sequence, TypedDict, Tuple, Optional, cast
 
 # pylint: disable=too-many-public-methods
+# pylint: disable=too-many-arguments
 
 AUTONITY_CONTRACT_VERSION = 2
 """
@@ -245,70 +245,81 @@ class Autonity(ERC20):
         return [staking_from_tuple(staking) for staking in result]
 
     def bond(
-        self, from_addr: ChecksumAddress, validator_addr: ValidatorAddress, amount: Wei
+        self,
+        validator_addr: ValidatorAddress,
+        amount: Wei,
+        tx: Optional[TxParams] = None,
     ) -> TxParams:
         """
         Create a TxParams calling the `bond` method.  See `bond` on the
         Autonity contract.
         """
-        return unsigned_tx_from_contract_call(
-            self.contract.functions.bond(validator_addr, amount), from_addr=from_addr
-        )
+        return self.contract.functions.bond(validator_addr, amount).buildTransaction(tx)
 
     def unbond(
-        self, from_addr: ChecksumAddress, validator_addr: ValidatorAddress, amount: int
+        self,
+        validator_addr: ValidatorAddress,
+        amount: int,
+        tx: Optional[TxParams] = None,
     ) -> TxParams:
         """
         Create a TxParams calling the `unbond` method.  See `unbond` on
         the Autonity contract.
         """
-        return unsigned_tx_from_contract_call(
-            self.contract.functions.unbond(validator_addr, amount), from_addr=from_addr
+        return self.contract.functions.unbond(validator_addr, amount).buildTransaction(
+            tx
         )
 
-    def register_validator(self, from_addr: ChecksumAddress, enode: str) -> TxParams:
+    def register_validator(
+        self,
+        enode: str,
+        tx: Optional[TxParams] = None,
+    ) -> TxParams:
         """
         Create a TxParams calling the `registerValidator` method.  See
         `registerValidator` on the Autonity contract.
         """
-        return unsigned_tx_from_contract_call(
-            self.contract.functions.registerValidator(enode), from_addr=from_addr
-        )
+        return self.contract.functions.registerValidator(enode).buildTransaction(tx)
 
     def pause_validator(
-        self, from_addr: ChecksumAddress, validator_addr: ValidatorAddress
+        self,
+        validator_addr: ValidatorAddress,
+        tx: Optional[TxParams] = None,
     ) -> TxParams:
         """
         Create a TxParams calling the `pauseValidator` method.  See
         `pauseValidator` on the Autonity contract.
         """
-        return unsigned_tx_from_contract_call(
-            self.contract.functions.pauseValidator(validator_addr), from_addr=from_addr
+        return self.contract.functions.pauseValidator(validator_addr).buildTransaction(
+            tx
         )
 
     def activate_validator(
-        self, from_addr: ChecksumAddress, validator_addr: ValidatorAddress
+        self,
+        validator_addr: ValidatorAddress,
+        tx: Optional[TxParams] = None,
     ) -> TxParams:
         """
         Create a TxParams calling the `activateValidator` method.  See
         `activateValidator` on the Autonity contract.
         """
-        return unsigned_tx_from_contract_call(
-            self.contract.functions.activateValidator(validator_addr),
-            from_addr=from_addr,
-        )
+        return self.contract.functions.activateValidator(
+            validator_addr
+        ).buildTransaction(tx)
 
     def change_commissionrate(
-        self, from_addr: ChecksumAddress, validator: ValidatorAddress, rate: int
+        self,
+        validator: ValidatorAddress,
+        rate: int,
+        tx: Optional[TxParams] = None,
     ) -> TxParams:
         """
         Create a TxParams calling the `changeCommissionRate` method.  See
         `changeCommissionRate` on the Autonity contract.
         """
-        return unsigned_tx_from_contract_call(
-            self.contract.functions.changeCommissionRate(validator, rate),
-            from_addr=from_addr,
-        )
+        return self.contract.functions.changeCommissionRate(
+            validator, rate
+        ).buildTransaction(tx)
 
     # TODO: events
 

@@ -14,7 +14,7 @@ from eth_account.account import Account, SignedTransaction  # type: ignore
 from web3 import Web3
 from web3.contract import ContractFunction
 from web3.types import ChecksumAddress, TxParams, TxReceipt, Wei, Nonce, HexBytes
-from typing import Optional
+from typing import Callable, Optional
 
 # pylint: disable=too-many-arguments
 
@@ -42,6 +42,92 @@ def unsigned_tx_from_contract_call(
         tx_params["gas"] = gas
     call_tx_params = function.buildTransaction(tx_params)
     return call_tx_params
+
+
+def prepare_transaction(
+    from_addr: Optional[ChecksumAddress] = None,
+    gas: Optional[Wei] = None,
+    gas_price: Optional[Wei] = None,
+    max_fee_per_gas: Optional[Wei] = None,
+    max_priority_fee_per_gas: Optional[Wei] = None,
+    nonce: Optional[Nonce] = None,
+    chain_id: Optional[int] = None,
+) -> TxParams:
+    """
+    Optionally set some fields on a TxParams object.  This can then be
+    passed to contract call methods, and then any remaining fields set
+    with finalize_transaction.
+    """
+    tx: TxParams = {}
+
+    if from_addr:
+        tx["from"] = from_addr
+
+    if nonce:
+        tx["nonce"] = nonce
+
+    if gas:
+        tx["gas"] = gas
+
+    if chain_id:
+        tx["chainId"] = chain_id
+
+    # Require either gas_price OR max_fee_per_gas, etc
+
+    if gas_price:
+        if max_fee_per_gas or max_priority_fee_per_gas:
+            raise ValueError("-gas price cannot be used with other fee parameters")
+        tx["gasPrice"] = gas_price
+    else:
+        if max_fee_per_gas:
+            tx["maxFeePerGas"] = max_fee_per_gas
+        else:
+            raise ValueError("No gas fee parameters given.")
+
+        if max_priority_fee_per_gas:
+            tx["maxPriorityFeePerGas"] = max_priority_fee_per_gas
+        else:
+            tx["maxPriorityFeePerGas"] = tx["maxFeePerGas"]
+
+    return tx
+
+
+# TODO: consider a new FinalizedTxParams  type.
+
+
+def finalize_transaction(
+    create_w3: Callable[[], Web3],
+    tx: TxParams,
+    from_addr: Optional[ChecksumAddress],
+) -> TxParams:
+    """
+    Fill in any values not already set.  If necessary, a Web3 object
+    will be created via the create_w3 callback.
+    """
+
+    w3: Optional[Web3] = None
+
+    def get_web3() -> Web3:
+        nonlocal w3
+        if not w3:
+            w3 = create_w3()
+        return w3
+
+    if "gas" not in tx:
+        w3 = get_web3()
+        tx["gas"] = w3.eth.estimateGas(tx)
+
+    if "nonce" not in tx:
+        if not from_addr:
+            raise ValueError("neither nonce or from-address given")
+        w3 = get_web3()
+        tx["nonce"] = w3.eth.get_transaction_count(from_addr)
+
+    if "chainId" not in tx:
+        w3 = get_web3()
+        tx["chainId"] = w3.eth.chain_id
+
+    return tx
 
 
 def sign_tx_with_private_key(

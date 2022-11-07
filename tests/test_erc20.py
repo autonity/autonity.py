@@ -4,11 +4,14 @@
 ERC20 token tests
 """
 
-from tests.common import create_test_web3
+from tests.common import create_test_web3, ALICE, BOB, CAROL
 
+from autonity.utils.tx import prepare_transaction, finalize_transaction
 from autonity.autonity import Autonity
 from autonity.erc20 import ERC20
 
+from web3 import Web3
+from web3.types import Wei
 from unittest import TestCase
 
 
@@ -45,3 +48,43 @@ class TestERC20(TestCase):
             balance = token.balance_of(holder)
             self.assertTrue(isinstance(balance, int))
             print(f"  {holder}: {balance}")
+
+    def test_erc20_txs(self) -> None:
+        """
+        Check calls to transaction creation methods.
+        """
+
+        w3 = create_test_web3()
+        autonity = Autonity(w3)
+        token = ERC20(w3, autonity.contract.address)
+
+        alice = Web3.toChecksumAddress(ALICE)
+        bob = Web3.toChecksumAddress(BOB)
+        carol = Web3.toChecksumAddress(CAROL)
+
+        # Alice to Bob
+        transfer_tx = prepare_transaction(
+            from_addr=alice, gas=Wei(10000), gas_price=Wei(10000)
+        )
+        transfer_tx = token.transfer(bob, Wei(1), transfer_tx)
+        transfer_tx = finalize_transaction(
+            create_w3=lambda: w3, tx=transfer_tx, from_addr=alice
+        )
+
+        # Bob approves Alice to control 1000
+        approve_tx = prepare_transaction(
+            from_addr=bob, gas=Wei(50000), gas_price=Wei(30000)
+        )
+        approve_tx = token.approve(alice, Wei(1000), approve_tx)
+        approve_tx = finalize_transaction(
+            create_w3=lambda: w3, tx=approve_tx, from_addr=bob
+        )
+
+        # Alice uses 500 of the 1000 approved
+        transfer_from_tx = prepare_transaction(
+            from_addr=alice, gas=Wei(9000), gas_price=Wei(5000)
+        )
+        transfer_from_tx = token.transfer_from(alice, carol, Wei(500), transfer_from_tx)
+        transfer_from_tx = finalize_transaction(
+            create_w3=lambda: w3, tx=transfer_from_tx, from_addr=alice
+        )
