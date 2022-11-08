@@ -69,13 +69,11 @@ def create_transaction(
     else:
         if max_fee_per_gas:
             tx["maxFeePerGas"] = max_fee_per_gas
-        else:
-            raise ValueError("No gas fee parameters given.")
 
-        if max_priority_fee_per_gas:
-            tx["maxPriorityFeePerGas"] = max_priority_fee_per_gas
-        else:
-            tx["maxPriorityFeePerGas"] = tx["maxFeePerGas"]
+            if max_priority_fee_per_gas:
+                tx["maxPriorityFeePerGas"] = max_priority_fee_per_gas
+            else:
+                tx["maxPriorityFeePerGas"] = tx["maxFeePerGas"]
 
     return tx
 
