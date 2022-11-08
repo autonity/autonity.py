@@ -297,7 +297,7 @@ class Autonity(ERC20):
         """
         return self.contract.functions.activateValidator(validator_addr)
 
-    def change_commissionrate(
+    def change_commission_rate(
         self,
         validator: ValidatorAddress,
         rate: int,
