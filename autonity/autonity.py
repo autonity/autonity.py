@@ -17,8 +17,9 @@ from autonity.erc20 import ERC20
 from autonity.abi_manager import ABIManager
 
 from web3 import Web3
-from web3.types import ChecksumAddress, Wei, TxParams
-from typing import Sequence, TypedDict, Tuple, Optional, cast
+from web3.contract import ContractFunction
+from web3.types import ChecksumAddress, Wei
+from typing import Sequence, TypedDict, Tuple, cast
 
 # pylint: disable=too-many-public-methods
 # pylint: disable=too-many-arguments
@@ -248,78 +249,64 @@ class Autonity(ERC20):
         self,
         validator_addr: ValidatorAddress,
         amount: Wei,
-        tx: Optional[TxParams] = None,
-    ) -> TxParams:
+    ) -> ContractFunction:
         """
         Create a TxParams calling the `bond` method.  See `bond` on the
         Autonity contract.
         """
-        return self.contract.functions.bond(validator_addr, amount).buildTransaction(tx)
+        return self.contract.functions.bond(validator_addr, amount)
 
     def unbond(
         self,
         validator_addr: ValidatorAddress,
         amount: int,
-        tx: Optional[TxParams] = None,
-    ) -> TxParams:
+    ) -> ContractFunction:
         """
         Create a TxParams calling the `unbond` method.  See `unbond` on
         the Autonity contract.
         """
-        return self.contract.functions.unbond(validator_addr, amount).buildTransaction(
-            tx
-        )
+        return self.contract.functions.unbond(validator_addr, amount)
 
     def register_validator(
         self,
         enode: str,
-        tx: Optional[TxParams] = None,
-    ) -> TxParams:
+    ) -> ContractFunction:
         """
         Create a TxParams calling the `registerValidator` method.  See
         `registerValidator` on the Autonity contract.
         """
-        return self.contract.functions.registerValidator(enode).buildTransaction(tx)
+        return self.contract.functions.registerValidator(enode)
 
     def pause_validator(
         self,
         validator_addr: ValidatorAddress,
-        tx: Optional[TxParams] = None,
-    ) -> TxParams:
+    ) -> ContractFunction:
         """
         Create a TxParams calling the `pauseValidator` method.  See
         `pauseValidator` on the Autonity contract.
         """
-        return self.contract.functions.pauseValidator(validator_addr).buildTransaction(
-            tx
-        )
+        return self.contract.functions.pauseValidator(validator_addr)
 
     def activate_validator(
         self,
         validator_addr: ValidatorAddress,
-        tx: Optional[TxParams] = None,
-    ) -> TxParams:
+    ) -> ContractFunction:
         """
         Create a TxParams calling the `activateValidator` method.  See
         `activateValidator` on the Autonity contract.
         """
-        return self.contract.functions.activateValidator(
-            validator_addr
-        ).buildTransaction(tx)
+        return self.contract.functions.activateValidator(validator_addr)
 
     def change_commissionrate(
         self,
         validator: ValidatorAddress,
         rate: int,
-        tx: Optional[TxParams] = None,
-    ) -> TxParams:
+    ) -> ContractFunction:
         """
         Create a TxParams calling the `changeCommissionRate` method.  See
         `changeCommissionRate` on the Autonity contract.
         """
-        return self.contract.functions.changeCommissionRate(
-            validator, rate
-        ).buildTransaction(tx)
+        return self.contract.functions.changeCommissionRate(validator, rate)
 
     # TODO: events
 

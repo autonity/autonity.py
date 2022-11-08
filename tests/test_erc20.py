@@ -6,7 +6,7 @@ ERC20 token tests
 
 from tests.common import create_test_web3, ALICE, BOB, CAROL
 
-from autonity.utils.tx import prepare_transaction, finalize_transaction
+from autonity.utils.tx import create_contract_function_transaction
 from autonity.autonity import Autonity
 from autonity.erc20 import ERC20
 
@@ -63,28 +63,28 @@ class TestERC20(TestCase):
         carol = Web3.toChecksumAddress(CAROL)
 
         # Alice to Bob
-        transfer_tx = prepare_transaction(
-            from_addr=alice, gas=Wei(10000), gas_price=Wei(10000)
+        transfer_tx = create_contract_function_transaction(
+            function=token.transfer(bob, Wei(1)),
+            from_addr=alice,
+            gas=Wei(10000),
+            gas_price=Wei(10000),
         )
-        transfer_tx = token.transfer(bob, Wei(1), transfer_tx)
-        transfer_tx = finalize_transaction(
-            create_w3=lambda: w3, tx=transfer_tx, from_addr=alice
-        )
+        self.assertTrue(transfer_tx)
 
         # Bob approves Alice to control 1000
-        approve_tx = prepare_transaction(
-            from_addr=bob, gas=Wei(50000), gas_price=Wei(30000)
+        approve_tx = create_contract_function_transaction(
+            function=token.approve(alice, Wei(1000)),
+            from_addr=bob,
+            gas=Wei(50000),
+            gas_price=Wei(30000),
         )
-        approve_tx = token.approve(alice, Wei(1000), approve_tx)
-        approve_tx = finalize_transaction(
-            create_w3=lambda: w3, tx=approve_tx, from_addr=bob
-        )
+        self.assertTrue(approve_tx)
 
         # Alice uses 500 of the 1000 approved
-        transfer_from_tx = prepare_transaction(
-            from_addr=alice, gas=Wei(9000), gas_price=Wei(5000)
+        transfer_from_tx = create_contract_function_transaction(
+            function=token.transfer_from(alice, carol, Wei(500)),
+            from_addr=alice,
+            gas=Wei(9000),
+            gas_price=Wei(5000),
         )
-        transfer_from_tx = token.transfer_from(alice, carol, Wei(500), transfer_from_tx)
-        transfer_from_tx = finalize_transaction(
-            create_w3=lambda: w3, tx=transfer_from_tx, from_addr=alice
-        )
+        self.assertTrue(transfer_from_tx)

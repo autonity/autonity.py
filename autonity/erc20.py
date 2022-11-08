@@ -6,9 +6,9 @@ Model for an ERC20 token
 
 from autonity.abi_manager import ABIManager
 
-from web3.contract import Contract, ABI
+from web3.contract import Contract, ABI, ContractFunction
 from web3.exceptions import BadFunctionCallOutput
-from web3.types import Address, ChecksumAddress, TxParams, Wei, ABIFunction
+from web3.types import Address, ChecksumAddress, Wei, ABIFunction
 from web3 import Web3
 from typing import Union, Optional
 
@@ -129,42 +129,37 @@ class ERC20:
         self,
         recipient: ChecksumAddress,
         amount: Wei,
-        tx: Optional[TxParams] = None,
-    ) -> TxParams:
+    ) -> ContractFunction:
         """
         Create a transaction transferring `amount` (in Wei) to
         `recipient`.
         """
-        return self.contract.functions.transfer(recipient, amount).buildTransaction(tx)
+        return self.contract.functions.transfer(recipient, amount)
 
     def approve(
         self,
         spender: ChecksumAddress,
         amount: Wei,
-        tx: Optional[TxParams] = None,
-    ) -> TxParams:
+    ) -> ContractFunction:
         """
         Create a transaction granting `spender` permission to spend
         `amount` (in Wei) of tokens held by `from_addr`.
         """
-        return self.contract.functions.approve(spender, amount).buildTransaction(tx)
+        return self.contract.functions.approve(spender, amount)
 
     def transfer_from(
         self,
         spender: ChecksumAddress,
         recipient: ChecksumAddress,
         amount: Wei,
-        tx: Optional[TxParams] = None,
-    ) -> TxParams:
+    ) -> ContractFunction:
         """
         Create a transaction transferring `amount` (in Wei) of the tokens
         held by `spender` to `recipient`.  `spender` must previously
         have granted `from_addr` permission to spend these tokens, via
         an `approve` transaction.
         """
-        return self.contract.functions.transferFrom(
-            spender, recipient, amount
-        ).buildTransaction(tx)
+        return self.contract.functions.transferFrom(spender, recipient, amount)
 
     # TODO: expose events?
     #   event Transfer(address indexed from, address indexed to, uint256 value);

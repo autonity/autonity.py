@@ -19,33 +19,9 @@ from typing import Callable, Optional
 # pylint: disable=too-many-arguments
 
 
-def unsigned_tx_from_contract_call(
-    function: ContractFunction,
-    from_addr: ChecksumAddress,
-    value: Wei = Wei(0),
-    gas: Wei = Wei(0),
-    gas_price: Wei = Wei(0),
-    nonce: Nonce = Nonce(0),
-) -> TxParams:
-    """
-    Given a contract call and other parameters, create an unsigned
-    transaction (Web3 TxParams object).
-    """
-    tx_params: TxParams = {"from": from_addr}
-    if value:
-        tx_params["value"] = value
-
-    w3 = function.web3
-    tx_params["gasPrice"] = gas_price or w3.eth.gas_price
-    tx_params["nonce"] = nonce or w3.eth.get_transaction_count(from_addr)
-    if gas:
-        tx_params["gas"] = gas
-    call_tx_params = function.buildTransaction(tx_params)
-    return call_tx_params
-
-
-def prepare_transaction(
+def create_transaction(
     from_addr: Optional[ChecksumAddress] = None,
+    value: Wei = Wei(0),
     gas: Optional[Wei] = None,
     gas_price: Optional[Wei] = None,
     max_fee_per_gas: Optional[Wei] = None,
@@ -72,6 +48,9 @@ def prepare_transaction(
     if chain_id:
         tx["chainId"] = chain_id
 
+    if value:
+        tx["value"] = value
+
     # Require either gas_price OR max_fee_per_gas, etc
 
     if gas_price:
@@ -92,7 +71,34 @@ def prepare_transaction(
     return tx
 
 
-# TODO: consider a new FinalizedTxParams  type.
+def create_contract_function_transaction(
+    function: ContractFunction,
+    from_addr: ChecksumAddress,
+    value: Wei = Wei(0),
+    gas: Wei = Wei(0),
+    gas_price: Wei = Wei(0),
+    max_fee_per_gas: Optional[Wei] = None,
+    max_priority_fee_per_gas: Optional[Wei] = None,
+    nonce: Nonce = Nonce(0),
+    chain_id: Optional[int] = None,
+) -> TxParams:
+    """
+    Given a contract call and other parameters, create an unsigned
+    transaction (Web3 TxParams object).  Any fields not passed in will
+    be filled out by querying the attached node, if available.
+    """
+    tx = create_transaction(
+        from_addr=from_addr,
+        value=value,
+        gas=gas,
+        gas_price=gas_price,
+        max_fee_per_gas=max_fee_per_gas,
+        max_priority_fee_per_gas=max_priority_fee_per_gas,
+        nonce=nonce,
+        chain_id=chain_id,
+    )
+
+    return function.buildTransaction(tx)
 
 
 def finalize_transaction(
