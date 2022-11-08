@@ -17,11 +17,14 @@ from web3.types import ChecksumAddress, TxParams, TxReceipt, Wei, Nonce, HexByte
 from typing import Callable, Optional
 
 # pylint: disable=too-many-arguments
+# pylint: disable=too-many-branches
 
 
 def create_transaction(
     from_addr: Optional[ChecksumAddress] = None,
-    value: Wei = Wei(0),
+    to_addr: Optional[ChecksumAddress] = None,
+    value: Optional[Wei] = None,
+    data: Optional[HexBytes] = None,
     gas: Optional[Wei] = None,
     gas_price: Optional[Wei] = None,
     max_fee_per_gas: Optional[Wei] = None,
@@ -39,6 +42,15 @@ def create_transaction(
     if from_addr:
         tx["from"] = from_addr
 
+    if to_addr:
+        tx["to"] = to_addr
+
+    if value:
+        tx["value"] = value
+
+    if data:
+        tx["data"] = data
+
     if nonce:
         tx["nonce"] = nonce
 
@@ -48,14 +60,11 @@ def create_transaction(
     if chain_id:
         tx["chainId"] = chain_id
 
-    if value:
-        tx["value"] = value
-
     # Require either gas_price OR max_fee_per_gas, etc
 
     if gas_price:
         if max_fee_per_gas or max_priority_fee_per_gas:
-            raise ValueError("-gas price cannot be used with other fee parameters")
+            raise ValueError("gas price cannot be used with other fee parameters")
         tx["gasPrice"] = gas_price
     else:
         if max_fee_per_gas:
@@ -74,12 +83,12 @@ def create_transaction(
 def create_contract_function_transaction(
     function: ContractFunction,
     from_addr: ChecksumAddress,
-    value: Wei = Wei(0),
-    gas: Wei = Wei(0),
-    gas_price: Wei = Wei(0),
+    value: Optional[Wei] = None,
+    gas: Optional[Wei] = None,
+    gas_price: Optional[Wei] = None,
     max_fee_per_gas: Optional[Wei] = None,
     max_priority_fee_per_gas: Optional[Wei] = None,
-    nonce: Nonce = Nonce(0),
+    nonce: Optional[Nonce] = None,
     chain_id: Optional[int] = None,
 ) -> TxParams:
     """
