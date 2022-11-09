@@ -10,6 +10,5 @@ Top-level Autonity module exposing primary types.
 from autonity.autonity import Autonity, AUTONITY_CONTRACT_VERSION
 from autonity.config import Config
 from autonity.committee_member import CommitteeMember
-from autonity.validator import ValidatorDescription, Validator
-from autonity.liquid_newton import LiquidNewton
+from autonity.validator import ValidatorDescriptor, Validator
 from autonity.tendermint import Tendermint

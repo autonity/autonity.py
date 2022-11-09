@@ -7,12 +7,15 @@ Model holding Validator information.
 from __future__ import annotations
 
 from autonity.liquid_newton import LiquidNewton
+from autonity.erc20 import ERC20
 
 from enum import IntEnum
-from dataclasses import dataclass
 from web3 import Web3
-from web3.types import ChecksumAddress
+from web3.types import ChecksumAddress, Wei
+from web3.contract import ContractFunction
 from typing import TypedDict, NewType, Tuple
+
+# pylint: disable=too-many-instance-attributes
 
 
 ValidatorAddress = NewType("ValidatorAddress", ChecksumAddress)
@@ -27,7 +30,7 @@ class ValidatorState(IntEnum):
     PAUSED = 1
 
 
-class ValidatorDescription(TypedDict):
+class ValidatorDescriptor(TypedDict):
     """
     Dictionary representing the description of a Validator
     """
@@ -44,7 +47,7 @@ class ValidatorDescription(TypedDict):
     state: ValidatorState
 
 
-def validator_description_from_tuple(
+def validator_descriptor_from_tuple(
     value: Tuple[
         ChecksumAddress,
         ValidatorAddress,
@@ -57,7 +60,7 @@ def validator_description_from_tuple(
         int,
         ValidatorState,
     ]
-) -> ValidatorDescription:
+) -> ValidatorDescriptor:
 
     """
     Create an instance from the tuple returned by Web3 contract calls.
@@ -74,7 +77,7 @@ def validator_description_from_tuple(
     assert isinstance(value[8], int)
     assert isinstance(value[9], int)
 
-    return ValidatorDescription(
+    return ValidatorDescriptor(
         {
             "treasury": value[0],
             "addr": value[1],
@@ -90,31 +93,49 @@ def validator_description_from_tuple(
     )
 
 
-@dataclass
 class Validator:
     """
     Information held about a Validator.
     """
 
     treasury: ChecksumAddress
-    addr: ValidatorAddress
+    address: ValidatorAddress
     enode: str
     commission_rate: int
     bonded_stake: int
     total_slashed: int
-    liquid_contract: LiquidNewton
+    lnew_contract: ERC20
     liquid_supply: int
     registration_block: int
     state: ValidatorState
 
-    def __init__(self, w3: Web3, vdesc: ValidatorDescription):
+    _liquid_contract: LiquidNewton
+    """
+    Internally this provides access to the extra functions.  Publicly,
+    LNEW is exposed as a plain ERC20 token, via lnew_contract.
+    """
+
+    def __init__(self, w3: Web3, vdesc: ValidatorDescriptor):
         self.treasury = vdesc["treasury"]
-        self.addr = vdesc["addr"]
+        self.address = vdesc["addr"]
         self.enode = vdesc["enode"]
         self.commission_rate = vdesc["commission_rate"]
         self.bonded_stake = vdesc["bonded_stake"]
         self.total_slashed = vdesc["total_slashed"]
-        self.liquid_contract = LiquidNewton(w3, vdesc["liquid_contract"])
+        self._liquid_contract = LiquidNewton(w3, vdesc["liquid_contract"])
+        self.lnew_contract = self._liquid_contract
         self.liquid_supply = vdesc["liquid_supply"]
         self.registration_block = vdesc["registration_block"]
         self.state = vdesc["state"]
+
+    def unclaimed_rewards(self, account: ChecksumAddress) -> Wei:
+        """
+        Query the rewards for this validator, claimable by `account`.
+        """
+        return self._liquid_contract.unclaimed_rewards(account)
+
+    def claim_rewards(self) -> ContractFunction:
+        """
+        Create a ContractFunction to claim the rewards due to th call, from this validator.
+        """
+        return self._liquid_contract.claim_rewards()

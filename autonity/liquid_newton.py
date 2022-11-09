@@ -16,6 +16,13 @@ from web3.types import Wei, ChecksumAddress
 class LiquidNewton(ERC20):
     """
     The LiquidNewton contract.
+
+    This is intended for internal use only. The naming mirrors
+    the LiquidNewton contract in the Autonity code, but it's not very
+    intuitive to have methods such as "claim_rewards" on a Token.
+    Rather, this is more logically exposed by the Validator class.
+
+    TODO: review this API (here and in the Autonity contracts).
     """
 
     def __init__(self, web3: Web3, address: ChecksumAddress):

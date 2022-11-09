@@ -8,8 +8,8 @@ from __future__ import annotations
 
 from autonity.config import Config, config_from_tuple
 from autonity.validator import (
-    validator_description_from_tuple,
-    ValidatorDescription,
+    validator_descriptor_from_tuple,
+    ValidatorDescriptor,
     ValidatorAddress,
 )
 from autonity.committee_member import CommitteeMember, committee_member_from_tuple
@@ -189,7 +189,7 @@ class Autonity(ERC20):
         """
         return self.contract.functions.getValidators().call()
 
-    def get_validator(self, addr: ChecksumAddress) -> ValidatorDescription:
+    def get_validator(self, addr: ChecksumAddress) -> ValidatorDescriptor:
         """
         See `getValidator` on the Autonity contract.  To interact with
         validators, construct a `Validator` object from the returned
@@ -197,7 +197,7 @@ class Autonity(ERC20):
         """
         assert isinstance(addr, str)
         value = self.contract.functions.getValidator(addr).call()
-        return validator_description_from_tuple(value)
+        return validator_descriptor_from_tuple(value)
 
     def get_max_committee_size(self) -> int:
         """
