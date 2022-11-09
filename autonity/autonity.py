@@ -297,16 +297,18 @@ class Autonity(ERC20):
         """
         return self.contract.functions.activateValidator(validator_addr)
 
-    def change_commission_rate(
-        self,
-        validator: ValidatorAddress,
-        rate: int,
-    ) -> ContractFunction:
-        """
-        Create a TxParams calling the `changeCommissionRate` method.  See
-        `changeCommissionRate` on the Autonity contract.
-        """
-        return self.contract.functions.changeCommissionRate(validator, rate)
+    # TODO: enable when this is available.
+
+    # def change_commission_rate(
+    #     self,
+    #     validator: ValidatorAddress,
+    #     rate: int,
+    # ) -> ContractFunction:
+    #     """
+    #     Create a TxParams calling the `changeCommissionRate` method.  See
+    #     `changeCommissionRate` on the Autonity contract.
+    #     """
+    #     return self.contract.functions.changeCommissionRate(validator, rate)
 
     # TODO: events
 
