@@ -14,6 +14,7 @@ from eth_account.account import Account, SignedTransaction  # type: ignore
 from web3 import Web3
 from web3.contract import ContractFunction
 from web3.types import ChecksumAddress, TxParams, TxReceipt, Wei, Nonce, HexBytes
+from web3._utils.transactions import fill_transaction_defaults
 from typing import Callable, Optional
 
 # pylint: disable=too-many-arguments
@@ -139,6 +140,19 @@ def finalize_transaction(
     if "chainId" not in tx:
         w3 = get_web3()
         tx["chainId"] = w3.eth.chain_id
+
+    if "gasPrice" not in tx and "maxFeePerGas" not in tx:
+        tx = fill_transaction_defaults(get_web3(), tx)
+
+    # The code above to fill defaults introduces an (unserializable)
+    # empty bytes() in the "data" field.
+
+    if "data" in tx:
+        data = tx["data"]
+        if len(data) == 0:
+            del tx["data"]
+        elif isinstance(data, bytes):
+            tx["data"] = HexBytes(data).hex()
 
     return tx
 
