@@ -14,8 +14,7 @@ where = [ "." ]
 exclude = [ "tests" ]
 
 [tool.setuptools.package-data]
-"autonity.abi" = [ "autonity/abi/*.abi" ]
-"autonity" = [ "autonity/py.typed" ]
+"autonity" = [ "abi/*.abi", "py.typed" ]
 
 [project.optional-dependencies]
 "dev" = [
