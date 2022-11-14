@@ -152,7 +152,7 @@ def finalize_transaction(
         if len(data) == 0:
             del tx["data"]
         elif isinstance(data, bytes):
-            tx["data"] = HexBytes(data).hex()
+            tx["data"] = Web3.toHex(data)
 
     return tx
 
