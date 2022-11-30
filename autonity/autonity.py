@@ -18,7 +18,7 @@ from autonity.abi_manager import ABIManager
 
 from web3 import Web3
 from web3.contract import ContractFunction
-from web3.types import ChecksumAddress, Wei
+from web3.types import ChecksumAddress, Wei, HexBytes
 from typing import Sequence, TypedDict, Tuple, cast
 
 # pylint: disable=too-many-public-methods
@@ -261,15 +261,12 @@ class Autonity(ERC20):
         """
         return self.contract.functions.unbond(validator_addr, amount)
 
-    def register_validator(
-        self,
-        enode: str,
-    ) -> ContractFunction:
+    def register_validator(self, enode: str, proof: HexBytes) -> ContractFunction:
         """
         Create a TxParams calling the `registerValidator` method.  See
         `registerValidator` on the Autonity contract.
         """
-        return self.contract.functions.registerValidator(enode)
+        return self.contract.functions.registerValidator(enode, proof)
 
     def pause_validator(
         self,
@@ -365,18 +362,16 @@ class Autonity(ERC20):
         """
         return self.contract.functions.burn(address, amount)
 
-    # TODO: enable when this is available.
-
-    # def change_commission_rate(
-    #     self,
-    #     validator: ValidatorAddress,
-    #     rate: int,
-    # ) -> ContractFunction:
-    #     """
-    #     Create a TxParams calling the `changeCommissionRate` method.  See
-    #     `changeCommissionRate` on the Autonity contract.
-    #     """
-    #     return self.contract.functions.changeCommissionRate(validator, rate)
+    def change_commission_rate(
+        self,
+        validator: ValidatorAddress,
+        rate: int,
+    ) -> ContractFunction:
+        """
+        Create a TxParams calling the `changeCommissionRate` method.  See
+        `changeCommissionRate` on the Autonity contract.
+        """
+        return self.contract.functions.changeCommissionRate(validator, rate)
 
     # TODO: events
 
