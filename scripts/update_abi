@@ -3,13 +3,18 @@
 #Path to the autonity source code
 AUTONITY_PATH=../../../autonity-internal
 
+
 mkdir -p autonity/abi/temp
 solc --abi -o autonity/abi/temp --overwrite ${AUTONITY_PATH}/autonity/solidity/contracts/Autonity.sol
 
 mkdir -p autonity/abi
 for i in `ls autonity/abi/temp/*.abi` ; do
-    cat $i | json_pp > autonity/abi/${i##*/}
+    cat $i | jq --sort-keys > autonity/abi/${i##*/}
 done
+
+# Record how the abi was generated
+solc --version > autonity/abi/solc-version.txt
+git -C ../../../autonity-internal log --oneline -n 1 > autonity/abi/autonity-commit.txt
 
 echo
 echo "============================================================"

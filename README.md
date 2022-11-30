@@ -59,6 +59,8 @@ committee_enodes = web3.tendermint.get_committee_enodes()
 
 # Development
 
+## Setup
+
 ```console
 # Install for development in a virtual env
 $ make install
@@ -66,3 +68,17 @@ $ make install
 # Execute all code checks
 $ make check
 ```
+
+## Updating the contract ABIs
+
+The simple script `script/update_abi` generates the contract ABIs
+using `solc` from the path, assuming the autonity souce code is
+installed in a default location (see the script for details).  Keys
+are ordered via the `jq` tool, in order to produce deterministic
+output, and the results written to the `autonity/abi` directory.
+Further, it also records the version of solc and the commit used in
+files in the same directory.
+
+After executing the script against a new version of the code, the
+diffs can be reviewed to determine which methods have been modified,
+removed or added.
