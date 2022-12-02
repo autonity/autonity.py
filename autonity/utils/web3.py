@@ -74,12 +74,16 @@ def create_web3(
     return cast(Web3WithAutonity, w3)
 
 
-def create_web3_for_endpoint(endpoint: str, **kwArgs: Any) -> Web3WithAutonity:
+def create_web3_for_endpoint(
+    endpoint: str, ignore_chain_id: bool = True, **kwArgs: Any
+) -> Web3WithAutonity:
     """
     Convenience function to create a Web3 object for a specific
     endpoint URL.
     """
-    return create_web3(web3_provider_for_endpoint(endpoint, **kwArgs))
+    return create_web3(
+        web3_provider_for_endpoint(endpoint, **kwArgs), ignore_chain_id=ignore_chain_id
+    )
 
 
 def parse_autonity_chain_id(chain_id: int) -> str:
