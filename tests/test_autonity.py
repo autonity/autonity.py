@@ -8,6 +8,7 @@ from tests.common import create_test_web3
 
 from autonity.autonity import Autonity
 
+from web3.types import Wei
 from unittest import TestCase
 
 
@@ -61,3 +62,32 @@ class TestAutonity(TestCase):
         self.assertIsInstance(autonity.get_proposer(1, 1), str)
         self.assertIsInstance(autonity.get_bonding_req(0, 100), list)
         self.assertIsInstance(autonity.get_unbonding_req(0, 100), list)
+
+    def test_autonity_txs(self) -> None:
+        """
+        Test all tx functions.  For now, simply call the methods to ensure
+        they use contract ABI crreectly.
+        """
+
+        w3 = create_test_web3()
+        autonity = Autonity(w3)
+
+        validators = autonity.get_validators()
+        validator_addr = validators[0]
+        enode = "adsf"
+
+        autonity.bond(validator_addr, Wei(1))
+        autonity.unbond(validator_addr, Wei(1))
+        autonity.register_validator(enode)
+        autonity.pause_validator(validator_addr)
+        autonity.activate_validator(validator_addr)
+        autonity.set_minimum_base_fee(Wei(1))
+        autonity.set_committee_size(3)
+        autonity.set_unbonding_period(10)
+        autonity.set_epoch_period(10)
+        autonity.set_operator_account(validator_addr)
+        # autonity. set_block_period(12)
+        autonity.set_treasury_account(validator_addr)
+        autonity.set_treasury_fee(100000)
+        autonity.mint(validator_addr, Wei(7))
+        autonity.burn(validator_addr, Wei(7))
