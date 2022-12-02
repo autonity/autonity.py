@@ -183,7 +183,7 @@ class Autonity(ERC20):
         cms = self.contract.functions.getCommittee().call()
         return [committee_member_from_tuple(cm) for cm in cms]
 
-    def get_validators(self) -> Sequence[ChecksumAddress]:
+    def get_validators(self) -> Sequence[ValidatorAddress]:
         """
         See `getValidators` on the Autonity contract.
         """
