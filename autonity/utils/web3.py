@@ -46,6 +46,7 @@ def web3_provider_for_endpoint(endpoint: str) -> BaseProvider:
 def create_web3(
     provider: Optional[BaseProvider] = None,
     external_modules: Optional[Dict[str, Union[Type[Module], Sequence[Any]]]] = None,
+    ignore_chain_id: bool = True,
     **kwArgs: Any,
 ) -> Web3WithAutonity:
     """
@@ -66,8 +67,9 @@ def create_web3(
 
     # Check the chain ID and ensure it conforms to the Autonity
     # standard.
-    chain_id = w3.eth.chain_id
-    _ = parse_autonity_chain_id(chain_id)
+    if not ignore_chain_id:
+        chain_id = w3.eth.chain_id
+        _ = parse_autonity_chain_id(chain_id)
 
     return cast(Web3WithAutonity, w3)
 
