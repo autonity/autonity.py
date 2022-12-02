@@ -70,20 +70,14 @@ class Autonity(ERC20):
     Web3 module representing Autonity-specific API.
     """
 
-    def __init__(self, web3: Web3, disable_version_checks: bool = False):
+    def __init__(self, web3: Web3):
         super().__init__(
             web3,
             web3.toChecksumAddress(AUTONITY_CONTRACT_ADDRESS),
             ABIManager.load_abi("Autonity"),
         )
 
-        # Check the contract version
-        if not disable_version_checks:
-            config = self.config()
-            assert AUTONITY_CONTRACT_VERSION == config["contract_version"], (
-                f"Autonity contract version mismatch (chain: {config['contract_version']}, "
-                f"local: {AUTONITY_CONTRACT_VERSION})"
-            )
+        # TODO: What contract version checks can be performed here?
 
     @staticmethod
     def address() -> ChecksumAddress:
