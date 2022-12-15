@@ -46,6 +46,7 @@ def web3_provider_for_endpoint(endpoint: str) -> BaseProvider:
 def create_web3(
     provider: Optional[BaseProvider] = None,
     external_modules: Optional[Dict[str, Union[Type[Module], Sequence[Any]]]] = None,
+    ignore_chain_id: bool = True,
     **kwArgs: Any,
 ) -> Web3WithAutonity:
     """
@@ -66,18 +67,23 @@ def create_web3(
 
     # Check the chain ID and ensure it conforms to the Autonity
     # standard.
-    chain_id = w3.eth.chain_id
-    _ = parse_autonity_chain_id(chain_id)
+    if not ignore_chain_id:
+        chain_id = w3.eth.chain_id
+        _ = parse_autonity_chain_id(chain_id)
 
     return cast(Web3WithAutonity, w3)
 
 
-def create_web3_for_endpoint(endpoint: str, **kwArgs: Any) -> Web3WithAutonity:
+def create_web3_for_endpoint(
+    endpoint: str, ignore_chain_id: bool = True, **kwArgs: Any
+) -> Web3WithAutonity:
     """
     Convenience function to create a Web3 object for a specific
     endpoint URL.
     """
-    return create_web3(web3_provider_for_endpoint(endpoint, **kwArgs))
+    return create_web3(
+        web3_provider_for_endpoint(endpoint, **kwArgs), ignore_chain_id=ignore_chain_id
+    )
 
 
 def parse_autonity_chain_id(chain_id: int) -> str:

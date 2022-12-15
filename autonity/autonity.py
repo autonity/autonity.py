@@ -70,20 +70,14 @@ class Autonity(ERC20):
     Web3 module representing Autonity-specific API.
     """
 
-    def __init__(self, web3: Web3, disable_version_checks: bool = False):
+    def __init__(self, web3: Web3):
         super().__init__(
             web3,
             web3.toChecksumAddress(AUTONITY_CONTRACT_ADDRESS),
             ABIManager.load_abi("Autonity"),
         )
 
-        # Check the contract version
-        if not disable_version_checks:
-            config = self.config()
-            assert AUTONITY_CONTRACT_VERSION == config["contract_version"], (
-                f"Autonity contract version mismatch (chain: {config['contract_version']}, "
-                f"local: {AUTONITY_CONTRACT_VERSION})"
-            )
+        # TODO: What contract version checks can be performed here?
 
     @staticmethod
     def address() -> ChecksumAddress:
@@ -183,7 +177,7 @@ class Autonity(ERC20):
         cms = self.contract.functions.getCommittee().call()
         return [committee_member_from_tuple(cm) for cm in cms]
 
-    def get_validators(self) -> Sequence[ChecksumAddress]:
+    def get_validators(self) -> Sequence[ValidatorAddress]:
         """
         See `getValidators` on the Autonity contract.
         """
@@ -296,6 +290,80 @@ class Autonity(ERC20):
         `activateValidator` on the Autonity contract.
         """
         return self.contract.functions.activateValidator(validator_addr)
+
+    # Functions below here are operatorOnly
+
+    def set_minimum_base_fee(self, base_fee: Wei) -> ContractFunction:
+        """
+        Set the minimum gas price. Restricted to the operator account.
+        See `setMinimumBaseFee` on the Autonity contract.
+        """
+        return self.contract.functions.setMinimumBaseFee(base_fee)
+
+    def set_committee_size(self, committee_size: int) -> ContractFunction:
+        """
+        Set the maximum size of the consensus committee. Restricted to the
+        Operator account.  See `setCommitteeSize` on Autonity contract.
+        """
+        return self.contract.functions.setCommitteeSize(committee_size)
+
+    def set_unbonding_period(self, period: int) -> ContractFunction:
+        """
+        Set the unbonding period. Restricted to the Operator account.  See
+        `setUnbondingPeriod` on Autonity contract.
+        """
+        return self.contract.functions.setUnbondingPeriod(period)
+
+    def set_epoch_period(self, period: int) -> ContractFunction:
+        """
+        Set the epoch period. Restricted to the Operator account.  See
+        `setEpochPeriod` on Autonity contract.
+        """
+        return self.contract.functions.setEpochPeriod(period)
+
+    def set_operator_account(self, address: ChecksumAddress) -> ContractFunction:
+        """
+        Set the Operator account. Restricted to the Operator account.  See
+        `setOperatorAccount` on Autonity contract.
+        """
+        return self.contract.functions.setOperatorAccount(address)
+
+    # def set_block_period(period: int) -> ContractFunction:
+    #     """
+    #     Currently not supported.  Set the block period. Restricted to the
+    #     Operator account.
+    #     """
+    #     return self.contract.setBlockPeriod(period)
+
+    def set_treasury_account(self, address: ChecksumAddress) -> ContractFunction:
+        """
+        Set the global treasury account. Restricted to the Operator
+        account.  See `setTreasuryAccount` on Autonity contract.
+        """
+        return self.contract.functions.setTreasuryAccount(address)
+
+    def set_treasury_fee(self, treasury_fee: int) -> ContractFunction:
+        """
+        Set the treasury fee. Restricted to the Operator account.  See
+        `setTreasuryFee` on Autonity contract.
+        """
+        return self.contract.functions.setTreasuryFee(treasury_fee)
+
+    def mint(self, address: ChecksumAddress, amount: Wei) -> ContractFunction:
+        """
+        Mint new stake token (NTN) and add it to the recipient
+        balance. Restricted to the Operator account.  See `mint` on
+        Autonity contract.
+        """
+        return self.contract.functions.mint(address, amount)
+
+    def burn(self, address: ChecksumAddress, amount: Wei) -> ContractFunction:
+        """
+        Burn the specified amount of NTN stake token from an
+        account. Restricted to the Operator account.  This won't burn
+        associated Liquid tokens.  See `burn` on Autonity contract.
+        """
+        return self.contract.functions.burn(address, amount)
 
     # TODO: enable when this is available.
 
