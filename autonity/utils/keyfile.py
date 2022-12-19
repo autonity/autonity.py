@@ -4,6 +4,7 @@
 Keyfile utility functions
 """
 
+from eth_account import Account
 from eth_keyfile import create_keyfile_json, decode_keyfile_json  # type: ignore
 from web3 import Web3
 from web3.types import ChecksumAddress
@@ -24,6 +25,14 @@ def load_keyfile(filename: str) -> EncryptedKeyData:
         keyfile_json = json.load(keyfile_f)
         # TODO: validate the json
         return cast(EncryptedKeyData, keyfile_json)
+
+
+def get_address_from_private_key(private_key: PrivateKey) -> ChecksumAddress:
+    """
+    Return the address associated with a given private key.
+    """
+    account = Account.from_key(private_key)  # pylint: disable=no-value-for-parameter
+    return account.address
 
 
 def create_keyfile_from_private_key(
