@@ -8,7 +8,7 @@ from autonity.abi_manager import ABIManager
 
 from web3.contract import Contract, ABI, ContractFunction
 from web3.exceptions import BadFunctionCallOutput
-from web3.types import Address, ChecksumAddress, Wei, ABIFunction
+from web3.types import Address, ChecksumAddress, ABIFunction
 from web3 import Web3
 from typing import Union, Optional
 
@@ -96,7 +96,7 @@ class ERC20:
         except BadFunctionCallOutput:
             return None
 
-    def decimals(self) -> Optional[int]:
+    def decimals(self) -> int:
         """
         Returns the number of decimals used in the token (or None if not available).
         """
@@ -104,46 +104,50 @@ class ERC20:
         try:
             return decimals_function().call() if decimals_function else None
         except BadFunctionCallOutput:
-            return None
+            # https://ethereum.stackexchange.com/questions/100039/whats-the-default-erc20-decimals
+            return 0
 
-    def total_supply(self) -> Wei:
+    def total_supply(self) -> int:
         """
-        Total supply (in Wei) of the token.
+        Total supply in "token units" (divide by 10^decimals for value in whole tokens).
         """
         return self.contract.functions.totalSupply().call()
 
-    def balance_of(self, account: ChecksumAddress) -> Wei:
+    def balance_of(self, account: ChecksumAddress) -> int:
         """
-        Returns the balance (in Wei) of a particular address.
+        Returns the balance of a particular address in "token units"
+        (divide by 10^decimals for value in whole tokens).
         """
         return self.contract.functions.balanceOf(account).call()
 
-    def allowance(self, owner: ChecksumAddress, spender: ChecksumAddress) -> Wei:
+    def allowance(self, owner: ChecksumAddress, spender: ChecksumAddress) -> int:
         """
-        Returns the quantity (in Wei) that `owner` has granted `spender`
-        permission to spend.
+        Returns the quantity that `owner` has granted `spender` permission
+        to spend.  Given in "token units" (divide by 10^decimals for
+        value in whole tokens).
         """
         return self.contract.functions.balanceOf(owner, spender).call()
 
     def transfer(
         self,
         recipient: ChecksumAddress,
-        amount: Wei,
+        amount: int,
     ) -> ContractFunction:
         """
-        Create a transaction transferring `amount` (in Wei) to
-        `recipient`.
+        Create a transaction transferring `amount` in "token units"
+        (units of 1/10^decimals) to `recipient`.
         """
         return self.contract.functions.transfer(recipient, amount)
 
     def approve(
         self,
         spender: ChecksumAddress,
-        amount: Wei,
+        amount: int,
     ) -> ContractFunction:
         """
         Create a transaction granting `spender` permission to spend
-        `amount` (in Wei) of tokens held by `from_addr`.
+        `amount` in "token units" (units of 1/10^decimals) held by
+        `from_addr`.
         """
         return self.contract.functions.approve(spender, amount)
 
@@ -151,13 +155,14 @@ class ERC20:
         self,
         spender: ChecksumAddress,
         recipient: ChecksumAddress,
-        amount: Wei,
+        amount: int,
     ) -> ContractFunction:
         """
-        Create a transaction transferring `amount` (in Wei) of the tokens
-        held by `spender` to `recipient`.  `spender` must previously
-        have granted `from_addr` permission to spend these tokens, via
-        an `approve` transaction.
+        Create a transaction transferring `amount` in "token units" (units
+        of 1/10^decimals) of the tokens held by `spender` to
+        `recipient`.  `spender` must previously have granted
+        `from_addr` permission to spend these tokens, via an `approve`
+        transaction.
         """
         return self.contract.functions.transferFrom(spender, recipient, amount)
 
