@@ -242,7 +242,7 @@ class Autonity(ERC20):
     def bond(
         self,
         validator_addr: ValidatorAddress,
-        amount: Wei,
+        amount: int,
     ) -> ContractFunction:
         """
         Create a TxParams calling the `bond` method.  See `bond` on the

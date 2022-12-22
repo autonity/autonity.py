@@ -102,7 +102,7 @@ class ERC20:
         """
         decimals_function = getattr(self.contract.functions, "decimals", None)
         try:
-            return decimals_function().call() if decimals_function else None
+            return decimals_function().call() if decimals_function else 0
         except (BadFunctionCallOutput, ContractLogicError):
             # https://ethereum.stackexchange.com/questions/100039/whats-the-default-erc20-decimals
             return 0
