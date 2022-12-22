@@ -7,7 +7,7 @@ Model for an ERC20 token
 from autonity.abi_manager import ABIManager
 
 from web3.contract import Contract, ABI, ContractFunction
-from web3.exceptions import BadFunctionCallOutput
+from web3.exceptions import BadFunctionCallOutput, ContractLogicError
 from web3.types import Address, ChecksumAddress, ABIFunction
 from web3 import Web3
 from typing import Union, Optional
@@ -83,7 +83,7 @@ class ERC20:
         name_function = getattr(self.contract.functions, "name", None)
         try:
             return name_function().call() if name_function else None
-        except BadFunctionCallOutput:
+        except (BadFunctionCallOutput, ContractLogicError):
             return None
 
     def symbol(self) -> Optional[str]:
@@ -93,7 +93,7 @@ class ERC20:
         symbol_function = getattr(self.contract.functions, "symbol", None)
         try:
             return symbol_function().call() if symbol_function else None
-        except BadFunctionCallOutput:
+        except (BadFunctionCallOutput, ContractLogicError):
             return None
 
     def decimals(self) -> int:
@@ -103,7 +103,7 @@ class ERC20:
         decimals_function = getattr(self.contract.functions, "decimals", None)
         try:
             return decimals_function().call() if decimals_function else None
-        except BadFunctionCallOutput:
+        except (BadFunctionCallOutput, ContractLogicError):
             # https://ethereum.stackexchange.com/questions/100039/whats-the-default-erc20-decimals
             return 0
 
@@ -126,7 +126,7 @@ class ERC20:
         to spend.  Given in "token units" (divide by 10^decimals for
         value in whole tokens).
         """
-        return self.contract.functions.balanceOf(owner, spender).call()
+        return self.contract.functions.allowance(owner, spender).call()
 
     def transfer(
         self,
