@@ -12,7 +12,7 @@ from web3.types import Wei
 AUTON_DECIMALS = 18
 
 # TODO: Change this to 18 once the Autonity node supports that.
-NEWTON_DECIMALS = 0
+NEWTON_DECIMALS = 18
 
 
 def format_quantity(units: int, decimals: int) -> str:

@@ -26,4 +26,4 @@ class TestDenominations(TestCase):
         self.assertEqual("0.000000000000000003", format_quantity(3, 18))
 
         self.assertEqual("0.000000000000000012", format_auton_quantity(Wei(12)))
-        self.assertEqual("12", format_newton_quantity(12))
+        self.assertEqual("0.000000000000000012", format_newton_quantity(12))
