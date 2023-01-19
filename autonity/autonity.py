@@ -349,7 +349,7 @@ class Autonity(ERC20):
         """
         return self.contract.functions.setTreasuryFee(treasury_fee)
 
-    def mint(self, address: ChecksumAddress, amount: Wei) -> ContractFunction:
+    def mint(self, address: ChecksumAddress, amount: int) -> ContractFunction:
         """
         Mint new stake token (NTN) and add it to the recipient
         balance. Restricted to the Operator account.  See `mint` on
@@ -357,7 +357,7 @@ class Autonity(ERC20):
         """
         return self.contract.functions.mint(address, amount)
 
-    def burn(self, address: ChecksumAddress, amount: Wei) -> ContractFunction:
+    def burn(self, address: ChecksumAddress, amount: int) -> ContractFunction:
         """
         Burn the specified amount of NTN stake token from an
         account. Restricted to the Operator account.  This won't burn
