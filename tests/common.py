@@ -24,7 +24,7 @@ Dummy address
 """
 
 
-DEFAULT_URI = "https://rpc1.piccadilly.autonity.org:8545/"
+DEFAULT_URI = "https://rpc1.piccadilly.autonity.org/"
 
 
 def create_test_web3() -> Web3WithAutonity:

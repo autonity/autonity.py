@@ -20,10 +20,10 @@ Web3 object with the appropriate extensions enabled:
 from web3 import HTTPProvider
 from autonity import create_web3
 
-w3 = create_web3(HTTPProvider("https://rpc1.<NETWORK>.autonity.org:8545/"))
+w3 = create_web3(HTTPProvider("https://rpc1.<NETWORK>.autonity.org/"))
 ```
 
-Where`<NETWORK>` is the name of the Autonity Network being connected to. For example, `https://rpc1.bakerloo.autonity.org:8545/` to connect to the public endpoint on the Bakerloo Testnet.
+Where`<NETWORK>` is the name of the Autonity Network being connected to. For example, `https://rpc1.bakerloo.autonity.org/` to connect to the public endpoint on the Bakerloo Testnet.
 
 Alternatively the caller can attach these modules manually:
 
@@ -32,7 +32,7 @@ from web3 import Web3, HTTPProvider
 from autonity import Tendermint, Autonity
 
 w3 = Web3(
-    HTTPProvider("https://rpc1.bakerloo.autonity.org:8545/"),
+    HTTPProvider("https://rpc1.bakerloo.autonity.org/"),
     external_modules={
         "aut": Autonity,
         "tendermint": Tendermint,
