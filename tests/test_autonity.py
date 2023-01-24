@@ -8,7 +8,7 @@ from tests.common import create_test_web3
 
 from autonity.autonity import Autonity
 
-from web3.types import Wei
+from web3.types import Wei, HexBytes
 from unittest import TestCase
 
 
@@ -78,7 +78,7 @@ class TestAutonity(TestCase):
 
         autonity.bond(validator_addr, Wei(1))
         autonity.unbond(validator_addr, Wei(1))
-        autonity.register_validator(enode)
+        autonity.register_validator(enode, HexBytes("0x1234abcd"))
         autonity.pause_validator(validator_addr)
         autonity.activate_validator(validator_addr)
         autonity.set_minimum_base_fee(Wei(1))
@@ -91,3 +91,4 @@ class TestAutonity(TestCase):
         autonity.set_treasury_fee(100000)
         autonity.mint(validator_addr, Wei(7))
         autonity.burn(validator_addr, Wei(7))
+        autonity.change_commission_rate(validator_addr, Wei(7))

@@ -1,307 +1,351 @@
 [
-   {
-      "inputs" : [
-         {
-            "name" : "_validator",
-            "internalType" : "address",
-            "type" : "address"
-         },
-         {
-            "type" : "address",
-            "internalType" : "address payable",
-            "name" : "_treasury"
-         },
-         {
-            "type" : "uint256",
-            "internalType" : "uint256",
-            "name" : "_commissionRate"
-         }
-      ],
-      "stateMutability" : "nonpayable",
-      "type" : "constructor"
-   },
-   {
-      "type" : "event",
-      "anonymous" : false,
-      "inputs" : [
-         {
-            "name" : "owner",
-            "internalType" : "address",
-            "type" : "address",
-            "indexed" : true
-         },
-         {
-            "indexed" : true,
-            "type" : "address",
-            "internalType" : "address",
-            "name" : "spender"
-         },
-         {
-            "type" : "uint256",
-            "indexed" : false,
-            "internalType" : "uint256",
-            "name" : "value"
-         }
-      ],
-      "name" : "Approval"
-   },
-   {
-      "type" : "event",
-      "anonymous" : false,
-      "inputs" : [
-         {
-            "internalType" : "address",
-            "name" : "from",
-            "type" : "address",
-            "indexed" : true
-         },
-         {
-            "indexed" : true,
-            "type" : "address",
-            "name" : "to",
-            "internalType" : "address"
-         },
-         {
-            "indexed" : false,
-            "type" : "uint256",
-            "internalType" : "uint256",
-            "name" : "value"
-         }
-      ],
-      "name" : "Transfer"
-   },
-   {
-      "outputs" : [
-         {
-            "type" : "uint256",
-            "name" : "",
-            "internalType" : "uint256"
-         }
-      ],
-      "type" : "function",
-      "inputs" : [],
-      "name" : "COMMISSION_RATE_PRECISION",
-      "stateMutability" : "view"
-   },
-   {
-      "outputs" : [
-         {
-            "type" : "uint256",
-            "name" : "",
-            "internalType" : "uint256"
-         }
-      ],
-      "type" : "function",
-      "name" : "FEE_FACTOR_UNIT_RECIP",
-      "stateMutability" : "view",
-      "inputs" : []
-   },
-   {
-      "outputs" : [
-         {
-            "type" : "uint256",
-            "name" : "",
-            "internalType" : "uint256"
-         }
-      ],
-      "type" : "function",
-      "inputs" : [
-         {
-            "type" : "address",
-            "name" : "_owner",
-            "internalType" : "address"
-         },
-         {
-            "type" : "address",
-            "name" : "_spender",
-            "internalType" : "address"
-         }
-      ],
-      "name" : "allowance",
-      "stateMutability" : "view"
-   },
-   {
-      "name" : "approve",
-      "stateMutability" : "nonpayable",
-      "inputs" : [
-         {
-            "internalType" : "address",
-            "name" : "_spender",
-            "type" : "address"
-         },
-         {
-            "name" : "_amount",
-            "internalType" : "uint256",
-            "type" : "uint256"
-         }
-      ],
-      "outputs" : [
-         {
-            "internalType" : "bool",
-            "name" : "",
-            "type" : "bool"
-         }
-      ],
-      "type" : "function"
-   },
-   {
-      "type" : "function",
-      "outputs" : [
-         {
-            "type" : "uint256",
-            "name" : "",
-            "internalType" : "uint256"
-         }
-      ],
-      "inputs" : [
-         {
-            "type" : "address",
-            "internalType" : "address",
-            "name" : "_delegator"
-         }
-      ],
-      "name" : "balanceOf",
-      "stateMutability" : "view"
-   },
-   {
-      "stateMutability" : "nonpayable",
-      "name" : "burn",
-      "inputs" : [
-         {
-            "name" : "_account",
-            "internalType" : "address",
-            "type" : "address"
-         },
-         {
-            "internalType" : "uint256",
-            "name" : "_amount",
-            "type" : "uint256"
-         }
-      ],
-      "outputs" : [],
-      "type" : "function"
-   },
-   {
-      "outputs" : [],
-      "type" : "function",
-      "stateMutability" : "nonpayable",
-      "name" : "claimRewards",
-      "inputs" : []
-   },
-   {
-      "type" : "function",
-      "outputs" : [],
-      "stateMutability" : "nonpayable",
-      "name" : "mint",
-      "inputs" : [
-         {
-            "type" : "address",
-            "name" : "_account",
-            "internalType" : "address"
-         },
-         {
-            "internalType" : "uint256",
-            "name" : "_amount",
-            "type" : "uint256"
-         }
-      ]
-   },
-   {
-      "inputs" : [],
-      "name" : "redistribute",
-      "stateMutability" : "payable",
-      "outputs" : [
-         {
-            "type" : "uint256",
-            "internalType" : "uint256",
-            "name" : ""
-         }
-      ],
-      "type" : "function"
-   },
-   {
-      "type" : "function",
-      "outputs" : [
-         {
-            "type" : "uint256",
-            "name" : "",
-            "internalType" : "uint256"
-         }
-      ],
-      "inputs" : [],
-      "name" : "totalSupply",
-      "stateMutability" : "view"
-   },
-   {
-      "outputs" : [
-         {
-            "type" : "bool",
-            "name" : "_success",
-            "internalType" : "bool"
-         }
-      ],
-      "type" : "function",
-      "inputs" : [
-         {
-            "name" : "_to",
-            "internalType" : "address",
-            "type" : "address"
-         },
-         {
-            "type" : "uint256",
-            "name" : "_amount",
-            "internalType" : "uint256"
-         }
-      ],
-      "name" : "transfer",
-      "stateMutability" : "nonpayable"
-   },
-   {
-      "stateMutability" : "nonpayable",
-      "name" : "transferFrom",
-      "inputs" : [
-         {
-            "type" : "address",
-            "name" : "_sender",
-            "internalType" : "address"
-         },
-         {
-            "name" : "_recipient",
-            "internalType" : "address",
-            "type" : "address"
-         },
-         {
-            "type" : "uint256",
-            "internalType" : "uint256",
-            "name" : "_amount"
-         }
-      ],
-      "type" : "function",
-      "outputs" : [
-         {
-            "internalType" : "bool",
-            "name" : "_success",
-            "type" : "bool"
-         }
-      ]
-   },
-   {
-      "type" : "function",
-      "outputs" : [
-         {
-            "internalType" : "uint256",
-            "name" : "",
-            "type" : "uint256"
-         }
-      ],
-      "stateMutability" : "view",
-      "name" : "unclaimedRewards",
-      "inputs" : [
-         {
-            "type" : "address",
-            "internalType" : "address",
-            "name" : "_account"
-         }
-      ]
-   }
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_validator",
+        "type": "address"
+      },
+      {
+        "internalType": "address payable",
+        "name": "_treasury",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_commissionRate",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "_index",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "spender",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "value",
+        "type": "uint256"
+      }
+    ],
+    "name": "Approval",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "value",
+        "type": "uint256"
+      }
+    ],
+    "name": "Transfer",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "COMMISSION_RATE_PRECISION",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "FEE_FACTOR_UNIT_RECIP",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_owner",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_spender",
+        "type": "address"
+      }
+    ],
+    "name": "allowance",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_spender",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "approve",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_delegator",
+        "type": "address"
+      }
+    ],
+    "name": "balanceOf",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_account",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "burn",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "claimRewards",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_account",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "mint",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "name",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "redistribute",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_rate",
+        "type": "uint256"
+      }
+    ],
+    "name": "setCommissionRate",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "symbol",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "totalSupply",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_to",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "transfer",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "_success",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_sender",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_recipient",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "transferFrom",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "_success",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_account",
+        "type": "address"
+      }
+    ],
+    "name": "unclaimedRewards",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
 ]

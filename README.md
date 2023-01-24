@@ -20,10 +20,10 @@ Web3 object with the appropriate extensions enabled:
 from web3 import HTTPProvider
 from autonity import create_web3
 
-w3 = create_web3(HTTPProvider("https://rpc1.<NETWORK>.autonity.org:8545/"))
+w3 = create_web3(HTTPProvider("https://rpc1.<NETWORK>.autonity.org/"))
 ```
 
-Where`<NETWORK>` is the name of the Autonity Network being connected to. For example, `https://rpc1.bakerloo.autonity.org:8545/` to connect to the public endpoint on the Bakerloo Testnet.
+Where`<NETWORK>` is the name of the Autonity Network being connected to. For example, `https://rpc1.bakerloo.autonity.org/` to connect to the public endpoint on the Bakerloo Testnet.
 
 Alternatively the caller can attach these modules manually:
 
@@ -32,7 +32,7 @@ from web3 import Web3, HTTPProvider
 from autonity import Tendermint, Autonity
 
 w3 = Web3(
-    HTTPProvider("https://rpc1.bakerloo.autonity.org:8545/"),
+    HTTPProvider("https://rpc1.bakerloo.autonity.org/"),
     external_modules={
         "aut": Autonity,
         "tendermint": Tendermint,
@@ -59,6 +59,8 @@ committee_enodes = web3.tendermint.get_committee_enodes()
 
 # Development
 
+## Setup
+
 ```console
 # Install for development in a virtual env
 $ make install
@@ -66,3 +68,17 @@ $ make install
 # Execute all code checks
 $ make check
 ```
+
+## Updating the contract ABIs
+
+The simple script `script/update_abi` generates the contract ABIs
+using `solc` from the path, assuming the autonity souce code is
+installed in a default location (see the script for details).  Keys
+are ordered via the `jq` tool, in order to produce deterministic
+output, and the results written to the `autonity/abi` directory.
+Further, it also records the version of solc and the commit used in
+files in the same directory.
+
+After executing the script against a new version of the code, the
+diffs can be reviewed to determine which methods have been modified,
+removed or added.
