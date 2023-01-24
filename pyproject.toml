@@ -10,7 +10,7 @@ dependencies = [
 ]
 # For now, the stable version of web3.py does not seem to support
 # Python 3.10 as it uses an older version of websockets.
-requires-python = ">=3.8,<3.11"
+requires-python = ">=3.8"
 
 [tool.setuptools.packages.find]
 where = [ "." ]
