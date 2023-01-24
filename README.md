@@ -1,61 +1,45 @@
-
 # Introduction
 
-[Autonity](https://autnoity.org) is a protocol that provides smart contract and settlement infrastructure specialized for developing new risk markets.  It is a fork of the [Ethereum protocol](https://ethereum.org/).
+[Autonity](https://autonity.org) is a protocol that provides smart contract and settlement infrastructure specialized for developing new risk markets.  It is a fork of the [Ethereum protocol](https://ethereum.org/).  See the [Autonity documentation](https://docs.autonity.org) for further information.
 
-This package provides the `tendermint` and `aut` extensions to [Web3.py](https://github.com/ethereum/web3.py), for convenient interaction with the Autonity network.
+This package provides typed wrappers around the Autonity-specific extensions of Ethereum, using the [Web3.py](https://github.com/ethereum/web3.py) framework, for convenient and statically checked interactions with the Autonity network.
 
 # Installation
 
 ```console
-pip install autonity
+pip install git+https://github.com/autonity/autonity.py
 ```
 
 # Usage
 
-The convenience function `create_web3` can be used to easily create a
-Web3 object with the appropriate extensions enabled:
+The primary utility of this library is the typed wrappers around the Autonity protocol contract, which provides access to Autonity-specific functionality.
 
 ```python
-from web3 import HTTPProvider
-from autonity import create_web3
+from autonity.utils.web3 import create_web3_for_endpoint
+from autonity import Autonity, Validator
 
-w3 = create_web3(HTTPProvider("https://rpc1.<NETWORK>.autonity.org/"))
+w3 = create_web3_for_endpoint("<RPC_ENDPOINT>")
+
+# Create the typed wrapper around the Autonity contract.
+autonity = Autonity(w3)
+
+# Get total supply of Newton
+ntn_supply = autonity.total_supply()
+
+# Get the current validator list
+validator_ids = autonity.get_validators()
+
+# Get descriptor for the 0-th validator.  Print LNEW contract address.
+validator_desc_0 = autonity.get_validator(validator_ids[0])
+print(f"LNEW contract addr: {validator_desc_0.liquid_contract}")
+
+# Typed validator Liquid Newton contract.  Query unclaimed fees for <ADDRESS>.
+validator_0 = Validator(w3, validator_desc_0)
+unclaimed_rewards = validator_0.unclaimed_rewards("<ADDRESS>")
+print(f"unclaimed rewards: {unclaimed_rewards}")
 ```
 
-Where`<NETWORK>` is the name of the Autonity Network being connected to. For example, `https://rpc1.bakerloo.autonity.org/` to connect to the public endpoint on the Bakerloo Testnet.
-
-Alternatively the caller can attach these modules manually:
-
-```python
-from web3 import Web3, HTTPProvider
-from autonity import Tendermint, Autonity
-
-w3 = Web3(
-    HTTPProvider("https://rpc1.bakerloo.autonity.org/"),
-    external_modules={
-        "aut": Autonity,
-        "tendermint": Tendermint,
-    })
-```
-
-These modules can then be used as any other extension.
-
-For example, the *Autonity contract* (a special contract providing much of Autonity-specific functionality [docs.autonity.org, Autonity Contract Interface](https://docs.autonity.org/reference/api/aut/)), can be accessed as any other [web3.py contract object](https://web3py.readthedocs.io/en/latest/contracts.html#contracts) as follows.
-
-```python
-aut_contract = web3.aut.autonity_contract()
-
-# Get the total supply of Newton
-ntn_supply = autonity_contract.functions.totalSupply().call()
-```
-
-To query the autonity-specific RPC interface:
-
-```python
-# Get the current enodes belonging to the consensus committee
-committee_enodes = web3.tendermint.get_committee_enodes()
-```
+Where`<RPC_ENDPOINT>` is the name of the Autonity network being connected to. See https://docs.autonity.org/networks/ for information about specific networks.
 
 # Development
 
@@ -71,14 +55,6 @@ $ make check
 
 ## Updating the contract ABIs
 
-The simple script `script/update_abi` generates the contract ABIs
-using `solc` from the path, assuming the autonity souce code is
-installed in a default location (see the script for details).  Keys
-are ordered via the `jq` tool, in order to produce deterministic
-output, and the results written to the `autonity/abi` directory.
-Further, it also records the version of solc and the commit used in
-files in the same directory.
+The simple script `script/update_abi` generates the contract ABIs using `solc` from the path, assuming the autonity souce code is installed in a default location (see the script for details).  Keys are ordered via the `jq` tool, in order to produce deterministic output, and the results written to the `autonity/abi` directory.  Further, it also records the version of solc and the commit used in files in the same directory.
 
-After executing the script against a new version of the code, the
-diffs can be reviewed to determine which methods have been modified,
-removed or added.
+After executing the script against a new version of the code, the diffs can be reviewed to determine which methods have been modified, removed or added.
