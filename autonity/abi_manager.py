@@ -30,3 +30,11 @@ class ABIManager:
             _CACHE[contract_name] = json.loads(text)
 
         return _CACHE[contract_name]
+
+    @staticmethod
+    def load_abi_file(file_name: str) -> ABI:
+        """
+        Load an ABI from a file.
+        """
+        with open(file_name, "r", encoding="utf8") as abi_f:
+            return json.load(abi_f)
