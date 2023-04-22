@@ -15,6 +15,18 @@ from web3.types import (
 from typing import Dict, List, Tuple, Sequence, Any, Union, Callable, cast
 
 
+def find_abi_constructor(abi: ABI) -> ABIFunction:
+    """
+    Given an ABI and function name, find the ABIFunction element.
+    """
+
+    for element in abi:
+        if element["type"] == "constructor" and "name" not in element:
+            return cast(ABIFunction, element)
+
+    raise ValueError("constructor not found in ABI")
+
+
 def find_abi_function(abi: ABI, function_name: str) -> ABIFunction:
     """
     Given an ABI and function name, find the ABIFunction element.
