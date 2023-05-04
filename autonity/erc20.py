@@ -6,7 +6,7 @@ Model for an ERC20 token
 
 from autonity.abi_manager import ABIManager
 
-from web3.contract import Contract, ABI, ContractFunction
+from web3.contract.contract import Contract, ABI, ContractFunction
 from web3.exceptions import BadFunctionCallOutput, ContractLogicError
 from web3.types import Address, ChecksumAddress, ABIFunction
 from web3 import Web3

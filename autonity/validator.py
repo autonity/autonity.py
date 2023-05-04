@@ -12,7 +12,7 @@ from autonity.erc20 import ERC20
 from enum import IntEnum
 from web3 import Web3
 from web3.types import ChecksumAddress, Wei
-from web3.contract import ContractFunction
+from web3.contract.contract import ContractFunction
 from typing import TypedDict, NewType, Tuple
 
 # pylint: disable=too-many-instance-attributes

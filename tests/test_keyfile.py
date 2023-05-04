@@ -30,7 +30,7 @@ class TestKeyfile(TestCase):
         enc_keyfile = create_keyfile_from_private_key(private_key, password)
 
         # Check address extraction
-        self.assertTrue(Web3.isChecksumAddress(get_address_from_keyfile(enc_keyfile)))
+        self.assertTrue(Web3.is_checksum_address(get_address_from_keyfile(enc_keyfile)))
 
         # attempt to decrypt
         private_key_dec = decrypt_keyfile(enc_keyfile, password)

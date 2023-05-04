@@ -12,7 +12,7 @@ from autonity.utils.keyfile import (
 
 from eth_account.account import Account, SignedTransaction  # type: ignore
 from web3 import Web3
-from web3.contract import ContractFunction
+from web3.contract.contract import ContractFunction
 from web3.types import ChecksumAddress, TxParams, TxReceipt, Wei, Nonce, HexBytes
 from web3._utils.transactions import fill_transaction_defaults
 from typing import Callable, Optional
@@ -106,7 +106,7 @@ def create_contract_function_transaction(
         chain_id=chain_id,
     )
 
-    return function.buildTransaction(tx)
+    return function.build_transaction(tx)
 
 
 def finalize_transaction(
@@ -129,7 +129,7 @@ def finalize_transaction(
 
     if "gas" not in tx:
         w3 = get_web3()
-        tx["gas"] = w3.eth.estimateGas(tx)
+        tx["gas"] = w3.eth.estimate_gas(tx)
 
     if "nonce" not in tx:
         if not from_addr:
@@ -152,7 +152,7 @@ def finalize_transaction(
         if len(data) == 0:
             del tx["data"]
         elif isinstance(data, bytes):
-            tx["data"] = Web3.toHex(data)
+            tx["data"] = Web3.to_hex(data)
 
     return tx
 

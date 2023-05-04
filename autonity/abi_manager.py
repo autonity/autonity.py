@@ -8,7 +8,7 @@ import autonity.abi
 
 import importlib.resources  # type: ignore
 import json
-from web3.contract import ABI
+from web3.contract.contract import ABI
 from typing import Dict
 
 

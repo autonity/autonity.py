@@ -17,7 +17,7 @@ from autonity.erc20 import ERC20
 from autonity.abi_manager import ABIManager
 
 from web3 import Web3
-from web3.contract import ContractFunction
+from web3.contract.contract import ContractFunction
 from web3.types import ChecksumAddress, Wei, HexBytes
 from typing import Sequence, TypedDict, Tuple, cast
 
@@ -73,7 +73,7 @@ class Autonity(ERC20):
     def __init__(self, web3: Web3):
         super().__init__(
             web3,
-            web3.toChecksumAddress(AUTONITY_CONTRACT_ADDRESS),
+            web3.to_checksum_address(AUTONITY_CONTRACT_ADDRESS),
             ABIManager.load_abi("Autonity"),
         )
 
@@ -84,7 +84,7 @@ class Autonity(ERC20):
         """
         Return the deterministic address of the Autonity contract.
         """
-        return Web3.toChecksumAddress(AUTONITY_CONTRACT_ADDRESS)
+        return Web3.to_checksum_address(AUTONITY_CONTRACT_ADDRESS)
 
     def commission_rate_precision(self) -> int:
         """

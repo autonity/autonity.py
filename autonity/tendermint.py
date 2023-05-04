@@ -29,7 +29,7 @@ class Tendermint(Module):
     def _getCommitteeAtHash_munger(  # pylint: disable=invalid-name
         self, block_hash: bytes
     ) -> Tuple[str]:
-        return (self.web3.toHex(block_hash),)
+        return (self.w3.to_hex(block_hash),)
 
     _getCommittee: Method = Method(
         json_rpc_method=RPCEndpoint("tendermint_getCommittee"),
@@ -92,7 +92,7 @@ class Tendermint(Module):
         """
         addr = self._getContractAddress()
         assert isinstance(addr, str)
-        return self.web3.toChecksumAddress(addr)
+        return self.w3.to_checksum_address(addr)
 
     def get_core_state(self) -> Any:
         """
