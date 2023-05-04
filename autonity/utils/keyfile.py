@@ -49,7 +49,7 @@ def get_address_from_keyfile(encrypted_key: EncryptedKeyData) -> ChecksumAddress
     """
     Given some keyfile data, extract the address.
     """
-    return Web3.toChecksumAddress(encrypted_key["address"])
+    return Web3.to_checksum_address(encrypted_key["address"])
 
 
 def decrypt_keyfile(encrypted_key: EncryptedKeyData, password: str) -> PrivateKey:

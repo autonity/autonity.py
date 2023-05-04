@@ -6,11 +6,11 @@ build-backend = "setuptools.build_meta"
 name = "autonity.py"
 version = "0.1.0"
 dependencies = [
-  "web3==5.31.3"
+  "web3==6.3.0"
 ]
 # For now, the stable version of web3.py does not seem to support
 # Python 3.10 as it uses an older version of websockets.
-requires-python = ">=3.8,<3.11"
+requires-python = ">=3.8"
 
 [tool.setuptools.packages.find]
 where = [ "." ]

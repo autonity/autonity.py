@@ -58,9 +58,9 @@ class TestERC20(TestCase):
         autonity = Autonity(w3)
         token = ERC20(w3, autonity.contract.address)
 
-        alice = Web3.toChecksumAddress(ALICE)
-        bob = Web3.toChecksumAddress(BOB)
-        carol = Web3.toChecksumAddress(CAROL)
+        alice = Web3.to_checksum_address(ALICE)
+        bob = Web3.to_checksum_address(BOB)
+        carol = Web3.to_checksum_address(CAROL)
 
         # Alice to Bob
         transfer_tx = create_contract_function_transaction(

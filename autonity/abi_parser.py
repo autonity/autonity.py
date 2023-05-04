@@ -118,7 +118,7 @@ def _string_to_argument_fn_for_type(arg_type: str) -> ParamParser:
     if arg_type == "bool":
         return _parse_bool
     if arg_type == "address":
-        return Web3.toChecksumAddress
+        return Web3.to_checksum_address
     if arg_type.startswith("bytes") or arg_type == "string":
         return _parse_string
     if arg_type.startswith("fixed") or arg_type.startswith("ufixed"):

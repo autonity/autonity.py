@@ -9,7 +9,7 @@ from autonity.abi_manager import ABIManager
 from autonity.erc20 import ERC20
 
 from web3 import Web3
-from web3.contract import ContractFunction
+from web3.contract.contract import ContractFunction
 from web3.types import Wei, ChecksumAddress
 
 
