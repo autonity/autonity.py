@@ -1,30 +1,70 @@
 [build-system]
-requires = ["setuptools==63.4.3"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
 
 [project]
-name = "autonity.py"
-version = "0.1.0"
-dependencies = [
-  "web3==6.3.0"
-]
-# For now, the stable version of web3.py does not seem to support
-# Python 3.10 as it uses an older version of websockets.
+name = "autonity"
+description = "Python library for interacting with Autonity"
+readme = "README.md"
+license = "MIT"
+keywords = ["autonity", "web3", "rpc", "client", "library"]
+dynamic = ["version", "urls"]
 requires-python = ">=3.8"
+dependencies = ["web3==6.3.0"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+]
 
-[tool.setuptools.packages.find]
-where = [ "." ]
-exclude = [ "tests" ]
+# [tool.setuptools.packages.find]
+# where = [ "." ]
+# exclude = [ "tests" ]
+# [tool.setuptools.package-data]
+# "autonity" = [ "abi/*.abi", "py.typed" ]
+[tool.black]
 
-[tool.setuptools.package-data]
-"autonity" = [ "abi/*.abi", "py.typed" ]
+[tool.hatch.version]
+source = "vcs"
 
-[project.optional-dependencies]
-"dev" = [
+[tool.hatch.build]
+include = ["autonity/**"]
+
+[tool.hatch.build.hooks.vcs]
+version-file = "autonity/__version__.py"
+
+[metadata.hooks.vcs.urls]
+Homepage = "https://github.com/autonity/autonity.py"
+Source = "https://github.com/autonity/autonity.py"
+Issues = "https://github.com/autonity/autonity.py/issues"
+source_archive = "https://github.com/autonity/autonity.py/archive/{commit_hash}.zip"
+
+[tool.hatch.envs.default]
+dependencies = [
   "mypy==0.982",
   "pylint==2.15.4",
   "flake8==5.0.4",
   "black==19.3b0",
+  "coverage==7.2.5",
+  "pyclean==2.7.0"
 ]
 
-[tool.black]
+[tool.hatch.envs.default.scripts]
+test = "python -m unittest discover {args:tests}"
+test-cov = "coverage run -m unittest discover {args:tests}"
+cov-report = [
+  "- coverage combine",
+  'coverage report --show-missing --omit="tests/*"',
+]
+cov = ["test-cov", "cov-report"]
+lint = [
+  "mypy autonity tests",
+  "pylint autonity tests",
+  "flake8 autonity tests",
+  "black --check autonity tests",
+]
+clean = ["hatch clean", "pyclean ."]

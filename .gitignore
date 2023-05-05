@@ -1,6 +1,10 @@
-*~
-/env
-*.egg-info
 __pycache__
+__version__.py
+.coverage
 .DS_Store
+.mypy_cache
+*.egg-info
+*~
 /build
+/env
+dist

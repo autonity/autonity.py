@@ -43,6 +43,8 @@ Where`<RPC_ENDPOINT>` is the name of the Autonity network being connected to. Se
 
 # Development
 
+The project uses [hatch](https://hatch.pypa.io/latest/install/#pipx) as build tool.
+
 ## Setup
 
 ```console
