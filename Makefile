@@ -1,12 +1,12 @@
 
 .PHONY: check check-types check-syntax check-tests test
 
-check: check-types check-syntax check-tests
+check: lint test
 
-check-syntax check-types:
+lint:
 	hatch run lint
 
-check-tests test:
+test:
 	hatch run test
 
 coverage:
