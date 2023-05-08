@@ -61,7 +61,6 @@ def validator_descriptor_from_tuple(
         ValidatorState,
     ]
 ) -> ValidatorDescriptor:
-
     """
     Create an instance from the tuple returned by Web3 contract calls.
     """
