@@ -119,7 +119,10 @@ class TestABIParser(TestCase):
             abi_function, ["0x2b5ad5c4795c026514f8317c7a215e218dccd6cf", "100"]
         )
         self.assertEqual(
-            [Web3.to_checksum_address("0x2b5ad5c4795c026514f8317c7a215e218dccd6cf"), 100],
+            [
+                Web3.to_checksum_address("0x2b5ad5c4795c026514f8317c7a215e218dccd6cf"),
+                100,
+            ],
             arguments,
         )
 
