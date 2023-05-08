@@ -15,3 +15,5 @@ coverage:
 clean:
 	hatch run clean
 
+update-abi:
+	./scripts/update_abi
