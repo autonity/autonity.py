@@ -3,10 +3,7 @@
 
 check: check-types check-syntax check-tests
 
-check-types:
-	mypy autonity tests
-
-check-syntax:
+check-syntax check-types:
 	hatch run lint
 
 check-tests test:
