@@ -1,20 +1,34 @@
 #!/usr/bin/env bash
 
-#Path to the autonity source code
-AUTONITY_PATH=../../../autonity-internal
 
+# Autonity node tag version
+# The releases are available at: 
+# https://github.com/autonity/autonity/releases
+AUTONITY_NODE_TAG=v0.10.1
+AUTONITY_NODE_COMMIT=ce483153e7c1527c0326e8100b57b102bd702781
+AUTONITY_NODE_REPO=https://github.com/autonity/autonity.git
 
-mkdir -p autonity/abi/temp
-solc --abi -o autonity/abi/temp --overwrite ${AUTONITY_PATH}/autonity/solidity/contracts/Autonity.sol
+echo 
+echo "============================================================"
+echo "Generating ABI files for Autonity contract from version ${AUTONITY_NODE_TAG}"
+echo "Commit: ${AUTONITY_NODE_COMMIT}"
+echo "============================================================"
+
+WORKING_DIR=autonity/abi/temp
+mkdir -p ${WORKING_DIR}
+git clone ${AUTONITY_NODE_REPO} ${WORKING_DIR}/autonity
+git -C ${WORKING_DIR}/autonity checkout ${AUTONITY_NODE_COMMIT}
+solc --abi -o ${WORKING_DIR} --overwrite ${WORKING_DIR}/autonity/autonity/solidity/contracts/Autonity.sol
 
 mkdir -p autonity/abi
-for i in `ls autonity/abi/temp/*.abi` ; do
+for i in `ls ${WORKING_DIR}/*.abi` ; do
     cat $i | jq --sort-keys > autonity/abi/${i##*/}
 done
 
 # Record how the abi was generated
 solc --version > autonity/abi/solc-version.txt
-git -C ../../../autonity-internal log --oneline -n 1 > autonity/abi/autonity-commit.txt
+git -C ${WORKING_DIR}/autonity log --oneline -n 1 > autonity/abi/autonity-commit.txt
+rm -rf ${WORKING_DIR}
 
 echo
 echo "============================================================"
