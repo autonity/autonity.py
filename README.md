@@ -45,21 +45,33 @@ Where`<RPC_ENDPOINT>` is the name of the Autonity network being connected to. Se
 
 The project uses [hatch](https://hatch.pypa.io/latest/install/#pipx) as build tool.
 
-## Setup
+## Test and linting
 
-```console
-# Install for development in a virtual env
-$ make install
+For linting use the command:
 
-# Execute all code checks
-$ make check
+```console 
+make lint
+```
+
+To run the test with coverage report use the command:
+```
+make coverage
 ```
 
 ## Updating the contract ABIs
 
-The simple script `script/update_abi` generates the contract ABIs using `solc` from the path, assuming the autonity souce code is installed in a default location (see the script for details).  Keys are ordered via the `jq` tool, in order to produce deterministic output, and the results written to the `autonity/abi` directory.  Further, it also records the version of solc and the commit used in files in the same directory.
+The script `script/update_abi` generates the contract ABIs using `solc`. Keys are ordered via the `jq` tool, in order to produce deterministic output, and the results written to the `autonity/abi` directory.  Further, it also records the version of solc and the commit used in files in the same directory.
+
+The autonity contract version being compiled is set in the `update_abi` script, to build a different version, it is necessary to set the variable
+`AUTONITY_NODE_COMMIT` with the desired git commit hash.
 
 After executing the script against a new version of the code, the diffs can be reviewed to determine which methods have been modified, removed or added.
+
+To run the script use
+
+```console
+make update-abi
+```
 
 ## Reporting a Vulnerability
 
