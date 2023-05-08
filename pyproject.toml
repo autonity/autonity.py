@@ -21,11 +21,6 @@ classifiers = [
   "Programming Language :: Python :: 3.11",
 ]
 
-# [tool.setuptools.packages.find]
-# where = [ "." ]
-# exclude = [ "tests" ]
-# [tool.setuptools.package-data]
-# "autonity" = [ "abi/*.abi", "py.typed" ]
 [tool.black]
 
 [tool.hatch.version]
@@ -45,10 +40,10 @@ source_archive = "https://github.com/autonity/autonity.py/archive/{commit_hash}.
 
 [tool.hatch.envs.default]
 dependencies = [
-  "mypy==0.982",
-  "pylint==2.15.4",
-  "flake8==5.0.4",
-  "black==19.3b0",
+  "mypy==1.2.0",
+  "pylint==2.17.4",
+  "flake8==6.0.0",
+  "black==23.3.0",
   "coverage==7.2.5",
   "pyclean==2.7.0"
 ]
@@ -68,3 +63,23 @@ lint = [
   "black --check autonity tests",
 ]
 clean = ["hatch clean", "pyclean ."]
+
+[tool.pylint]
+ignore-paths = ['autonity/__version__.py']
+good-names = ["w3", "tx"]
+disable = ["wrong-import-order", "too-few-public-methods", "fixme"]
+max-attributes = 10
+output-format = "text"
+
+[tool.mypy]
+strict_optional = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+scripts_are_modules = true
+disallow_untyped_defs = true
+disallow_untyped_calls = true
+exclude = "tests/archive"
+
+[[tool.mypy.overrides]]
+module = ["requests.*", "six"]
+ignore_missing_imports = true
