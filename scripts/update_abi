@@ -1,10 +1,8 @@
 #!/usr/bin/env bash
 
 
-# Autonity node tag version
-# The releases are available at: 
+# Autonity client releases are available here: 
 # https://github.com/autonity/autonity/releases
-AUTONITY_NODE_TAG=v0.10.1
 AUTONITY_NODE_COMMIT=ce483153e7c1527c0326e8100b57b102bd702781
 AUTONITY_NODE_REPO=https://github.com/autonity/autonity.git
 
@@ -14,7 +12,7 @@ echo "Generating ABI files for Autonity contract from version ${AUTONITY_NODE_TA
 echo "Commit: ${AUTONITY_NODE_COMMIT}"
 echo "============================================================"
 
-WORKING_DIR=autonity/abi/temp
+WORKING_DIR=temp
 mkdir -p ${WORKING_DIR}
 git clone ${AUTONITY_NODE_REPO} ${WORKING_DIR}/autonity
 git -C ${WORKING_DIR}/autonity checkout ${AUTONITY_NODE_COMMIT}
@@ -27,7 +25,7 @@ done
 
 # Record how the abi was generated
 solc --version > autonity/abi/solc-version.txt
-git -C ${WORKING_DIR}/autonity log --oneline -n 1 > autonity/abi/autonity-commit.txt
+git -C ${WORKING_DIR}/autonity log --no-decorate --pretty='format:%H' -n 1 > autonity/abi/autonity-commit.txt
 rm -rf ${WORKING_DIR}
 
 echo
