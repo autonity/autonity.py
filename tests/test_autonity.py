@@ -6,10 +6,59 @@ Autonity contract tests
 
 from tests.common import create_test_web3
 
-from autonity.autonity import Autonity
+from autonity.autonity import (
+    Autonity,
+    get_autonity_contract_version,
+    get_autonity_contract_abi_path,
+)
+import os
 
 from web3.types import Wei, HexBytes
 from unittest import TestCase
+
+
+class TestAutonityInfo(TestCase):
+    """
+    Test the autonity info functions.
+    """
+
+    def test_info(self) -> None:
+        """
+        Test the version function.
+        """
+        version_path = os.path.abspath(
+            os.path.join(
+                os.path.dirname(__file__),
+                "..",
+                "autonity",
+                "abi",
+                "autonity-commit.txt",
+            )
+        )
+        version = get_autonity_contract_version()
+
+        with open(version_path, "r", encoding="utf-8") as file:
+            expected_version = file.read().strip()
+            self.assertIsInstance(version, str)
+            self.assertEqual(version, expected_version)
+
+        self.assertIsInstance(version, str)
+        print(f"Autonity version: {version}")
+
+    def test_abi_path(self) -> None:
+        """
+        Test the abi path function.
+        """
+
+        abs_abi_path = os.path.abspath(
+            os.path.join(
+                os.path.dirname(__file__), "..", "autonity", "abi", "Autonity.abi"
+            )
+        )
+        abi_path = get_autonity_contract_abi_path()
+        self.assertIsInstance(abi_path, str)
+        self.assertEqual(abi_path, abs_abi_path)
+        print(f"Autonity abi path: {abi_path}")
 
 
 class TestAutonity(TestCase):
