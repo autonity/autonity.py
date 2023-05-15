@@ -16,6 +16,8 @@ from autonity.committee_member import CommitteeMember, committee_member_from_tup
 from autonity.erc20 import ERC20
 from autonity.abi_manager import ABIManager
 
+import os
+
 from web3 import Web3
 from web3.contract.contract import ContractFunction
 from web3.types import ChecksumAddress, Wei, HexBytes
@@ -24,15 +26,33 @@ from typing import Sequence, TypedDict, Tuple, cast
 # pylint: disable=too-many-public-methods
 # pylint: disable=too-many-arguments
 
-AUTONITY_CONTRACT_VERSION = 2
-"""
-The version of the Autonity contract which this library is aligned
-with.
-"""
-
-
-# TODO: use the tendermint RPC call for this?
 AUTONITY_CONTRACT_ADDRESS = "0xBd770416a3345F91E4B34576cb804a576fa48EB1"
+"""
+The default autonity contract address.
+see https://docs.autonity.org/concepts/architecture/#autonity-protocol-contract
+"""
+
+
+def get_autonity_contract_version() -> str:
+    """
+    Returns the version of the Autonity contract which this library is aligned with,
+    and that is bundled with the library.
+    """
+    version_path = os.path.join(os.path.dirname(__file__), "abi", "autonity-commit.txt")
+    if not os.path.exists(version_path):
+        return "N/A"
+    with open(version_path, "r", encoding="utf-8") as file:
+        return file.read().strip()
+
+
+def get_autonity_contract_abi_path() -> str:
+    """
+    Returns the Autonity contract ABI path bundled with the library.
+    This can be used in to load the ABI from a 3rd party app or library
+    """
+    return os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "abi", "Autonity.abi")
+    )
 
 
 class Staking(TypedDict):
