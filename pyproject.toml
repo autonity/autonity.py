@@ -21,16 +21,11 @@ classifiers = [
   "Programming Language :: Python :: 3.11",
 ]
 
-[tool.black]
-
-[tool.hatch.version]
-source = "vcs"
-
 [tool.hatch.build]
 include = ["autonity/**"]
 
-[tool.hatch.build.hooks.vcs]
-version-file = "autonity/__version__.py"
+[tool.hatch.version]
+path = "autonity/__version__.py"
 
 [metadata.hooks.vcs.urls]
 Homepage = "https://github.com/autonity/autonity.py"
@@ -45,7 +40,8 @@ dependencies = [
   "flake8==6.0.0",
   "black==23.3.0",
   "coverage==7.2.5",
-  "pyclean==2.7.0"
+  "pyclean==2.7.0",
+  "commitizen==3.2.1"
 ]
 
 [tool.hatch.envs.default.scripts]
@@ -57,15 +53,14 @@ cov-report = [
 ]
 cov = ["test-cov", "cov-report"]
 lint = [
+  "black --check autonity tests",
   "mypy autonity tests",
   "pylint autonity tests",
   "flake8 autonity tests",
-  "black --check autonity tests",
 ]
 clean = ["hatch clean", "pyclean ."]
 
 [tool.pylint]
-ignore-paths = ['autonity/__version__.py']
 good-names = ["w3", "tx"]
 disable = ["wrong-import-order", "too-few-public-methods", "fixme"]
 max-attributes = 10
@@ -83,3 +78,5 @@ exclude = "tests/archive"
 [[tool.mypy.overrides]]
 module = ["requests.*", "six"]
 ignore_missing_imports = true
+
+[tool.black]
