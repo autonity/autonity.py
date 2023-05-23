@@ -22,6 +22,8 @@ jobs:
         python-version: ${{ matrix.python-ver }}
     - name: Install Hatch
       run: pip install --upgrade hatch
-    - name: Lint and test
-      run:  make check
+    - name: Lint
+      run: make lint
+    - name: Test
+      run: make test
 
