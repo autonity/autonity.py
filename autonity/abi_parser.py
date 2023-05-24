@@ -4,7 +4,6 @@
 Functions for working with contract ABIs.
 """
 
-
 from __future__ import annotations
 from web3 import Web3
 from web3.types import (
@@ -13,6 +12,7 @@ from web3.types import (
     ABIFunctionParams,
 )
 from typing import Dict, List, Tuple, Sequence, Any, Union, Callable, cast
+import json
 
 
 def find_abi_constructor(abi: ABI) -> ABIFunction:
@@ -102,17 +102,20 @@ def _parse_bool(bool_str: str) -> bool:
     return True
 
 
+def _parse_complex(value: str) -> Any:
+    """
+    Parse a complex type, such as an array or tuple.
+    """
+    return json.loads(value)
+
+
 def _string_to_argument_fn_for_type(arg_type: str) -> ParamParser:
     """
     Return a function which parses a string into a type suitable for
     function arguments.
     """
-
-    # TODO: support complex types
-
-    if "[" in arg_type:
-        raise ValueError(f"cannot convert array type '{arg_type}' from string")
-
+    if arg_type.endswith("[]") or arg_type == "tuple":
+        return _parse_complex
     if arg_type.startswith("uint") or arg_type.startswith("int"):
         return int
     if arg_type == "bool":
@@ -123,7 +126,6 @@ def _string_to_argument_fn_for_type(arg_type: str) -> ParamParser:
         return _parse_string
     if arg_type.startswith("fixed") or arg_type.startswith("ufixed"):
         return float
-
     raise ValueError(f"cannot convert '{arg_type}' from string")
 
 
