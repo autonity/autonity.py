@@ -1,3 +1,5 @@
+# mypy: ignore-errors
+# This is a test file, skipping type checking in it.
 """
 Tests for abi_parser.py
 """
@@ -9,6 +11,9 @@ from web3 import Web3
 from web3.types import ABI
 from unittest import TestCase
 from typing import Dict, cast
+from json.decoder import JSONDecodeError
+
+import os
 
 
 MOCK_ABI = cast(
@@ -108,25 +113,145 @@ class TestABIParser(TestCase):
     Test the ABI parsing functionality.
     """
 
+    # pylint: disable=line-too-long
     def test_arg_encoding(self) -> None:
         """
         Test argument encoding.
         """
-
-        abi = ABIManager.load_abi("IERC20")
-        abi_function = find_abi_function(abi, "approve")
-        arguments = parse_arguments(
-            abi_function, ["0x2b5ad5c4795c026514f8317c7a215e218dccd6cf", "100"]
+        tests = [
+            {
+                "name": "OK: test for address",
+                "function": "test_address",
+                "inputs": ["0x1e9Ee7293bc304A10a0b33D0FCCBDFF78463bE5c"],
+                "expected": [
+                    Web3.to_checksum_address(
+                        "0x1e9Ee7293bc304A10a0b33D0FCCBDFF78463bE5c"
+                    )
+                ],
+            },
+            {
+                "name": "OK: for boolean input (1)",
+                "function": "test_bool",
+                "inputs": ["true"],
+                "expected": [True],
+            },
+            {
+                "name": "OK: for boolean input (2)",
+                "function": "test_bool",
+                "inputs": ["1"],
+                "expected": [True],
+            },
+            {
+                "name": "OK: for boolean input (3)",
+                "function": "test_bool",
+                "inputs": ["True"],
+                "expected": [True],
+            },
+            {
+                "name": "OK: for boolean input (4)",
+                "function": "test_bool",
+                "inputs": ["non empty string"],
+                "expected": [True],
+            },
+            {
+                "name": "OK: for boolean input (5)",
+                "function": "test_bool",
+                "inputs": ["   "],
+                "expected": [True],
+            },  # whitespace is considered True
+            {
+                "name": "OK: for boolean input (6)",
+                "function": "test_bool",
+                "inputs": ["false"],
+                "expected": [False],
+            },
+            {
+                "name": "OK: for boolean input (7)",
+                "function": "test_bool",
+                "inputs": ["0"],
+                "expected": [False],
+            },
+            {
+                "name": "OK: for boolean input (8)",
+                "function": "test_bool",
+                "inputs": ["False"],
+                "expected": [False],
+            },
+            {
+                "name": "OK: for boolean input (9)",
+                "function": "test_bool",
+                "inputs": [""],
+                "expected": [False],
+            },
+            {
+                "name": "OK: for array input",
+                "function": "test_array",
+                "inputs": ["[1,2,3,4,5]"],
+                "expected": [[1, 2, 3, 4, 5]],
+            },
+            {
+                "name": "OK: for tuple input",
+                "function": "test_tuple",
+                "inputs": [
+                    '["0x1e9Ee7293bc304A10a0b33D0FCCBDFF78463bE5c","0x1e9Ee7293bc304A10a0b33D0FCCBDFF78463bE5c",10]'
+                ],
+                "expected": [
+                    [
+                        Web3.to_checksum_address(
+                            "0x1e9Ee7293bc304A10a0b33D0FCCBDFF78463bE5c"
+                        ),
+                        Web3.to_checksum_address(
+                            "0x1e9Ee7293bc304A10a0b33D0FCCBDFF78463bE5c"
+                        ),
+                        10,
+                    ]
+                ],
+            },
+            {
+                "name": "OK: test for multiple input types",
+                "function": "test_combine",
+                "inputs": [
+                    '["0x1e9Ee7293bc304A10a0b33D0FCCBDFF78463bE5c","0x1e9Ee7293bc304A10a0b33D0FCCBDFF78463bE5c",10]',
+                    '["a","b","c","d"]',
+                    "0x1e9Ee7293bc304A10a0b33D0FCCBDFF78463bE5c",
+                    "10000",
+                ],
+                "expected": [
+                    [
+                        Web3.to_checksum_address(
+                            "0x1e9Ee7293bc304A10a0b33D0FCCBDFF78463bE5c"
+                        ),
+                        Web3.to_checksum_address(
+                            "0x1e9Ee7293bc304A10a0b33D0FCCBDFF78463bE5c"
+                        ),
+                        10,
+                    ],
+                    ["a", "b", "c", "d"],
+                    "0x1e9Ee7293bc304A10a0b33D0FCCBDFF78463bE5c",
+                    10000,
+                ],
+            },
+            {
+                "name": "ERR: test invalid json",
+                "function": "test_array",
+                "inputs": ["1,2,3,4,5"],
+                "error": JSONDecodeError,
+            },
+        ]
+        # execute tests
+        abi = ABIManager.load_abi_file(
+            os.path.join(os.path.dirname(__file__), "abi", "TestTypes.abi")
         )
-        self.assertEqual(
-            [
-                Web3.to_checksum_address("0x2b5ad5c4795c026514f8317c7a215e218dccd6cf"),
-                100,
-            ],
-            arguments,
-        )
-
-        # TODO: use mock ABIs to test other types
+        for test in tests:
+            abi_function = find_abi_function(abi, test["function"])
+            # check for error
+            if test.get("error") is not None:
+                self.assertRaises(
+                    JSONDecodeError, parse_arguments, abi_function, test["inputs"]
+                )
+                continue
+            arguments = parse_arguments(abi_function, test["inputs"])
+            self.assertEqual(test["expected"], arguments)
 
     def test_return_value_decoding(self) -> None:
         """
