@@ -1,3 +1,9 @@
+## 1.0.1 (2023-06-07)
+
+### Docs
+
+- update installation instructions in readme
+
 ## v1.0.0 (2023-05-26)
 
 ### Feat
