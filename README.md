@@ -7,7 +7,7 @@ This package provides typed wrappers around the Autonity-specific extensions of 
 # Installation
 
 ```console
-pip install git+https://github.com/autonity/autonity.py
+pip install autonity
 ```
 
 # Usage
@@ -49,7 +49,7 @@ The project uses [hatch](https://hatch.pypa.io/latest/install/#pipx) as build to
 
 For linting use the command:
 
-```console 
+```console
 make lint
 ```
 
