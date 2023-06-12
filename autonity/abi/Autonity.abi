@@ -10,7 +10,12 @@
           },
           {
             "internalType": "address",
-            "name": "addr",
+            "name": "nodeAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "oracleAddress",
             "type": "address"
           },
           {
@@ -123,6 +128,116 @@
     "anonymous": false,
     "inputs": [
       {
+        "components": [
+          {
+            "internalType": "uint8",
+            "name": "Chunks",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint8",
+            "name": "ChunkID",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint8",
+            "name": "Type",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint8",
+            "name": "Rule",
+            "type": "uint8"
+          },
+          {
+            "internalType": "address",
+            "name": "Reporter",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "Sender",
+            "type": "address"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "MsgHash",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes",
+            "name": "RawProof",
+            "type": "bytes"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct Autonity.AccountabilityEvent",
+        "name": "ev",
+        "type": "tuple"
+      }
+    ],
+    "name": "AccusationAdded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint8",
+            "name": "Chunks",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint8",
+            "name": "ChunkID",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint8",
+            "name": "Type",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint8",
+            "name": "Rule",
+            "type": "uint8"
+          },
+          {
+            "internalType": "address",
+            "name": "Reporter",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "Sender",
+            "type": "address"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "MsgHash",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes",
+            "name": "RawProof",
+            "type": "bytes"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct Autonity.AccountabilityEvent",
+        "name": "ev",
+        "type": "tuple"
+      }
+    ],
+    "name": "AccusationRemoved",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
         "indexed": true,
         "internalType": "address",
         "name": "owner",
@@ -188,6 +303,19 @@
       {
         "indexed": false,
         "internalType": "uint256",
+        "name": "period",
+        "type": "uint256"
+      }
+    ],
+    "name": "EpochPeriodUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
         "name": "gasPrice",
         "type": "uint256"
       }
@@ -212,6 +340,93 @@
       }
     ],
     "name": "MintedStake",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint8",
+            "name": "Chunks",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint8",
+            "name": "ChunkID",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint8",
+            "name": "Type",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint8",
+            "name": "Rule",
+            "type": "uint8"
+          },
+          {
+            "internalType": "address",
+            "name": "Reporter",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "Sender",
+            "type": "address"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "MsgHash",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes",
+            "name": "RawProof",
+            "type": "bytes"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct Autonity.AccountabilityEvent",
+        "name": "ev",
+        "type": "tuple"
+      }
+    ],
+    "name": "MisbehaviourAdded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "penalty",
+        "type": "uint256"
+      }
+    ],
+    "name": "MisbehaviourPenaltyUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "validator",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "penalty",
+        "type": "uint256"
+      }
+    ],
+    "name": "NodeSlashed",
     "type": "event"
   },
   {
@@ -256,6 +471,12 @@
       },
       {
         "indexed": false,
+        "internalType": "address",
+        "name": "oracleAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
         "internalType": "string",
         "name": "enode",
         "type": "string"
@@ -287,6 +508,61 @@
       }
     ],
     "name": "Rewarded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint8",
+            "name": "Chunks",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint8",
+            "name": "ChunkID",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint8",
+            "name": "Type",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint8",
+            "name": "Rule",
+            "type": "uint8"
+          },
+          {
+            "internalType": "address",
+            "name": "Reporter",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "Sender",
+            "type": "address"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "MsgHash",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes",
+            "name": "RawProof",
+            "type": "bytes"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct Autonity.AccountabilityEvent",
+        "name": "ev",
+        "type": "tuple"
+      }
+    ],
+    "name": "SubmitGuiltyAccusation",
     "type": "event"
   },
   {
@@ -332,149 +608,8 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_address",
-        "type": "address"
-      }
-    ],
-    "name": "activateValidator",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "owner",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "spender",
-        "type": "address"
-      }
-    ],
-    "name": "allowance",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "spender",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "approve",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_addr",
-        "type": "address"
-      }
-    ],
-    "name": "balanceOf",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_validator",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "bond",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_addr",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "burn",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_validator",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_rate",
-        "type": "uint256"
-      }
-    ],
-    "name": "changeCommissionRate",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
     "inputs": [],
     "name": "completeContractUpgrade",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "computeCommittee",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -539,19 +674,6 @@
   },
   {
     "inputs": [],
-    "name": "decimals",
-    "outputs": [
-      {
-        "internalType": "uint8",
-        "name": "",
-        "type": "uint8"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "deployer",
     "outputs": [
       {
@@ -578,7 +700,7 @@
   },
   {
     "inputs": [],
-    "name": "epochReward",
+    "name": "epochTotalBondedStake",
     "outputs": [
       {
         "internalType": "uint256",
@@ -591,7 +713,97 @@
   },
   {
     "inputs": [],
-    "name": "epochTotalBondedStake",
+    "name": "getNewContract",
+    "outputs": [
+      {
+        "internalType": "bytes",
+        "name": "",
+        "type": "bytes"
+      },
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "headBondingID",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "headUnbondingID",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "lastEpochBlock",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "resetContractUpgrade",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "tailBondingID",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "tailUnbondingID",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "totalRedistributed",
     "outputs": [
       {
         "internalType": "uint256",
@@ -605,11 +817,465 @@
   {
     "inputs": [
       {
+        "internalType": "bytes",
+        "name": "_bytecode",
+        "type": "bytes"
+      },
+      {
+        "internalType": "string",
+        "name": "_abi",
+        "type": "string"
+      }
+    ],
+    "name": "upgradeContract",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "stateMutability": "payable",
+    "type": "receive"
+  },
+  {
+    "inputs": [],
+    "name": "name",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "symbol",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint8",
+            "name": "Chunks",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint8",
+            "name": "ChunkID",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint8",
+            "name": "Type",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint8",
+            "name": "Rule",
+            "type": "uint8"
+          },
+          {
+            "internalType": "address",
+            "name": "Reporter",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "Sender",
+            "type": "address"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "MsgHash",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes",
+            "name": "RawProof",
+            "type": "bytes"
+          }
+        ],
+        "internalType": "struct Autonity.AccountabilityEvent[]",
+        "name": "_events",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "handleAccountabilityEvents",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "decimals",
+    "outputs": [
+      {
+        "internalType": "uint8",
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "_enode",
+        "type": "string"
+      },
+      {
+        "internalType": "address",
+        "name": "_oracleAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_multisig",
+        "type": "bytes"
+      }
+    ],
+    "name": "registerValidator",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_validator",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "bond",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_validator",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "unbond",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_address",
+        "type": "address"
+      }
+    ],
+    "name": "pauseValidator",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_address",
+        "type": "address"
+      }
+    ],
+    "name": "activateValidator",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_validator",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_rate",
+        "type": "uint256"
+      }
+    ],
+    "name": "changeCommissionRate",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_price",
+        "type": "uint256"
+      }
+    ],
+    "name": "setMinimumBaseFee",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_size",
+        "type": "uint256"
+      }
+    ],
+    "name": "setCommitteeSize",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_period",
+        "type": "uint256"
+      }
+    ],
+    "name": "setUnbondingPeriod",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_newPenalty",
+        "type": "uint256"
+      }
+    ],
+    "name": "setMisbehaviourPenalty",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_period",
+        "type": "uint256"
+      }
+    ],
+    "name": "setEpochPeriod",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_account",
+        "type": "address"
+      }
+    ],
+    "name": "setOperatorAccount",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address payable",
+        "name": "_account",
+        "type": "address"
+      }
+    ],
+    "name": "setTreasuryAccount",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_treasuryFee",
+        "type": "uint256"
+      }
+    ],
+    "name": "setTreasuryFee",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_addr",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "mint",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_addr",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "burn",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_recipient",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "transfer",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "spender",
+        "type": "address"
+      },
+      {
         "internalType": "uint256",
         "name": "amount",
         "type": "uint256"
       }
     ],
+    "name": "approve",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "sender",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "recipient",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "transferFrom",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "spender",
+        "type": "address"
+      }
+    ],
+    "name": "allowance",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "finalize",
     "outputs": [
       {
@@ -641,44 +1307,307 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "startId",
-        "type": "uint256"
-      },
+        "internalType": "bytes32",
+        "name": "_msgHash",
+        "type": "bytes32"
+      }
+    ],
+    "name": "misbehaviourProcessed",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_msgHash",
+        "type": "bytes32"
+      }
+    ],
+    "name": "accusationProcessed",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_addr",
+        "type": "address"
+      }
+    ],
+    "name": "getSlashedStake",
+    "outputs": [
       {
         "internalType": "uint256",
-        "name": "lastId",
+        "name": "",
         "type": "uint256"
       }
     ],
-    "name": "getBondingReq",
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_addr",
+        "type": "address"
+      }
+    ],
+    "name": "getValidatorRecentMisbehaviours",
     "outputs": [
       {
         "components": [
           {
-            "internalType": "address payable",
-            "name": "delegator",
+            "internalType": "uint8",
+            "name": "Chunks",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint8",
+            "name": "ChunkID",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint8",
+            "name": "Type",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint8",
+            "name": "Rule",
+            "type": "uint8"
+          },
+          {
+            "internalType": "address",
+            "name": "Reporter",
             "type": "address"
           },
           {
             "internalType": "address",
-            "name": "delegatee",
+            "name": "Sender",
             "type": "address"
           },
           {
-            "internalType": "uint256",
-            "name": "amount",
-            "type": "uint256"
+            "internalType": "bytes32",
+            "name": "MsgHash",
+            "type": "bytes32"
           },
           {
-            "internalType": "uint256",
-            "name": "startBlock",
-            "type": "uint256"
+            "internalType": "bytes",
+            "name": "RawProof",
+            "type": "bytes"
           }
         ],
-        "internalType": "struct Autonity.Staking[]",
+        "internalType": "struct Autonity.AccountabilityEvent[]",
         "name": "",
         "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_msgHash",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint8",
+        "name": "_type",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint8",
+        "name": "_rule",
+        "type": "uint8"
+      },
+      {
+        "internalType": "address",
+        "name": "_reporter",
+        "type": "address"
+      },
+      {
+        "internalType": "uint8",
+        "name": "_chunkID",
+        "type": "uint8"
+      }
+    ],
+    "name": "getAccountabilityEventChunk",
+    "outputs": [
+      {
+        "internalType": "bytes",
+        "name": "",
+        "type": "bytes"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_addr",
+        "type": "address"
+      }
+    ],
+    "name": "getValidatorRecentAccusations",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint8",
+            "name": "Chunks",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint8",
+            "name": "ChunkID",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint8",
+            "name": "Type",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint8",
+            "name": "Rule",
+            "type": "uint8"
+          },
+          {
+            "internalType": "address",
+            "name": "Reporter",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "Sender",
+            "type": "address"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "MsgHash",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes",
+            "name": "RawProof",
+            "type": "bytes"
+          }
+        ],
+        "internalType": "struct Autonity.AccountabilityEvent[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "computeCommittee",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getEpochPeriod",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getBlockPeriod",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getUnbondingPeriod",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getPenalty",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getLastEpochBlock",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getVersion",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -711,12 +1640,12 @@
   },
   {
     "inputs": [],
-    "name": "getCommitteeEnodes",
+    "name": "getValidators",
     "outputs": [
       {
-        "internalType": "string[]",
+        "internalType": "address[]",
         "name": "",
-        "type": "string[]"
+        "type": "address[]"
       }
     ],
     "stateMutability": "view",
@@ -724,64 +1653,7 @@
   },
   {
     "inputs": [],
-    "name": "getLastEpochBlock",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getMaxCommitteeSize",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getMinimumBaseFee",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getNewContract",
-    "outputs": [
-      {
-        "internalType": "bytes",
-        "name": "",
-        "type": "bytes"
-      },
-      {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getOperator",
+    "name": "getTreasuryAccount",
     "outputs": [
       {
         "internalType": "address",
@@ -793,24 +1665,13 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "height",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "round",
-        "type": "uint256"
-      }
-    ],
-    "name": "getProposer",
+    "inputs": [],
+    "name": "getTreasuryFee",
     "outputs": [
       {
-        "internalType": "address",
+        "internalType": "uint256",
         "name": "",
-        "type": "address"
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -819,44 +1680,30 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "startId",
-        "type": "uint256"
-      },
+        "internalType": "address",
+        "name": "_addr",
+        "type": "address"
+      }
+    ],
+    "name": "balanceOf",
+    "outputs": [
       {
         "internalType": "uint256",
-        "name": "lastId",
+        "name": "",
         "type": "uint256"
       }
     ],
-    "name": "getUnbondingReq",
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "totalSupply",
     "outputs": [
       {
-        "components": [
-          {
-            "internalType": "address payable",
-            "name": "delegator",
-            "type": "address"
-          },
-          {
-            "internalType": "address",
-            "name": "delegatee",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "amount",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "startBlock",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct Autonity.Staking[]",
+        "internalType": "uint256",
         "name": "",
-        "type": "tuple[]"
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -881,7 +1728,12 @@
           },
           {
             "internalType": "address",
-            "name": "addr",
+            "name": "nodeAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "oracleAddress",
             "type": "address"
           },
           {
@@ -935,20 +1787,7 @@
   },
   {
     "inputs": [],
-    "name": "getValidators",
-    "outputs": [
-      {
-        "internalType": "address[]",
-        "name": "",
-        "type": "address[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getVersion",
+    "name": "getMaxCommitteeSize",
     "outputs": [
       {
         "internalType": "uint256",
@@ -961,7 +1800,20 @@
   },
   {
     "inputs": [],
-    "name": "headBondingID",
+    "name": "getCommitteeEnodes",
+    "outputs": [
+      {
+        "internalType": "string[]",
+        "name": "",
+        "type": "string[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getMinimumBaseFee",
     "outputs": [
       {
         "internalType": "uint256",
@@ -974,25 +1826,12 @@
   },
   {
     "inputs": [],
-    "name": "headUnbondingID",
+    "name": "getOperator",
     "outputs": [
       {
-        "internalType": "uint256",
+        "internalType": "address",
         "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "lastEpochBlock",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
+        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -1001,223 +1840,44 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "_addr",
-        "type": "address"
+        "internalType": "uint256",
+        "name": "startId",
+        "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "_amount",
+        "name": "lastId",
         "type": "uint256"
       }
     ],
-    "name": "mint",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "name",
+    "name": "getBondingReq",
     "outputs": [
       {
-        "internalType": "string",
+        "components": [
+          {
+            "internalType": "address payable",
+            "name": "delegator",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "delegatee",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "startBlock",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct Autonity.Staking[]",
         "name": "",
-        "type": "string"
-      }
-    ],
-    "stateMutability": "pure",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_address",
-        "type": "address"
-      }
-    ],
-    "name": "pauseValidator",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "_enode",
-        "type": "string"
-      },
-      {
-        "internalType": "bytes",
-        "name": "_proof",
-        "type": "bytes"
-      }
-    ],
-    "name": "registerValidator",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "resetContractUpgrade",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_size",
-        "type": "uint256"
-      }
-    ],
-    "name": "setCommitteeSize",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_period",
-        "type": "uint256"
-      }
-    ],
-    "name": "setEpochPeriod",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_price",
-        "type": "uint256"
-      }
-    ],
-    "name": "setMinimumBaseFee",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_account",
-        "type": "address"
-      }
-    ],
-    "name": "setOperatorAccount",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address payable",
-        "name": "_account",
-        "type": "address"
-      }
-    ],
-    "name": "setTreasuryAccount",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_treasuryFee",
-        "type": "uint256"
-      }
-    ],
-    "name": "setTreasuryFee",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_period",
-        "type": "uint256"
-      }
-    ],
-    "name": "setUnbondingPeriod",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "symbol",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
-      }
-    ],
-    "stateMutability": "pure",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "tailBondingID",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "tailUnbondingID",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "totalRedistributed",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "totalSupply",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
+        "type": "tuple[]"
       }
     ],
     "stateMutability": "view",
@@ -1226,94 +1886,47 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "_recipient",
-        "type": "address"
+        "internalType": "uint256",
+        "name": "startId",
+        "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "_amount",
+        "name": "lastId",
         "type": "uint256"
       }
     ],
-    "name": "transfer",
+    "name": "getUnbondingReq",
     "outputs": [
       {
-        "internalType": "bool",
+        "components": [
+          {
+            "internalType": "address payable",
+            "name": "delegator",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "delegatee",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "startBlock",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct Autonity.Staking[]",
         "name": "",
-        "type": "bool"
+        "type": "tuple[]"
       }
     ],
-    "stateMutability": "nonpayable",
+    "stateMutability": "view",
     "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "sender",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "recipient",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "transferFrom",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_validator",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "unbond",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes",
-        "name": "_bytecode",
-        "type": "bytes"
-      },
-      {
-        "internalType": "string",
-        "name": "_abi",
-        "type": "string"
-      }
-    ],
-    "name": "upgradeContract",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "stateMutability": "payable",
-    "type": "receive"
   }
 ]
