@@ -19,6 +19,7 @@ from typing import TypedDict, NewType, Tuple
 
 
 ValidatorAddress = NewType("ValidatorAddress", ChecksumAddress)
+OracleAddress = NewType("OracleAddress", ChecksumAddress)
 
 
 class ValidatorState(IntEnum):
@@ -64,30 +65,32 @@ def validator_descriptor_from_tuple(
     """
     Create an instance from the tuple returned by Web3 contract calls.
     """
-    assert len(value) == 10
+    assert len(value) == 11, f"expected 11 elements, got {len(value)}"
     assert isinstance(value[0], str)
     assert isinstance(value[1], str)
     assert isinstance(value[2], str)
-    assert isinstance(value[3], int)
+    assert isinstance(value[3], str)
     assert isinstance(value[4], int)
     assert isinstance(value[5], int)
-    assert isinstance(value[6], str)
-    assert isinstance(value[7], int)
+    assert isinstance(value[6], int)
+    assert isinstance(value[7], str)
     assert isinstance(value[8], int)
     assert isinstance(value[9], int)
+    assert isinstance(value[10], int)
 
     return ValidatorDescriptor(
         {
             "treasury": value[0],
             "addr": value[1],
-            "enode": value[2],
-            "commission_rate": value[3],
-            "bonded_stake": value[4],
-            "total_slashed": value[5],
-            "liquid_contract": value[6],
-            "liquid_supply": value[7],
-            "registration_block": value[8],
-            "state": ValidatorState(value[9]),
+            "oracle_addr": value[2],  # TODO: remove this once the contract is updated
+            "enode": value[3],
+            "commission_rate": value[4],
+            "bonded_stake": value[5],
+            "total_slashed": value[6],
+            "liquid_contract": value[7],
+            "liquid_supply": value[8],
+            "registration_block": value[9],
+            "state": ValidatorState(value[10]),
         }
     )
 
@@ -99,6 +102,7 @@ class Validator:
 
     treasury: ChecksumAddress
     address: ValidatorAddress
+    oracle_address: OracleAddress
     enode: str
     commission_rate: int
     bonded_stake: int

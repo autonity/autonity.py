@@ -121,11 +121,13 @@ class TestAutonity(TestCase):
 
         validators = autonity.get_validators()
         validator_addr = validators[0]
+        # TODO: use oracle address
+        oracle_addr = validators[0]
         enode = "adsf"
 
         autonity.bond(validator_addr, Wei(1))
         autonity.unbond(validator_addr, Wei(1))
-        autonity.register_validator(enode, HexBytes("0x1234abcd"))
+        autonity.register_validator(enode, oracle_addr, HexBytes("0x1234abcd"))
         autonity.pause_validator(validator_addr)
         autonity.activate_validator(validator_addr)
         autonity.set_minimum_base_fee(Wei(1))

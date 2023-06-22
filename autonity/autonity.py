@@ -271,12 +271,12 @@ class Autonity(ERC20):
         """
         return self.contract.functions.unbond(validator_addr, amount)
 
-    def register_validator(self, enode: str, proof: HexBytes) -> ContractFunction:
+    def register_validator(self, enode: str, oracleAddress: str, proof: HexBytes) -> ContractFunction:
         """
         Create a TxParams calling the `registerValidator` method.  See
         `registerValidator` on the Autonity contract.
         """
-        return self.contract.functions.registerValidator(enode, proof)
+        return self.contract.functions.registerValidator(enode, oracleAddress, proof)
 
     def pause_validator(
         self,
