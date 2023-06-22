@@ -4,7 +4,7 @@
 Common test functions
 """
 
-
+import os
 from autonity.utils.web3 import Web3WithAutonity, create_web3_for_endpoint
 
 
@@ -24,7 +24,7 @@ Dummy address
 """
 
 
-DEFAULT_URI = "https://rpc1.piccadilly.autonity.org/"
+DEFAULT_URI = os.getenv("TEST_RPC_URI", "https://rpc1.piccadilly.autonity.org/")
 
 
 def create_test_web3() -> Web3WithAutonity:
