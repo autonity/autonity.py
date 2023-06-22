@@ -142,10 +142,6 @@ class Autonity(ERC20):
         """
         return self.contract.functions.totalRedistributed().call()
 
-    def epoch_reward(self) -> int:
-        """
-        See `epochReward` on the Autonity contract.
-        """
         return self.contract.functions.epochReward().call()
 
     def tail_bonding_id(self) -> int:
@@ -236,12 +232,6 @@ class Autonity(ERC20):
         See `getOperator` on the Autonity contract.
         """
         return self.contract.functions.getOperator().call()
-
-    def get_proposer(self, height: int, round_idx: int) -> ChecksumAddress:
-        """
-        See `getProposer` on the Autonity contract.
-        """
-        return self.contract.functions.getProposer(height, round_idx).call()
 
     def get_bonding_req(self, start_id: int, last_id: int) -> Sequence[Staking]:
         """

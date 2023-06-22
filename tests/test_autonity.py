@@ -83,7 +83,6 @@ class TestAutonity(TestCase):
         self.assertIsInstance(autonity.last_epoch_block(), int)
         self.assertIsInstance(autonity.epoch_total_bonded_stake(), int)
         self.assertIsInstance(autonity.total_redistributed(), int)
-        self.assertIsInstance(autonity.epoch_reward(), int)
 
         self.assertIsInstance(autonity.tail_bonding_id(), int)
         self.assertIsInstance(autonity.head_bonding_id(), int)
@@ -108,7 +107,6 @@ class TestAutonity(TestCase):
         self.assertIsInstance(committee_enodes[0], str)
         self.assertIsInstance(autonity.get_minimum_base_fee(), int)
         self.assertIsInstance(autonity.get_operator(), str)
-        self.assertIsInstance(autonity.get_proposer(1, 1), str)
         self.assertIsInstance(autonity.get_bonding_req(0, 100), list)
         self.assertIsInstance(autonity.get_unbonding_req(0, 100), list)
 
