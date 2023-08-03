@@ -9,9 +9,8 @@ from decimal import Decimal
 
 from web3.types import Wei
 
-AUTON_DECIMALS = 18
 
-# TODO: Change this to 18 once the Autonity node supports that.
+AUTON_DECIMALS = 18
 NEWTON_DECIMALS = 18
 
 
