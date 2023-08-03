@@ -4,6 +4,3 @@ __pycache__/
 # Root directories
 /.mypy_cache/
 /dist/
-
-# Root files
-/.coverage

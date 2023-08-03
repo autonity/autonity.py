@@ -52,20 +52,16 @@ networks.
 ## Development
 
 The project uses [hatch](https://hatch.pypa.io/latest/install/#pipx) as the
-build tool.
+build tool. To launch the tests, run:
 
-To launch the tests:
+```console
+hatch run test:all
+```
 
 For linting use the command:
 
 ```console
-make lint
-```
-
-To run the test with coverage report use the command:
-
-```
-make coverage
+hatch run lint:check
 ```
 
 ### Updating the Contract ABIs
@@ -81,12 +77,6 @@ to build a different version, it is necessary to set the variable
 
 After executing the script against a new version of the code, the diffs can be
 reviewed to determine which methods have been modified, removed or added.
-
-To run the script use
-
-```console
-make update-abi
-```
 
 ## Reporting a Vulnerability
 

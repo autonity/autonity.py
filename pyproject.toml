@@ -8,18 +8,24 @@ description = "Python library for interacting with Autonity"
 readme = "README.md"
 license = "MIT"
 keywords = ["autonity", "web3", "rpc", "client", "library"]
-dynamic = ["version", "urls"]
+dynamic = ["version"]
 requires-python = ">=3.8"
 dependencies = ["web3==6.3.0"]
 classifiers = [
-  "Development Status :: 4 - Beta",
-  "License :: OSI Approved :: MIT License",
-  "Programming Language :: Python",
-  "Programming Language :: Python :: 3.8",
-  "Programming Language :: Python :: 3.9",
-  "Programming Language :: Python :: 3.10",
-  "Programming Language :: Python :: 3.11",
+    "Development Status :: 4 - Beta",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
 ]
+
+[project.urls]
+homepage = "https://github.com/autonity/autonity.py"
+source = "https://github.com/autonity/autonity.py"
+issues = "https://github.com/autonity/autonity.py/issues"
+changes = "https://github.com/autonity/autonity.py/blob/master/CHANGELOG.md"
 
 [tool.hatch.build]
 include = ["autonity/**"]
@@ -27,56 +33,31 @@ include = ["autonity/**"]
 [tool.hatch.version]
 path = "autonity/__version__.py"
 
-[metadata.hooks.vcs.urls]
-Homepage = "https://github.com/autonity/autonity.py"
-Source = "https://github.com/autonity/autonity.py"
-Issues = "https://github.com/autonity/autonity.py/issues"
-source_archive = "https://github.com/autonity/autonity.py/archive/{commit_hash}.zip"
+[tool.hatch.envs.test]
+dependencies = ["mypy"]
 
-[tool.hatch.envs.default]
-dependencies = [
-  "mypy==1.2.0",
-  "pylint==2.17.4",
-  "flake8==6.0.0",
-  "black==23.3.0",
-  "coverage==7.2.5",
-  "pyclean==2.7.0",
-  "commitizen==3.2.1"
-]
+[tool.hatch.envs.test.scripts]
+main = "python -m unittest discover {args:tests}"
+types = "mypy {args:.}"
+all = ["main", "types"]
 
-[tool.hatch.envs.default.scripts]
-test = "python -m unittest discover {args:tests}"
-test-cov = "coverage run -m unittest discover {args:tests}"
-cov-report = [
-  "- coverage combine",
-  'coverage report --show-missing --omit="tests/*"',
-]
-cov = ["test-cov", "cov-report"]
-lint = [
-  "black --check autonity tests",
-  "mypy autonity tests",
-  "pylint autonity tests",
-  "flake8 autonity tests",
-]
-clean = ["hatch clean", "pyclean ."]
+[tool.hatch.envs.lint]
+detached = true
+dependencies = ["black", "ruff"]
 
-[tool.pylint]
-good-names = ["w3", "tx"]
-disable = ["wrong-import-order", "too-few-public-methods", "fixme"]
-max-attributes = 10
-output-format = "text"
+[tool.hatch.envs.lint.scripts]
+check = ["ruff check {args:.}", "black --check {args:.}"]
+format = ["black {args:.}", "ruff check --fix --select I {args:.}"]
 
 [tool.mypy]
-strict_optional = true
-disallow_incomplete_defs = true
 check_untyped_defs = true
-scripts_are_modules = true
-disallow_untyped_defs = true
+disallow_incomplete_defs = true
 disallow_untyped_calls = true
+disallow_untyped_defs = true
 exclude = "tests/archive"
+scripts_are_modules = true
+strict_optional = true
 
 [[tool.mypy.overrides]]
+ignore_missing_imports = false
 module = ["requests.*", "six"]
-ignore_missing_imports = true
-
-[tool.black]
