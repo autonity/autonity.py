@@ -4,13 +4,14 @@
 Model for an ERC20 token
 """
 
-from autonity.abi_manager import ABIManager
+from typing import Optional, Union
 
-from web3.contract.contract import Contract, ABI, ContractFunction
-from web3.exceptions import BadFunctionCallOutput, ContractLogicError
-from web3.types import Address, ChecksumAddress, ABIFunction
 from web3 import Web3
-from typing import Union, Optional
+from web3.contract.contract import ABI, Contract, ContractFunction
+from web3.exceptions import BadFunctionCallOutput, ContractLogicError
+from web3.types import ABIFunction, Address, ChecksumAddress
+
+from autonity.abi_manager import ABIManager
 
 # pylint: disable=too-many-arguments
 
@@ -18,7 +19,9 @@ from typing import Union, Optional
 NAME_FUNCTION: ABIFunction = {
     "inputs": [],
     "name": "name",
-    "outputs": [{"internalType": "string", "name": "", "type": "string"}],  # type: ignore
+    "outputs": [
+        {"internalType": "string", "name": "", "type": "string"}  # type: ignore
+    ],
     "stateMutability": "pure",
     "type": "function",
 }
@@ -26,7 +29,9 @@ NAME_FUNCTION: ABIFunction = {
 SYMBOL_FUNCTION: ABIFunction = {
     "inputs": [],
     "name": "symbol",
-    "outputs": [{"internalType": "string", "name": "", "type": "string"}],  # type: ignore
+    "outputs": [
+        {"internalType": "string", "name": "", "type": "string"}  # type: ignore
+    ],
     "stateMutability": "pure",
     "type": "function",
 }

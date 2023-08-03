@@ -5,8 +5,10 @@ Committee member model class
 """
 
 from __future__ import annotations
-from web3.types import ChecksumAddress
-from typing import TypedDict, Tuple
+
+from typing import Tuple, TypedDict
+
+from eth_typing import ChecksumAddress
 
 
 class CommitteeMember(TypedDict):

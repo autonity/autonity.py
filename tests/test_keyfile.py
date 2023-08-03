@@ -4,15 +4,16 @@
 Keyfile tests
 """
 
+from unittest import TestCase
+
+from web3 import Web3
+
 from autonity.utils.keyfile import (
     PrivateKey,
     create_keyfile_from_private_key,
-    get_address_from_keyfile,
     decrypt_keyfile,
+    get_address_from_keyfile,
 )
-
-from web3 import Web3
-from unittest import TestCase
 
 
 class TestKeyfile(TestCase):

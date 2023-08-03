@@ -4,13 +4,13 @@
 ABIManager class
 """
 
-import autonity.abi
-
 import importlib.resources  # type: ignore
 import json
-from web3.contract.contract import ABI
 from typing import Dict
 
+from web3.contract.contract import ABI
+
+import autonity.abi
 
 _CACHE: Dict[str, ABI] = {}
 

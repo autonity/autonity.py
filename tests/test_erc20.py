@@ -4,15 +4,15 @@
 ERC20 token tests
 """
 
-from tests.common import create_test_web3, ALICE, BOB, CAROL
-
-from autonity.utils.tx import create_contract_function_transaction
-from autonity.autonity import Autonity
-from autonity.erc20 import ERC20
+from unittest import TestCase
 
 from web3 import Web3
 from web3.types import Wei
-from unittest import TestCase
+
+from autonity.autonity import Autonity
+from autonity.erc20 import ERC20
+from autonity.utils.tx import create_contract_function_transaction
+from tests.common import ALICE, BOB, CAROL, create_test_web3
 
 
 class TestERC20(TestCase):

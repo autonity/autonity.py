@@ -4,17 +4,17 @@
 Autonity contract tests
 """
 
-from tests.common import create_test_web3
+import os
+from unittest import TestCase
+
+from web3.types import HexBytes, Wei
 
 from autonity.autonity import (
     Autonity,
-    get_autonity_contract_version,
     get_autonity_contract_abi_path,
+    get_autonity_contract_version,
 )
-import os
-
-from web3.types import Wei, HexBytes
-from unittest import TestCase
+from tests.common import create_test_web3
 
 
 class TestAutonityInfo(TestCase):

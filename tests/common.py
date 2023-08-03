@@ -7,7 +7,6 @@ Common test functions
 
 from autonity.utils.web3 import Web3WithAutonity, create_web3_for_endpoint
 
-
 ALICE = "0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf"
 """
 Dummy address

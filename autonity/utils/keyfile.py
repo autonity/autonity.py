@@ -4,13 +4,13 @@
 Keyfile utility functions
 """
 
+import json
+from typing import Any, Dict, NewType, cast
+
 from eth_account import Account
 from eth_keyfile import create_keyfile_json, decode_keyfile_json  # type: ignore
 from web3 import Web3
 from web3.types import ChecksumAddress
-import json
-from typing import Dict, NewType, Any, cast
-
 
 EncryptedKeyData = NewType("EncryptedKeyData", Dict[str, Any])
 

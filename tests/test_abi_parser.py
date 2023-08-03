@@ -4,17 +4,16 @@
 Tests for abi_parser.py
 """
 
-from autonity.abi_parser import find_abi_function, parse_arguments, parse_return_value
-from autonity.abi_manager import ABIManager
+import os
+from json.decoder import JSONDecodeError
+from typing import Dict, cast
+from unittest import TestCase
 
 from web3 import Web3
 from web3.types import ABI
-from unittest import TestCase
-from typing import Dict, cast
-from json.decoder import JSONDecodeError
 
-import os
-
+from autonity.abi_manager import ABIManager
+from autonity.abi_parser import find_abi_function, parse_arguments, parse_return_value
 
 MOCK_ABI = cast(
     ABI,

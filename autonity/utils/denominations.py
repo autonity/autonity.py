@@ -6,8 +6,8 @@ Constants related to known token precisions.
 """
 
 from decimal import Decimal
-from web3.types import Wei
 
+from web3.types import Wei
 
 AUTON_DECIMALS = 18
 

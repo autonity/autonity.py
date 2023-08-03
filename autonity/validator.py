@@ -6,14 +6,15 @@ Model holding Validator information.
 
 from __future__ import annotations
 
-from autonity.liquid_newton import LiquidNewton
-from autonity.erc20 import ERC20
-
 from enum import IntEnum
+from typing import NewType, Tuple, TypedDict
+
 from web3 import Web3
-from web3.types import ChecksumAddress, Wei
 from web3.contract.contract import ContractFunction
-from typing import TypedDict, NewType, Tuple
+from web3.types import ChecksumAddress, Wei
+
+from autonity.erc20 import ERC20
+from autonity.liquid_newton import LiquidNewton
 
 # pylint: disable=too-many-instance-attributes
 
@@ -135,6 +136,6 @@ class Validator:
 
     def claim_rewards(self) -> ContractFunction:
         """
-        Create a ContractFunction to claim the rewards due to th call, from this validator.
+        Create a ContractFunction to claim the rewards due from this validator.
         """
         return self._liquid_contract.claim_rewards()

@@ -4,13 +4,14 @@
 Web3 utility functions
 """
 
-from autonity.tendermint import Tendermint
-
 import re
+from typing import Any, Dict, Optional, Sequence, Type, Union, cast
+
 from web3 import Web3
-from web3.providers import BaseProvider
 from web3.module import Module
-from typing import Dict, Sequence, Union, Optional, Type, Any, cast
+from web3.providers import BaseProvider
+
+from autonity.tendermint import Tendermint
 
 
 class Web3WithAutonity(Web3):

@@ -2,14 +2,15 @@
 Tests for autonity.utils.denominations
 """
 
-from autonity.utils.denominations import (
-    format_quantity,
-    format_auton_quantity,
-    format_newton_quantity,
-)
+from unittest import TestCase
 
 from web3.types import Wei
-from unittest import TestCase
+
+from autonity.utils.denominations import (
+    format_auton_quantity,
+    format_newton_quantity,
+    format_quantity,
+)
 
 
 class TestDenominations(TestCase):

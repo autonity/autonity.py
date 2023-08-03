@@ -6,22 +6,24 @@ Python module holding the Autonity Web3.py external module
 
 from __future__ import annotations
 
-from autonity.config import Config, config_from_tuple
-from autonity.validator import (
-    validator_descriptor_from_tuple,
-    ValidatorDescriptor,
-    ValidatorAddress,
-)
-from autonity.committee_member import CommitteeMember, committee_member_from_tuple
-from autonity.erc20 import ERC20
-from autonity.abi_manager import ABIManager
-
 import os
+from typing import Sequence, Tuple, TypedDict, cast
 
+from eth_typing import ChecksumAddress
+from hexbytes import HexBytes
 from web3 import Web3
 from web3.contract.contract import ContractFunction
-from web3.types import ChecksumAddress, Wei, HexBytes
-from typing import Sequence, TypedDict, Tuple, cast
+from web3.types import Wei
+
+from autonity.abi_manager import ABIManager
+from autonity.committee_member import CommitteeMember, committee_member_from_tuple
+from autonity.config import Config, config_from_tuple
+from autonity.erc20 import ERC20
+from autonity.validator import (
+    ValidatorAddress,
+    ValidatorDescriptor,
+    validator_descriptor_from_tuple,
+)
 
 # pylint: disable=too-many-public-methods
 # pylint: disable=too-many-arguments

@@ -4,18 +4,19 @@
 Transaction utility functions
 """
 
+from typing import Callable, Optional
+
+from eth_account.account import Account, SignedTransaction  # type: ignore
+from web3 import Web3
+from web3._utils.transactions import fill_transaction_defaults
+from web3.contract.contract import ContractFunction
+from web3.types import ChecksumAddress, HexBytes, Nonce, TxParams, TxReceipt, Wei
+
 from autonity.utils.keyfile import (
     EncryptedKeyData,
     PrivateKey,
     decrypt_keyfile,
 )
-
-from eth_account.account import Account, SignedTransaction  # type: ignore
-from web3 import Web3
-from web3.contract.contract import ContractFunction
-from web3.types import ChecksumAddress, TxParams, TxReceipt, Wei, Nonce, HexBytes
-from web3._utils.transactions import fill_transaction_defaults
-from typing import Callable, Optional
 
 # pylint: disable=too-many-arguments
 # pylint: disable=too-many-branches

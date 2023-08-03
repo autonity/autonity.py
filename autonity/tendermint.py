@@ -6,13 +6,14 @@ Python module containing the Tendermint Web3 external module.
 
 from __future__ import annotations
 
-from autonity.committee_member import CommitteeMember
-
 import json
-from web3.types import ABI, RPCEndpoint
-from web3.module import Module
+from typing import Any, Sequence, Tuple, cast
+
 from web3.method import Method
-from typing import Sequence, Tuple, Any, cast
+from web3.module import Module
+from web3.types import ABI, RPCEndpoint
+
+from autonity.committee_member import CommitteeMember
 
 
 class Tendermint(Module):

@@ -5,14 +5,16 @@ Functions for working with contract ABIs.
 """
 
 from __future__ import annotations
+
+import json
+from typing import Any, Callable, Dict, List, Sequence, Tuple, Union, cast
+
 from web3 import Web3
 from web3.types import (
     ABI,
     ABIFunction,
     ABIFunctionParams,
 )
-from typing import Dict, List, Tuple, Sequence, Any, Union, Callable, cast
-import json
 
 
 def find_abi_constructor(abi: ABI) -> ABIFunction:

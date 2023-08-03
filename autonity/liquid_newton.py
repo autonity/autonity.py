@@ -5,12 +5,12 @@ Models for the LiquidNewton contract for a given validator.  Note
 that this contract also exposes functionality for claiming fees.
 """
 
-from autonity.abi_manager import ABIManager
-from autonity.erc20 import ERC20
-
 from web3 import Web3
 from web3.contract.contract import ContractFunction
-from web3.types import Wei, ChecksumAddress
+from web3.types import ChecksumAddress, Wei
+
+from autonity.abi_manager import ABIManager
+from autonity.erc20 import ERC20
 
 
 class LiquidNewton(ERC20):

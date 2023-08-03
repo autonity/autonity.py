@@ -4,11 +4,10 @@
 LiquidNewton token tests
 """
 
-from tests.common import create_test_web3
+from unittest import TestCase
 
 from autonity import Autonity, Validator
-
-from unittest import TestCase
+from tests.common import create_test_web3
 
 
 class TestValidator(TestCase):
@@ -34,11 +33,13 @@ class TestValidator(TestCase):
         lnew = validator.lnew_contract
         lnew_symbol = lnew.symbol() or "LNEW"
         print(
-            f"Validator: {validator.address}, {lnew_symbol}: {lnew.name()} @{lnew.contract.address}"
+            f"Validator: {validator.address}, {lnew_symbol}: "
+            f"{lnew.name()} @{lnew.contract.address}"
         )
         for account in holders:
             lnew_balance = lnew.balance_of(account)
             unclaimed = validator.unclaimed_rewards(account)
             print(
-                f"  {account}: balance={lnew_balance} {lnew_symbol}, unclaimed fees={unclaimed}"
+                f"  {account}: "
+                f"balance={lnew_balance} {lnew_symbol}, unclaimed fees={unclaimed}"
             )

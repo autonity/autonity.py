@@ -4,11 +4,10 @@
 Tendermint module tests
 """
 
-from tests.common import create_test_web3
+from unittest import TestCase
 
 from autonity import Tendermint
-
-from unittest import TestCase
+from tests.common import create_test_web3
 
 
 class TestTenderming(TestCase):

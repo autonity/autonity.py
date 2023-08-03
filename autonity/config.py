@@ -6,8 +6,9 @@ Models for Autonity contract configuration
 
 from __future__ import annotations
 
+from typing import Tuple, TypedDict
+
 from web3.types import ChecksumAddress
-from typing import TypedDict, Tuple
 
 
 class Config(TypedDict):
