@@ -1,13 +1,13 @@
 #!/usr/bin/bash -eu
 
-AUTONITY_COMMIT='ce483153e7c1527c0326e8100b57b102bd702781'
-AUTONITY_REPO_URL='https://github.com/autonity/autonity.git'
-
 REPO_DIR="$(realpath "$(dirname "$0")/..")"
 WORKING_DIR="$(mktemp -d)"
 
-ABI_DIR="${REPO_DIR}/autonity/abi"
 AUTONITY_DIR="${WORKING_DIR}/autonity"
+ABI_DIR="${AUTONITY_DIR}/abi"
+
+AUTONITY_COMMIT="$(cat ${ABI_DIR}/autonity-commit.txt)"
+AUTONITY_REPO_URL='https://github.com/autonity/autonity.git'
 
 git clone ${AUTONITY_REPO_URL} "${AUTONITY_DIR}"
 cd "${AUTONITY_DIR}"

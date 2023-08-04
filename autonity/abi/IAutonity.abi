@@ -1,7 +1,7 @@
 [
   {
     "inputs": [],
-    "name": "ACCUSATION_CONTRACT",
+    "name": "getOperator",
     "outputs": [
       {
         "internalType": "address",
@@ -14,20 +14,7 @@
   },
   {
     "inputs": [],
-    "name": "INNOCENCE_CONTRACT",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "MISBEHAVIOUR_CONTRACT",
+    "name": "getOracle",
     "outputs": [
       {
         "internalType": "address",
