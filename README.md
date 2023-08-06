@@ -66,7 +66,7 @@ hatch run lint:check
 
 ### Updating the Contract ABIs
 
-The script `script/update_abi` generates the contract ABIs using `solc`. Keys
+The script `script/update_abi.sh` generates the contract ABIs using `solc`. Keys
 are ordered via the `jq` tool, in order to produce deterministic output, and the
 results written to the `autonity/abi` directory. Further, it also records the
 version of solc and the commit used in files in the same directory.
