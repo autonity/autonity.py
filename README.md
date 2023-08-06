@@ -1,4 +1,4 @@
-# Introduction
+# autonity.py
 
 [Autonity](https://autonity.org) is a protocol that provides smart contract and
 settlement infrastructure specialized for developing new risk markets. It is a
@@ -9,13 +9,13 @@ This package provides typed wrappers around the Autonity-specific extensions of
 Ethereum, using the [Web3.py](https://github.com/ethereum/web3.py) framework,
 for convenient and statically checked interactions with the Autonity network.
 
-# Installation
+## Installation
 
 ```console
 pip install autonity
 ```
 
-# Usage
+## Usage
 
 The primary utility of this library is the typed wrappers around the Autonity
 protocol contract, which provides access to Autonity-specific functionality.
@@ -46,14 +46,15 @@ print(f"unclaimed rewards: {unclaimed_rewards}")
 ```
 
 Where`<RPC_ENDPOINT>` is the name of the Autonity network being connected to.
-See <https://docs.autonity.org/networks/> for information about specific networks.
+See <https://docs.autonity.org/networks/> for information about specific
+networks.
 
-# Development
+## Development
 
-The project uses [hatch](https://hatch.pypa.io/latest/install/#pipx) as build
-tool.
+The project uses [hatch](https://hatch.pypa.io/latest/install/#pipx) as the
+build tool.
 
-## Test and linting
+To launch the tests:
 
 For linting use the command:
 
@@ -67,7 +68,7 @@ To run the test with coverage report use the command:
 make coverage
 ```
 
-## Updating the contract ABIs
+### Updating the Contract ABIs
 
 The script `script/update_abi` generates the contract ABIs using `solc`. Keys
 are ordered via the `jq` tool, in order to produce deterministic output, and the
