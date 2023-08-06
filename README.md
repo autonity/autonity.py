@@ -1,8 +1,13 @@
 # Introduction
 
-[Autonity](https://autonity.org) is a protocol that provides smart contract and settlement infrastructure specialized for developing new risk markets.  It is a fork of the [Ethereum protocol](https://ethereum.org/).  See the [Autonity documentation](https://docs.autonity.org) for further information.
+[Autonity](https://autonity.org) is a protocol that provides smart contract and
+settlement infrastructure specialized for developing new risk markets. It is a
+fork of the [Ethereum protocol](https://ethereum.org/). See the
+[Autonity documentation](https://docs.autonity.org) for further information.
 
-This package provides typed wrappers around the Autonity-specific extensions of Ethereum, using the [Web3.py](https://github.com/ethereum/web3.py) framework, for convenient and statically checked interactions with the Autonity network.
+This package provides typed wrappers around the Autonity-specific extensions of
+Ethereum, using the [Web3.py](https://github.com/ethereum/web3.py) framework,
+for convenient and statically checked interactions with the Autonity network.
 
 # Installation
 
@@ -12,7 +17,8 @@ pip install autonity
 
 # Usage
 
-The primary utility of this library is the typed wrappers around the Autonity protocol contract, which provides access to Autonity-specific functionality.
+The primary utility of this library is the typed wrappers around the Autonity
+protocol contract, which provides access to Autonity-specific functionality.
 
 ```python
 from autonity.utils.web3 import create_web3_for_endpoint
@@ -39,11 +45,13 @@ unclaimed_rewards = validator_0.unclaimed_rewards("<ADDRESS>")
 print(f"unclaimed rewards: {unclaimed_rewards}")
 ```
 
-Where`<RPC_ENDPOINT>` is the name of the Autonity network being connected to. See https://docs.autonity.org/networks/ for information about specific networks.
+Where`<RPC_ENDPOINT>` is the name of the Autonity network being connected to.
+See <https://docs.autonity.org/networks/> for information about specific networks.
 
 # Development
 
-The project uses [hatch](https://hatch.pypa.io/latest/install/#pipx) as build tool.
+The project uses [hatch](https://hatch.pypa.io/latest/install/#pipx) as build
+tool.
 
 ## Test and linting
 
@@ -54,18 +62,24 @@ make lint
 ```
 
 To run the test with coverage report use the command:
+
 ```
 make coverage
 ```
 
 ## Updating the contract ABIs
 
-The script `script/update_abi` generates the contract ABIs using `solc`. Keys are ordered via the `jq` tool, in order to produce deterministic output, and the results written to the `autonity/abi` directory.  Further, it also records the version of solc and the commit used in files in the same directory.
+The script `script/update_abi` generates the contract ABIs using `solc`. Keys
+are ordered via the `jq` tool, in order to produce deterministic output, and the
+results written to the `autonity/abi` directory. Further, it also records the
+version of solc and the commit used in files in the same directory.
 
-The autonity contract version being compiled is set in the `update_abi` script, to build a different version, it is necessary to set the variable
+The autonity contract version being compiled is set in the `update_abi` script,
+to build a different version, it is necessary to set the variable
 `AUTONITY_NODE_COMMIT` with the desired git commit hash.
 
-After executing the script against a new version of the code, the diffs can be reviewed to determine which methods have been modified, removed or added.
+After executing the script against a new version of the code, the diffs can be
+reviewed to determine which methods have been modified, removed or added.
 
 To run the script use
 
@@ -77,9 +91,11 @@ make update-abi
 
 **Please do not file a public ticket** mentioning the vulnerability.
 
-Instead, please send an email to <security@autonity.org> to report a security issue.
+Instead, please send an email to <security@autonity.org> to report a security
+issue.
 
-The following PGP key may be used to communicate sensitive information to developers:
+The following PGP key may be used to communicate sensitive information to
+developers:
 
 Fingerprint: `6006 CCC3 DD11 7885 1A23 4290 7486 F832 6320 219E`
 
