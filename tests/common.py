@@ -5,6 +5,10 @@ Common test functions
 """
 
 
+import os
+
+from dotenv import load_dotenv
+
 from autonity.utils.web3 import Web3WithAutonity, create_web3_for_endpoint
 
 ALICE = "0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf"
@@ -23,11 +27,12 @@ Dummy address
 """
 
 
-DEFAULT_URI = "https://rpc1.piccadilly.autonity.org/"
+load_dotenv()
+TEST_RPC_URL = os.getenv("TEST_RPC_URL", "https://rpc1.piccadilly.autonity.org/")
 
 
 def create_test_web3() -> Web3WithAutonity:
     """
     Create a Web3 for testing purposes.
     """
-    return create_web3_for_endpoint(DEFAULT_URI)
+    return create_web3_for_endpoint(TEST_RPC_URL)

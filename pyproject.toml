@@ -34,7 +34,7 @@ include = ["autonity/**"]
 path = "autonity/__version__.py"
 
 [tool.hatch.envs.test]
-dependencies = ["mypy"]
+dependencies = ["mypy", "python-dotenv"]
 
 [tool.hatch.envs.test.scripts]
 main = "python -m unittest discover {args:tests}"
