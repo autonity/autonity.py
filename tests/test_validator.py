@@ -33,7 +33,7 @@ class TestValidator(TestCase):
         lnew = validator.lnew_contract
         lnew_symbol = lnew.symbol() or "LNEW"
         print(
-            f"Validator: {validator.address}, {lnew_symbol}: "
+            f"Validator: {validator.node_address}, {lnew_symbol}: "
             f"{lnew.name()} @{lnew.contract.address}"
         )
         for account in holders:

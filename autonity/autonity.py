@@ -20,7 +20,8 @@ from autonity.committee_member import CommitteeMember, committee_member_from_tup
 from autonity.config import Config, config_from_tuple
 from autonity.erc20 import ERC20
 from autonity.validator import (
-    ValidatorAddress,
+    NodeAddress,
+    OracleAddress,
     ValidatorDescriptor,
     validator_descriptor_from_tuple,
 )
@@ -150,35 +151,29 @@ class Autonity(ERC20):
         """
         return self.contract.functions.epochReward().call()
 
-    def tail_bonding_id(self) -> int:
-        """
-        See `tailBondingID` on the Autonity contract.
-        """
-        return self.contract.functions.tailBondingID().call()
-
-    def head_bonding_id(self) -> int:
-        """
-        See `headBondingID` on the Autonity contract.
-        """
-        return self.contract.functions.headBondingID().call()
-
-    def tail_unbonding_id(self) -> int:
-        """
-        See `tailUnbondingID` on the Autonity contract.
-        """
-        return self.contract.functions.tailUnbondingID().call()
-
-    def head_unbonding_id(self) -> int:
-        """
-        See `headUnbondingID` on the Autonity contract.
-        """
-        return self.contract.functions.headUnbondingID().call()
-
     def deployer(self) -> ChecksumAddress:
         """
         See `deployer` on the Autonity contract.
         """
         return self.contract.functions.deployer().call()
+
+    def get_epoch_period(self) -> int:
+        """
+        See `getEpochPeriod` on the Autonity contract.
+        """
+        return self.contract.functions.getEpochPeriod().call()
+
+    def get_block_period(self) -> int:
+        """
+        See `getBlockPeriod` on the Autonity contract.
+        """
+        return self.contract.functions.getBlockPeriod().call()
+
+    def get_unbonding_period(self) -> int:
+        """
+        See `getUnbondingPeriod` on the Autonity contract.
+        """
+        return self.contract.functions.getUnbondingPeriod().call()
 
     def get_last_epoch_block(self) -> int:
         """
@@ -199,11 +194,23 @@ class Autonity(ERC20):
         cms = self.contract.functions.getCommittee().call()
         return [committee_member_from_tuple(cm) for cm in cms]
 
-    def get_validators(self) -> Sequence[ValidatorAddress]:
+    def get_validators(self) -> Sequence[NodeAddress]:
         """
         See `getValidators` on the Autonity contract.
         """
         return self.contract.functions.getValidators().call()
+
+    def get_treasury_account(self) -> ChecksumAddress:
+        """
+        See `getTreasuryAccount` on the Autonity contract.
+        """
+        return self.contract.functions.getTreasuryAccount().call()
+
+    def get_treasury_fee(self) -> int:
+        """
+        See `getTreasuryFee` on the Autonity contract.
+        """
+        return self.contract.functions.getTreasuryFee().call()
 
     def get_validator(self, addr: ChecksumAddress) -> ValidatorDescriptor:
         """
@@ -239,31 +246,27 @@ class Autonity(ERC20):
         """
         return self.contract.functions.getOperator().call()
 
+    def get_oracle(self) -> ChecksumAddress:
+        """
+        See `getOracle` on the Autonity contract.
+        """
+        return self.contract.functions.getOracle().call()
+
     def get_proposer(self, height: int, round_idx: int) -> ChecksumAddress:
         """
         See `getProposer` on the Autonity contract.
         """
         return self.contract.functions.getProposer(height, round_idx).call()
 
-    def get_bonding_req(self, start_id: int, last_id: int) -> Sequence[Staking]:
+    def get_epoch_from_block(self, block: int) -> int:
         """
-        See `getBondingReq` on the Autonity contract.
+        See `getEpochFromBlock` on the Autonity contract.
         """
-        result = self.contract.functions.getBondingReq(start_id, last_id).call()
-        assert isinstance(result, list)
-        return [staking_from_tuple(staking) for staking in result]
-
-    def get_unbonding_req(self, start_id: int, last_id: int) -> Sequence[Staking]:
-        """
-        See `getUnbondingReq` on the Autonity contract.
-        """
-        result = self.contract.functions.getUnbondingReq(start_id, last_id).call()
-        assert isinstance(result, list)
-        return [staking_from_tuple(staking) for staking in result]
+        return self.contract.functions.getEpochFromBlock(block).call()
 
     def bond(
         self,
-        validator_addr: ValidatorAddress,
+        validator_addr: NodeAddress,
         amount: int,
     ) -> ContractFunction:
         """
@@ -274,7 +277,7 @@ class Autonity(ERC20):
 
     def unbond(
         self,
-        validator_addr: ValidatorAddress,
+        validator_addr: NodeAddress,
         amount: int,
     ) -> ContractFunction:
         """
@@ -283,16 +286,18 @@ class Autonity(ERC20):
         """
         return self.contract.functions.unbond(validator_addr, amount)
 
-    def register_validator(self, enode: str, proof: HexBytes) -> ContractFunction:
+    def register_validator(
+        self, enode: str, oracle: OracleAddress, proof: HexBytes
+    ) -> ContractFunction:
         """
         Create a TxParams calling the `registerValidator` method.  See
         `registerValidator` on the Autonity contract.
         """
-        return self.contract.functions.registerValidator(enode, proof)
+        return self.contract.functions.registerValidator(enode, oracle, proof)
 
     def pause_validator(
         self,
-        validator_addr: ValidatorAddress,
+        validator_addr: NodeAddress,
     ) -> ContractFunction:
         """
         Create a TxParams calling the `pauseValidator` method.  See
@@ -302,7 +307,7 @@ class Autonity(ERC20):
 
     def activate_validator(
         self,
-        validator_addr: ValidatorAddress,
+        validator_addr: NodeAddress,
     ) -> ContractFunction:
         """
         Create a TxParams calling the `activateValidator` method.  See
@@ -368,6 +373,41 @@ class Autonity(ERC20):
         """
         return self.contract.functions.setTreasuryFee(treasury_fee)
 
+    def set_accountability_contract(self, address: ChecksumAddress) -> ContractFunction:
+        """
+        Set the accountability contract address. Restricted to the Operator
+        account.  See `setAccountabilityContract` on Autonity contract.
+        """
+        return self.contract.functions.setAccountabilityContract(address)
+
+    def set_oracle_contract(self, address: ChecksumAddress) -> ContractFunction:
+        """
+        Set the oracle contract address. Restricted to the Operator
+        account.  See `setOracleContract` on Autonity contract.
+        """
+        return self.contract.functions.setOracleContract(address)
+
+    def set_acu_contract(self, address: ChecksumAddress) -> ContractFunction:
+        """
+        Set the acu contract address. Restricted to the Operator
+        account.  See `setAcuContract` on Autonity contract.
+        """
+        return self.contract.functions.setAcuContract(address)
+
+    def set_supply_control_contract(self, address: ChecksumAddress) -> ContractFunction:
+        """
+        Set the supply control contract address. Restricted to the Operator
+        account.  See `setSupplyControlContract` on Autonity contract.
+        """
+        return self.contract.functions.setSupplyControlContract(address)
+
+    def set_stabilization_contract(self, address: ChecksumAddress) -> ContractFunction:
+        """
+        Set the stabilization contract address. Restricted to the Operator
+        account.  See `setStabilizationContract` on Autonity contract.
+        """
+        return self.contract.functions.setStabilizationContract(address)
+
     def mint(self, address: ChecksumAddress, amount: int) -> ContractFunction:
         """
         Mint new stake token (NTN) and add it to the recipient
@@ -386,7 +426,7 @@ class Autonity(ERC20):
 
     def change_commission_rate(
         self,
-        validator: ValidatorAddress,
+        validator: NodeAddress,
         rate: int,
     ) -> ContractFunction:
         """

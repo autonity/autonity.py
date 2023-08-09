@@ -28,6 +28,24 @@ class LiquidNewton(ERC20):
     def __init__(self, web3: Web3, address: ChecksumAddress):
         super().__init__(web3, address, ABIManager.load_abi("Liquid"))
 
+    def validator(self) -> ChecksumAddress:
+        """
+        Get the validator for this contract.
+        """
+        return self.contract.functions.validator().call()
+
+    def treasury(self) -> ChecksumAddress:
+        """
+        Get the treasury for this contract.
+        """
+        return self.contract.functions.treasury().call()
+
+    def commissionRate(self) -> ChecksumAddress:
+        """
+        Get the commision rate for this contract.
+        """
+        return self.contract.functions.commissionRate().call()
+
     def unclaimed_rewards(self, account: ChecksumAddress) -> Wei:
         """
         See function `unclaimedRewards` on LiquidNewton.sol

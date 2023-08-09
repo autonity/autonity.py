@@ -85,11 +85,6 @@ class TestAutonity(TestCase):
         self.assertIsInstance(autonity.total_redistributed(), int)
         self.assertIsInstance(autonity.epoch_reward(), int)
 
-        self.assertIsInstance(autonity.tail_bonding_id(), int)
-        self.assertIsInstance(autonity.head_bonding_id(), int)
-        self.assertIsInstance(autonity.tail_unbonding_id(), int)
-        self.assertIsInstance(autonity.head_unbonding_id(), int)
-
         self.assertIsInstance(autonity.deployer(), str)
 
         self.assertIsInstance(autonity.get_last_epoch_block(), int)
@@ -109,8 +104,6 @@ class TestAutonity(TestCase):
         self.assertIsInstance(autonity.get_minimum_base_fee(), int)
         self.assertIsInstance(autonity.get_operator(), str)
         self.assertIsInstance(autonity.get_proposer(1, 1), str)
-        self.assertIsInstance(autonity.get_bonding_req(0, 100), list)
-        self.assertIsInstance(autonity.get_unbonding_req(0, 100), list)
 
     def test_autonity_txs(self) -> None:
         """
@@ -123,11 +116,12 @@ class TestAutonity(TestCase):
 
         validators = autonity.get_validators()
         validator_addr = validators[0]
+        oracle_addr = validators[0]
         enode = "adsf"
 
         autonity.bond(validator_addr, Wei(1))
         autonity.unbond(validator_addr, Wei(1))
-        autonity.register_validator(enode, HexBytes("0x1234abcd"))
+        autonity.register_validator(enode, oracle_addr, HexBytes("0x1234abcd"))
         autonity.pause_validator(validator_addr)
         autonity.activate_validator(validator_addr)
         autonity.set_minimum_base_fee(Wei(1))
