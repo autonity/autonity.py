@@ -30,16 +30,16 @@ class TestValidator(TestCase):
         holders = [val.treasury for val in validators]
 
         validator = validators[0]
-        lnew = validator.lnew_contract
-        lnew_symbol = lnew.symbol() or "LNEW"
+        lntn = validator.lntn_contract
+        lntn_symbol = lntn.symbol() or "LNTN"
         print(
-            f"Validator: {validator.node_address}, {lnew_symbol}: "
-            f"{lnew.name()} @{lnew.contract.address}"
+            f"Validator: {validator.node_address}, {lntn_symbol}: "
+            f"{lntn.name()} @{lntn.contract.address}"
         )
         for account in holders:
-            lnew_balance = lnew.balance_of(account)
+            lntn_balance = lntn.balance_of(account)
             unclaimed = validator.unclaimed_rewards(account)
             print(
                 f"  {account}: "
-                f"balance={lnew_balance} {lnew_symbol}, unclaimed fees={unclaimed}"
+                f"balance={lntn_balance} {lntn_symbol}, unclaimed fees={unclaimed}"
             )

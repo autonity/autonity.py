@@ -35,9 +35,9 @@ ntn_supply = autonity.total_supply()
 # Get the current validator list
 validator_ids = autonity.get_validators()
 
-# Get descriptor for the 0-th validator.  Print LNEW contract address.
+# Get descriptor for the 0-th validator.  Print LNTN contract address.
 validator_desc_0 = autonity.get_validator(validator_ids[0])
-print(f"LNEW contract addr: {validator_desc_0.liquid_contract}")
+print(f"LNTN contract addr: {validator_desc_0.liquid_contract}")
 
 # Typed validator Liquid Newton contract.  Query unclaimed fees for <ADDRESS>.
 validator_0 = Validator(w3, validator_desc_0)

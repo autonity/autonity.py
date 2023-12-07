@@ -148,7 +148,7 @@ class Validator:
     self_unbonding_stake: int
     self_unbonding_shares: int
     self_unbonding_stake_locked: int
-    lnew_contract: ERC20
+    lntn_contract: ERC20
     liquid_supply: int
     registration_block: int
     total_slashed: int
@@ -159,7 +159,7 @@ class Validator:
     _liquid_contract: LiquidNewton
     """
     Internally this provides access to the extra functions.  Publicly,
-    LNEW is exposed as a plain ERC20 token, via lnew_contract.
+    LNTN is exposed as a plain ERC20 token, via lntn_contract.
     """
 
     def __init__(self, w3: Web3, vdesc: ValidatorDescriptor):
@@ -176,7 +176,7 @@ class Validator:
         self.self_unbonding_shares = vdesc["self_unbonding_shares"]
         self.self_unbonding_stake_locked = vdesc["self_unbonding_stake_locked"]
         self._liquid_contract = LiquidNewton(w3, vdesc["liquid_contract"])
-        self.lnew_contract = self._liquid_contract
+        self.lntn_contract = self._liquid_contract
         self.liquid_supply = vdesc["liquid_supply"]
         self.registration_block = vdesc["registration_block"]
         self.total_slashed = vdesc["total_slashed"]
