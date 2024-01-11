@@ -25,4 +25,4 @@ jobs:
       - name: Lint
         run: hatch run lint:check
       - name: Test
-        run: hatch run test
+        run: hatch run +py=${{ matrix.python-version }} test:all
