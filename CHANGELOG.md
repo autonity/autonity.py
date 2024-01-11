@@ -1,5 +1,22 @@
 # Changelog
 
+## [v2.0.0] - 2024-01-11
+
+### Changed
+
+- Rename LNEW -> LNTN consistent with protocol
+  ([`f74d871`](https://github.com/autonity/autonity.py/commit/f74d871))
+
+### Added
+
+- Support for Autonity Barada
+  ([`a2904d5`](https://github.com/autonity/autonity.py/commit/a2904d5))
+
+### Fixed
+
+- Fix import failure due to `ModuleNotFoundError` from eth-rlp
+  ([#41](https://github.com/autonity/autonity.py/issues/41))
+
 ## [v1.0.1] - 2023-06-07
 
 ### Fixed
