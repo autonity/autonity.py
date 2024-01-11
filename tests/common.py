@@ -7,7 +7,7 @@ Common test functions
 
 import os
 
-from dotenv import load_dotenv
+from dotenv import load_dotenv  # type: ignore
 
 from autonity.utils.web3 import Web3WithAutonity, create_web3_for_endpoint
 

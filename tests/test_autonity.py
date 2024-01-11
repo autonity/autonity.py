@@ -14,6 +14,7 @@ from autonity.autonity import (
     get_autonity_contract_abi_path,
     get_autonity_contract_version,
 )
+from autonity.validator import OracleAddress
 from tests.common import create_test_web3
 
 
@@ -116,7 +117,7 @@ class TestAutonity(TestCase):
 
         validators = autonity.get_validators()
         validator_addr = validators[0]
-        oracle_addr = validators[0]
+        oracle_addr = OracleAddress(validators[0])
         enode = "adsf"
 
         autonity.bond(validator_addr, Wei(1))

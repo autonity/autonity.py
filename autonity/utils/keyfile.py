@@ -8,11 +8,11 @@ import json
 from typing import Any, Dict, NewType, cast
 
 from eth_account import Account
-from eth_keyfile import create_keyfile_json, decode_keyfile_json  # type: ignore
+from eth_keyfile import create_keyfile_json, decode_keyfile_json
 from web3 import Web3
 from web3.types import ChecksumAddress
 
-EncryptedKeyData = NewType("EncryptedKeyData", Dict[str, Any])
+EncryptedKeyData = Dict[str, Any]
 
 PrivateKey = NewType("PrivateKey", bytes)
 
@@ -42,7 +42,7 @@ def create_keyfile_from_private_key(
     Create a keyfile (with encrypted private key) from a private key.
     """
     assert len(private_key) == 32
-    return create_keyfile_json(private_key, password.encode("utf8"))
+    return create_keyfile_json(private_key, password.encode("utf8"))  # type: ignore
 
 
 def get_address_from_keyfile(encrypted_key: EncryptedKeyData) -> ChecksumAddress:
@@ -56,6 +56,6 @@ def decrypt_keyfile(encrypted_key: EncryptedKeyData, password: str) -> PrivateKe
     """
     Decrypt the private key from a keyfile.
     """
-    private_key = decode_keyfile_json(encrypted_key, password.encode("utf8"))
+    private_key = decode_keyfile_json(encrypted_key, password.encode("utf8"))  # type: ignore
     assert isinstance(private_key, bytes)
     return cast(PrivateKey, private_key)
