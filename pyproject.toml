@@ -22,10 +22,10 @@ classifiers = [
 ]
 
 [project.urls]
-homepage = "https://github.com/autonity/autonity.py"
-source = "https://github.com/autonity/autonity.py"
-issues = "https://github.com/autonity/autonity.py/issues"
-changes = "https://github.com/autonity/autonity.py/blob/master/CHANGELOG.md"
+Homepage = "https://github.com/autonity/autonity.py"
+Source = "https://github.com/autonity/autonity.py"
+Issues = "https://github.com/autonity/autonity.py/issues"
+Changes = "https://github.com/autonity/autonity.py/blob/master/CHANGELOG.md"
 
 [tool.hatch.build]
 include = ["autonity/**"]
