@@ -94,6 +94,11 @@
             "type": "uint256"
           },
           {
+            "internalType": "bytes",
+            "name": "consensusKey",
+            "type": "bytes"
+          },
+          {
             "internalType": "enum ValidatorState",
             "name": "state",
             "type": "uint8"
@@ -162,6 +167,11 @@
               {
                 "internalType": "contract IStabilization",
                 "name": "stabilizationContract",
+                "type": "address"
+              },
+              {
+                "internalType": "contract UpgradeManager",
+                "name": "upgradeManagerContract",
                 "type": "address"
               }
             ],
@@ -258,6 +268,37 @@
       }
     ],
     "name": "Approval",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "delegator",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "delegatee",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "enum ValidatorState",
+        "name": "state",
+        "type": "uint8"
+      }
+    ],
+    "name": "BondingRejected",
     "type": "event"
   },
   {
@@ -757,6 +798,11 @@
             "internalType": "contract IStabilization",
             "name": "stabilizationContract",
             "type": "address"
+          },
+          {
+            "internalType": "contract UpgradeManager",
+            "name": "upgradeManagerContract",
+            "type": "address"
           }
         ],
         "internalType": "struct Autonity.Contracts",
@@ -884,6 +930,11 @@
             "internalType": "uint256",
             "name": "votingPower",
             "type": "uint256"
+          },
+          {
+            "internalType": "bytes",
+            "name": "consensusKey",
+            "type": "bytes"
           }
         ],
         "internalType": "struct Autonity.CommitteeMember[]",
@@ -929,6 +980,11 @@
             "internalType": "uint256",
             "name": "votingPower",
             "type": "uint256"
+          },
+          {
+            "internalType": "bytes",
+            "name": "consensusKey",
+            "type": "bytes"
           }
         ],
         "internalType": "struct Autonity.CommitteeMember[]",
@@ -1233,6 +1289,11 @@
             "type": "uint256"
           },
           {
+            "internalType": "bytes",
+            "name": "consensusKey",
+            "type": "bytes"
+          },
+          {
             "internalType": "enum ValidatorState",
             "name": "state",
             "type": "uint8"
@@ -1343,7 +1404,12 @@
       },
       {
         "internalType": "bytes",
-        "name": "_multisig",
+        "name": "_consensusKey",
+        "type": "bytes"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_signatures",
         "type": "bytes"
       }
     ],
@@ -1511,6 +1577,19 @@
       }
     ],
     "name": "setUnbondingPeriod",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "contract UpgradeManager",
+        "name": "_address",
+        "type": "address"
+      }
+    ],
+    "name": "setUpgradeManagerContract",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1718,6 +1797,11 @@
             "internalType": "uint256",
             "name": "provableFaultCount",
             "type": "uint256"
+          },
+          {
+            "internalType": "bytes",
+            "name": "consensusKey",
+            "type": "bytes"
           },
           {
             "internalType": "enum ValidatorState",

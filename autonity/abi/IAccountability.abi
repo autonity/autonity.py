@@ -88,6 +88,18 @@
         "internalType": "uint256",
         "name": "releaseBlock",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "isJailbound",
+        "type": "bool"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "eventId",
+        "type": "uint256"
       }
     ],
     "name": "SlashingEvent",
