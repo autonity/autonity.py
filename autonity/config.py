@@ -17,6 +17,7 @@ class Contracts(TypedDict):
     acu_contract: ChecksumAddress
     supply_control_contract: ChecksumAddress
     stabilization_contract: ChecksumAddress
+    upgrade_manager_contract: ChecksumAddress
 
 
 class Policy(TypedDict):
@@ -54,6 +55,7 @@ def config_from_tuple(
             ChecksumAddress,
             ChecksumAddress,
             ChecksumAddress,
+            ChecksumAddress,
         ],
         Tuple[ChecksumAddress, int, int, int],
         int,
@@ -72,6 +74,7 @@ def config_from_tuple(
     assert isinstance(value[1][2], str)
     assert isinstance(value[1][3], str)
     assert isinstance(value[1][4], str)
+    assert isinstance(value[1][5], str)
     assert isinstance(value[2][0], str)
     assert isinstance(value[2][1], int)
     assert isinstance(value[2][2], int)
@@ -95,6 +98,7 @@ def config_from_tuple(
                     "acu_contract": value[1][2],
                     "supply_control_contract": value[1][3],
                     "stabilization_contract": value[1][4],
+                    "upgrade_manager_contract": value[1][5],
                 }
             ),
             "protocol": Protocol(

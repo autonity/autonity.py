@@ -122,7 +122,9 @@ class TestAutonity(TestCase):
 
         autonity.bond(validator_addr, Wei(1))
         autonity.unbond(validator_addr, Wei(1))
-        autonity.register_validator(enode, oracle_addr, HexBytes("0x1234abcd"))
+        autonity.register_validator(
+            enode, oracle_addr, HexBytes("0x1234abc"), HexBytes("0x5678def")
+        )
         autonity.pause_validator(validator_addr)
         autonity.activate_validator(validator_addr)
         autonity.set_minimum_base_fee(Wei(1))
