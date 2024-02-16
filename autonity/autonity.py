@@ -287,13 +287,19 @@ class Autonity(ERC20):
         return self.contract.functions.unbond(validator_addr, amount)
 
     def register_validator(
-        self, enode: str, oracle: OracleAddress, proof: HexBytes
+        self,
+        enode: str,
+        oracle: OracleAddress,
+        consensus_key: HexBytes,
+        proof: HexBytes,
     ) -> ContractFunction:
         """
         Create a TxParams calling the `registerValidator` method.  See
         `registerValidator` on the Autonity contract.
         """
-        return self.contract.functions.registerValidator(enode, oracle, proof)
+        return self.contract.functions.registerValidator(
+            enode, oracle, consensus_key, proof
+        )
 
     def pause_validator(
         self,
@@ -408,6 +414,15 @@ class Autonity(ERC20):
         """
         return self.contract.functions.setStabilizationContract(address)
 
+    def set_upgrade_manager_contract(
+        self, address: ChecksumAddress
+    ) -> ContractFunction:
+        """
+        Set the upgrade manager contract address. Restricted to the Operator account.
+        See `setUpgradeManagerContract` on Autonity contract.
+        """
+        return self.contract.functions.setStabilizationContract(address)
+
     def mint(self, address: ChecksumAddress, amount: int) -> ContractFunction:
         """
         Mint new stake token (NTN) and add it to the recipient
@@ -436,11 +451,16 @@ class Autonity(ERC20):
         return self.contract.functions.changeCommissionRate(validator, rate)
 
     # TODO: events
-
     # event MintedStake(address addr, uint256 amount);
     # event BurnedStake(address addr, uint256 amount);
     # event CommissionRateChange(address validator, uint256 rate);
-    # event RegisteredValidator(
-    #   address treasury, address addr, string enode, address liquidContract);
-    # event PausedValidator(address treasury, address addr, uint256 effectiveBlock);
-    # event Rewarded(address addr, uint256 amount);
+    # event BondingRejected(address delegator, address delegatee, uint256 amount, ValidatorState state);
+    # event NewBondingRequest(address indexed validator, address indexed delegator, bool selfBonded, uint256 amount);
+    # event NewUnbondingRequest(address indexed validator, address indexed delegator, bool selfBonded, uint256 amount);
+    # event RegisteredValidator(address treasury, address addr, address oracleAddress, string enode, address liquidContract);
+    # event PausedValidator(address indexed treasury, address indexed addr, uint256 effectiveBlock);
+    # event ActivatedValidator(address indexed treasury, address indexed addr, uint256 effectiveBlock);
+    # event Rewarded(address indexed addr, uint256 amount);
+    # event EpochPeriodUpdated(uint256 period);
+    # event NewEpoch(uint256 epoch);
+    # event MinimumBaseFeeUpdated(uint256 gasPrice);

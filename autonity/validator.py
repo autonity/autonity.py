@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from enum import IntEnum
 from typing import NewType, Tuple, TypedDict
+from hexbytes import HexBytes
 
 from web3 import Web3
 from web3.contract.contract import ContractFunction
@@ -31,6 +32,7 @@ class ValidatorState(IntEnum):
     ACTIVE = 0
     PAUSED = 1
     JAILED = 2
+    JAILBOUND = 3
 
 
 class ValidatorDescriptor(TypedDict):
@@ -56,6 +58,7 @@ class ValidatorDescriptor(TypedDict):
     total_slashed: int
     jail_release_block: int
     provable_fault_count: int
+    consensus_key: str
     state: ValidatorState
 
 
@@ -79,13 +82,14 @@ def validator_descriptor_from_tuple(
         int,
         int,
         int,
+        bytes,
         ValidatorState,
     ]
 ) -> ValidatorDescriptor:
     """
     Create an instance from the tuple returned by Web3 contract calls.
     """
-    assert len(value) == 19
+    assert len(value) == 20
     assert isinstance(value[0], str)
     assert isinstance(value[1], str)
     assert isinstance(value[2], str)
@@ -104,7 +108,8 @@ def validator_descriptor_from_tuple(
     assert isinstance(value[15], int)
     assert isinstance(value[16], int)
     assert isinstance(value[17], int)
-    assert isinstance(value[18], int)
+    assert isinstance(value[18], bytes)
+    assert isinstance(value[19], int)
 
     return ValidatorDescriptor(
         {
@@ -126,7 +131,8 @@ def validator_descriptor_from_tuple(
             "total_slashed": value[15],
             "jail_release_block": value[16],
             "provable_fault_count": value[17],
-            "state": ValidatorState(value[18]),
+            "consensus_key": HexBytes(value[18]).hex(),
+            "state": ValidatorState(value[19]),
         }
     )
 
@@ -154,6 +160,7 @@ class Validator:
     total_slashed: int
     jail_release_block: int
     provable_fault_count: int
+    consensus_key: str
     state: ValidatorState
 
     _liquid_contract: LiquidNewton
@@ -182,6 +189,7 @@ class Validator:
         self.total_slashed = vdesc["total_slashed"]
         self.jail_release_block = vdesc["jail_release_block"]
         self.provable_fault_count = vdesc["provable_fault_count"]
+        self.consensus_key = vdesc["consensus_key"]
         self.state = vdesc["state"]
 
     def unclaimed_rewards(self, account: ChecksumAddress) -> Wei:
