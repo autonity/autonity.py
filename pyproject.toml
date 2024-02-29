@@ -10,7 +10,7 @@ license = "MIT"
 keywords = ["autonity", "web3", "rpc", "client", "library"]
 dynamic = ["version"]
 requires-python = ">=3.8"
-dependencies = ["typing-extensions", "web3==6.3.0"]
+dependencies = ["typing-extensions", "web3==6.3.0", "setuptools>=39.0.0"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "License :: OSI Approved :: MIT License",
@@ -19,6 +19,7 @@ classifiers = [
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
 ]
 
 [project.urls]
@@ -37,7 +38,7 @@ path = "autonity/__version__.py"
 dependencies = ["mypy", "python-dotenv"]
 
 [[tool.hatch.envs.test.matrix]]
-python = ["3.8", "3.9", "3.10", "3.11"]
+python = ["3.8", "3.9", "3.10", "3.11", "3.12"]
 
 [tool.hatch.envs.test.scripts]
 main = "python -m unittest discover {args:tests}"
