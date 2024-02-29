@@ -72,8 +72,8 @@ def parse_return_value(abi_function: ABIFunction, return_value: Any) -> Any:
             outputs[0]["type"], outputs[0], return_value
         )
 
-    assert isinstance(return_value, tuple)
-    return _parse_return_value_tuple(outputs, return_value)
+    return_value_tuple = tuple(return_value)
+    return _parse_return_value_tuple(outputs, return_value_tuple)
 
 
 ParamType = Union[str, int, float, bool]
