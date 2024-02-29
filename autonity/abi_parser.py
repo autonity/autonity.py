@@ -58,8 +58,10 @@ def parse_arguments(abi_function: ABIFunction, arguments: List[str]) -> List[Any
 
 def parse_return_value(abi_function: ABIFunction, return_value: Any) -> Any:
     """
-    Top level entry point, given the ABI outputs.  Supports void
-    types, and flattening a one-element tuple to a raw type.
+    Given the function ABI and the return values, matches the return values
+    with their names from the ABI spec.
+
+    Supports void types, and flattening a one-element tuple to a raw type.
     """
 
     outputs = abi_function["outputs"]
