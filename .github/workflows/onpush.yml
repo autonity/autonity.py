@@ -3,6 +3,7 @@ name: onpush
 
 on:
   push:
+  workflow_dispatch:
 
 jobs:
   check:
