@@ -9,7 +9,6 @@ from decimal import Decimal
 
 from web3.types import Wei
 
-
 AUTON_DECIMALS = 18
 NEWTON_DECIMALS = 18
 
