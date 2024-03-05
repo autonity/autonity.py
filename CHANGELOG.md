@@ -4,8 +4,8 @@
 
 ### Changed
 
-- Support the Autonity Barada protocol ([`a2904d5`](https://github.com/autonity/autonity.py/commit/a2904d5))
-- Rename LNEW -> LNTN consistent with protocol ([`f74d871`](https://github.com/autonity/autonity.py/commit/f74d871))
+- Support the Autonity Barada protocol ([`0c2d3c4`](https://github.com/autonity/autonity.py/commit/0c2d3c4))
+- Rename LNEW -> LNTN consistent with protocol ([`42398e7`](https://github.com/autonity/autonity.py/commit/42398e7))
 
 ### Added
 
