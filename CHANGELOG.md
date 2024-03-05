@@ -1,5 +1,16 @@
 # Changelog
 
+## [v3.0.0] - 2024-03-05
+
+### Changed
+
+- Support the Autonity Sumida protocol ([`bb982c6`](https://github.com/autonity/autonity.py/commit/bb982c6))
+- Update web3.py to `6.14.0` and support Python 3.12 ([`35965fb`](https://github.com/autonity/autonity.py/commit/35965fb))
+
+### Fixed
+
+- Fix `AssertionError` when contract call returns multiple values ([#45](https://github.com/autonity/autonity.py/pull/45))
+
 ## [v2.0.0] - 2024-01-11
 
 ### Changed
@@ -36,6 +47,7 @@
 
 _First release._
 
+[v3.0.0]: https://github.com/autonity/autonity.py/releases/tag/v3.0.0
 [v2.0.0]: https://github.com/autonity/autonity.py/releases/tag/v2.0.0
 [v1.0.1]: https://github.com/autonity/autonity.py/releases/tag/v1.0.1
 [v1.0.0]: https://github.com/autonity/autonity.py/releases/tag/v1.0.0
