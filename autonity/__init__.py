@@ -7,6 +7,7 @@ Top-level Autonity module exposing primary types.
 # pylint: disable=unused-import
 # flake8: noqa
 
+from autonity.accountability import Accountability, AccountabilityEvent
 from autonity.autonity import (
     Autonity,
     AUTONITY_CONTRACT_ADDRESS,
