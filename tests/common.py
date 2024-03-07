@@ -28,7 +28,7 @@ Dummy address
 
 
 load_dotenv()
-TEST_RPC_URL = os.getenv("TEST_RPC_URL", "https://rpc1.piccadilly.autonity.org/")
+TEST_RPC_URL = os.getenv("TEST_RPC_URL", "https://rpc2.piccadilly.autonity.org/")
 
 
 def create_test_web3() -> Web3WithAutonity:
