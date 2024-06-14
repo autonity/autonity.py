@@ -41,8 +41,8 @@ print(f"LNTN contract addr: {validator_desc_0.liquid_contract}")
 
 # Typed validator Liquid Newton contract.  Query unclaimed fees for <ADDRESS>.
 validator_0 = Validator(w3, validator_desc_0)
-unclaimed_rewards = validator_0.unclaimed_rewards("<ADDRESS>")
-print(f"unclaimed rewards: {unclaimed_rewards}")
+unclaimed_atn, unclaimed_ntn = validator_0.unclaimed_rewards("<ADDRESS>")
+print(f"unclaimed rewards: {unclaimed_atn} ATN, {unclaimed_ntn} NTN")
 ```
 
 Where`<RPC_ENDPOINT>` is the name of the Autonity network being connected to.
