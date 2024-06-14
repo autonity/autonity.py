@@ -175,9 +175,9 @@
             "type": "uint256"
           },
           {
-            "internalType": "uint256",
-            "name": "status",
-            "type": "uint256"
+            "internalType": "bool",
+            "name": "success",
+            "type": "bool"
           }
         ],
         "internalType": "struct IOracle.RoundData",
@@ -281,9 +281,9 @@
             "type": "uint256"
           },
           {
-            "internalType": "uint256",
-            "name": "status",
-            "type": "uint256"
+            "internalType": "bool",
+            "name": "success",
+            "type": "bool"
           }
         ],
         "internalType": "struct IOracle.RoundData",
