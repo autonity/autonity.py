@@ -18,6 +18,8 @@ class Contracts(TypedDict):
     supply_control_contract: ChecksumAddress
     stabilization_contract: ChecksumAddress
     upgrade_manager_contract: ChecksumAddress
+    inflation_controller_contract: ChecksumAddress
+    non_stakable_vesting_contract: ChecksumAddress
 
 
 class Policy(TypedDict):
@@ -25,6 +27,7 @@ class Policy(TypedDict):
     min_basefee: int
     delegation_rate: int
     unbonding_period: int
+    initial_inflation_reserve: int
     treasury_account: ChecksumAddress
 
 
@@ -68,13 +71,16 @@ def config_from_tuple(
     assert isinstance(value[0][1], int)
     assert isinstance(value[0][2], int)
     assert isinstance(value[0][3], int)
-    assert isinstance(value[0][4], str)
+    assert isinstance(value[0][4], int)
+    assert isinstance(value[0][5], str)
     assert isinstance(value[1][0], str)
     assert isinstance(value[1][1], str)
     assert isinstance(value[1][2], str)
     assert isinstance(value[1][3], str)
     assert isinstance(value[1][4], str)
     assert isinstance(value[1][5], str)
+    assert isinstance(value[1][6], str)
+    assert isinstance(value[1][7], str)
     assert isinstance(value[2][0], str)
     assert isinstance(value[2][1], int)
     assert isinstance(value[2][2], int)
@@ -88,7 +94,8 @@ def config_from_tuple(
                     "min_basefee": value[0][1],
                     "delegation_rate": value[0][2],
                     "unbonding_period": value[0][3],
-                    "treasury_account": value[0][4],
+                    "initial_inflation_reserve": value[0][4],
+                    "treasury_account": value[0][5],
                 }
             ),
             "contracts": Contracts(
@@ -99,6 +106,8 @@ def config_from_tuple(
                     "supply_control_contract": value[1][3],
                     "stabilization_contract": value[1][4],
                     "upgrade_manager_contract": value[1][5],
+                    "inflation_controller_contract": value[1][6],
+                    "non_stakable_vesting_contract": value[1][7],
                 }
             ),
             "protocol": Protocol(
