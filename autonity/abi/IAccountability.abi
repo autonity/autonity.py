@@ -111,6 +111,11 @@
         "internalType": "address",
         "name": "_validator",
         "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_ntnReward",
+        "type": "uint256"
       }
     ],
     "name": "distributeRewards",

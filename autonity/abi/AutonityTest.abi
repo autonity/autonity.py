@@ -133,6 +133,11 @@
                 "type": "uint256"
               },
               {
+                "internalType": "uint256",
+                "name": "initialInflationReserve",
+                "type": "uint256"
+              },
+              {
                 "internalType": "address payable",
                 "name": "treasuryAccount",
                 "type": "address"
@@ -172,6 +177,16 @@
               {
                 "internalType": "contract UpgradeManager",
                 "name": "upgradeManagerContract",
+                "type": "address"
+              },
+              {
+                "internalType": "contract IInflationController",
+                "name": "inflationControllerContract",
+                "type": "address"
+              },
+              {
+                "internalType": "contract INonStakableVestingVault",
+                "name": "nonStakableVestingContract",
                 "type": "address"
               }
             ],
@@ -251,6 +266,37 @@
       {
         "indexed": true,
         "internalType": "address",
+        "name": "validator",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "delegator",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "selfBonded",
+        "type": "bool"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "AppliedUnbondingReverted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
         "name": "owner",
         "type": "address"
       },
@@ -274,15 +320,15 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
-        "name": "delegator",
+        "name": "validator",
         "type": "address"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
-        "name": "delegatee",
+        "name": "delegator",
         "type": "address"
       },
       {
@@ -299,6 +345,31 @@
       }
     ],
     "name": "BondingRejected",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "validator",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "delegator",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "BondingReverted",
     "type": "event"
   },
   {
@@ -527,13 +598,50 @@
       {
         "indexed": true,
         "internalType": "address",
+        "name": "validator",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "delegator",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "selfBonded",
+        "type": "bool"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "ReleasedUnbondingReverted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
         "name": "addr",
         "type": "address"
       },
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "amount",
+        "name": "atnAmount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "ntnAmount",
         "type": "uint256"
       }
     ],
@@ -563,6 +671,50 @@
       }
     ],
     "name": "Transfer",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "validator",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "delegator",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "selfBonded",
+        "type": "bool"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "UnbondingRejected",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "epochTime",
+        "type": "uint256"
+      }
+    ],
+    "name": "UnlockingScheduleFailed",
     "type": "event"
   },
   {
@@ -658,6 +810,19 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "atnTotalRedistributed",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -690,8 +855,14 @@
       }
     ],
     "name": "bond",
-    "outputs": [],
-    "stateMutability": "nonpayable",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "payable",
     "type": "function"
   },
   {
@@ -777,6 +948,11 @@
             "type": "uint256"
           },
           {
+            "internalType": "uint256",
+            "name": "initialInflationReserve",
+            "type": "uint256"
+          },
+          {
             "internalType": "address payable",
             "name": "treasuryAccount",
             "type": "address"
@@ -816,6 +992,16 @@
           {
             "internalType": "contract UpgradeManager",
             "name": "upgradeManagerContract",
+            "type": "address"
+          },
+          {
+            "internalType": "contract IInflationController",
+            "name": "inflationControllerContract",
+            "type": "address"
+          },
+          {
+            "internalType": "contract INonStakableVestingVault",
+            "name": "nonStakableVestingContract",
             "type": "address"
           }
         ],
@@ -1255,6 +1441,25 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_unbondingID",
+        "type": "uint256"
+      }
+    ],
+    "name": "getRevertingAmount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "getTailBondingID",
     "outputs": [
@@ -1310,6 +1515,25 @@
     "inputs": [
       {
         "internalType": "uint256",
+        "name": "_unbondingID",
+        "type": "uint256"
+      }
+    ],
+    "name": "getUnbondingReleaseState",
+    "outputs": [
+      {
+        "internalType": "enum Autonity.UnbondingReleaseState",
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
         "name": "_id",
         "type": "uint256"
       }
@@ -1342,6 +1566,16 @@
             "internalType": "uint256",
             "name": "requestBlock",
             "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "revertingAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "enum Autonity.UnbondingReleaseState",
+            "name": "state",
+            "type": "uint8"
           },
           {
             "internalType": "bool",
@@ -1511,7 +1745,85 @@
   },
   {
     "inputs": [],
+    "name": "inflationReserve",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "lastEpochBlock",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "lastEpochTime",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "maxBondAppliedGas",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "maxRewardsDistributionGas",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "maxUnbondAppliedGas",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "maxUnbondReleasedGas",
     "outputs": [
       {
         "internalType": "uint256",
@@ -1564,6 +1876,13 @@
     "name": "pauseValidator",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "receiveATN",
+    "outputs": [],
+    "stateMutability": "payable",
     "type": "function"
   },
   {
@@ -1656,12 +1975,90 @@
   {
     "inputs": [
       {
+        "internalType": "contract IInflationController",
+        "name": "_address",
+        "type": "address"
+      }
+    ],
+    "name": "setInflationControllerContract",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_gas",
+        "type": "uint256"
+      }
+    ],
+    "name": "setMaxBondAppliedGas",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_gas",
+        "type": "uint256"
+      }
+    ],
+    "name": "setMaxRewardsDistributionGas",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_gas",
+        "type": "uint256"
+      }
+    ],
+    "name": "setMaxUnbondAppliedGas",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_gas",
+        "type": "uint256"
+      }
+    ],
+    "name": "setMaxUnbondReleasedGas",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "uint256",
         "name": "_price",
         "type": "uint256"
       }
     ],
     "name": "setMinimumBaseFee",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "contract INonStakableVestingVault",
+        "name": "_address",
+        "type": "address"
+      }
+    ],
+    "name": "setNonStakableVestingContract",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1701,6 +2098,19 @@
       }
     ],
     "name": "setStabilizationContract",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_price",
+        "type": "uint256"
+      }
+    ],
+    "name": "setStakingGasPrice",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1772,6 +2182,19 @@
   },
   {
     "inputs": [],
+    "name": "stakingGasPrice",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "symbol",
     "outputs": [
       {
@@ -1788,19 +2211,6 @@
     "name": "testComputeCommittee",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "totalRedistributed",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -1844,17 +2254,17 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "sender",
+        "name": "_sender",
         "type": "address"
       },
       {
         "internalType": "address",
-        "name": "recipient",
+        "name": "_recipient",
         "type": "address"
       },
       {
         "internalType": "uint256",
-        "name": "amount",
+        "name": "_amount",
         "type": "uint256"
       }
     ],
@@ -1883,6 +2293,30 @@
       }
     ],
     "name": "unbond",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_nodeAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "_enode",
+        "type": "string"
+      }
+    ],
+    "name": "updateEnode",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

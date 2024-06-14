@@ -1,0 +1,20 @@
+[
+  {
+    "inputs": [],
+    "name": "unlockTokens",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "_newUnlockedSubscribed",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_newUnlockedUnsubscribed",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

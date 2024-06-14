@@ -1,0 +1,101 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_bondingID",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_validator",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_liquid",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "_selfDelegation",
+        "type": "bool"
+      },
+      {
+        "internalType": "bool",
+        "name": "_rejected",
+        "type": "bool"
+      }
+    ],
+    "name": "bondingApplied",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "receiveATN",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address[]",
+        "name": "_validators",
+        "type": "address[]"
+      }
+    ],
+    "name": "rewardsDistributed",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_unbondingID",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_validator",
+        "type": "address"
+      },
+      {
+        "internalType": "bool",
+        "name": "_rejected",
+        "type": "bool"
+      }
+    ],
+    "name": "unbondingApplied",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_unbondingID",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "_rejected",
+        "type": "bool"
+      }
+    ],
+    "name": "unbondingReleased",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]
