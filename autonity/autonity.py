@@ -450,6 +450,12 @@ class Autonity(ERC20):
         """
         return self.contract.functions.changeCommissionRate(validator, rate)
 
+    def update_enode(self, validator: NodeAddress, enode: str) -> ContractFunction:
+        """
+        Update enode of a registered validator.
+        """
+        return self.contract.functions.updateEnode(validator, enode)
+
     # TODO: events
     # event MintedStake(address addr, uint256 amount);
     # event BurnedStake(address addr, uint256 amount);
