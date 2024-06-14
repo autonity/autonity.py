@@ -192,7 +192,7 @@ class Validator:
         self.consensus_key = vdesc["consensus_key"]
         self.state = vdesc["state"]
 
-    def unclaimed_rewards(self, account: ChecksumAddress) -> Wei:
+    def unclaimed_rewards(self, account: ChecksumAddress) -> Tuple[Wei, Wei]:
         """
         Query the rewards for this validator, claimable by `account`.
         """

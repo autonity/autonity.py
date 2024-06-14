@@ -38,8 +38,8 @@ class TestValidator(TestCase):
         )
         for account in holders:
             lntn_balance = lntn.balance_of(account)
-            unclaimed = validator.unclaimed_rewards(account)
+            unclaimed_atn, _ = validator.unclaimed_rewards(account)
             print(
                 f"  {account}: "
-                f"balance={lntn_balance} {lntn_symbol}, unclaimed fees={unclaimed}"
+                f"balance={lntn_balance} {lntn_symbol}, unclaimed fees={unclaimed_atn}"
             )
