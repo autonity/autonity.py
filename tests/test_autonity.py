@@ -83,7 +83,7 @@ class TestAutonity(TestCase):
         self.assertIsInstance(autonity.epoch_id(), int)
         self.assertIsInstance(autonity.last_epoch_block(), int)
         self.assertIsInstance(autonity.epoch_total_bonded_stake(), int)
-        self.assertIsInstance(autonity.total_redistributed(), int)
+        self.assertIsInstance(autonity.atn_total_redistributed(), int)
         self.assertIsInstance(autonity.epoch_reward(), int)
 
         self.assertIsInstance(autonity.deployer(), str)
