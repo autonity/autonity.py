@@ -139,11 +139,11 @@ class Autonity(ERC20):
         """
         return self.contract.functions.epochTotalBondedStake().call()
 
-    def total_redistributed(self) -> int:
+    def atn_total_redistributed(self) -> int:
         """
-        See `totalRedistributed` on the Autonity contract.
+        See `atnTotalRedistributed` on the Autonity contract.
         """
-        return self.contract.functions.totalRedistributed().call()
+        return self.contract.functions.atnTotalRedistributed().call()
 
     def epoch_reward(self) -> int:
         """
