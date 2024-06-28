@@ -51,8 +51,10 @@ class Config(TypedDict):
 
 def config_from_tuple(
     value: Tuple[
-        Tuple[int, int, int, int, ChecksumAddress],
+        Tuple[int, int, int, int, int, ChecksumAddress],
         Tuple[
+            ChecksumAddress,
+            ChecksumAddress,
             ChecksumAddress,
             ChecksumAddress,
             ChecksumAddress,

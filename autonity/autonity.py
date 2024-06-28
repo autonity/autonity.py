@@ -7,6 +7,7 @@ Python module holding the Autonity Web3.py external module
 from __future__ import annotations
 
 import os
+from enum import IntEnum
 from typing import Sequence, Tuple, TypedDict, cast
 
 from eth_typing import ChecksumAddress
@@ -56,6 +57,13 @@ def get_autonity_contract_abi_path() -> str:
     return os.path.abspath(
         os.path.join(os.path.dirname(__file__), "abi", "Autonity.abi")
     )
+
+
+class UnbondingReleaseState(IntEnum):
+    NOT_RELEASED = 0
+    RELEASED = 1
+    REJECTED = 2
+    REVERTED = 3
 
 
 class Staking(TypedDict):
@@ -115,6 +123,30 @@ class Autonity(ERC20):
         """
         return self.contract.functions.COMMISSION_RATE_PRECISION().call()
 
+    def max_bond_applied_gas(self) -> int:
+        """
+        See `maxBondAppliedGas` on the Autonity contract.
+        """
+        return self.contract.functions.maxBondAppliedGas().call()
+
+    def max_unbond_applied_gas(self) -> int:
+        """
+        See `maxUnbondAppliedGas` on the Autonity contract.
+        """
+        return self.contract.functions.maxUnbondAppliedGas().call()
+
+    def max_unbond_released_gas(self) -> int:
+        """
+        See `maxUnbondReleasedGas` on the Autonity contract.
+        """
+        return self.contract.functions.maxUnbondReleasedGas().call()
+
+    def max_rewards_distribution_gas(self) -> int:
+        """
+        See `maxRewardsDistributionGas` on the Autonity contract.
+        """
+        return self.contract.functions.maxRewardsDistributionGas().call()
+
     def config(self) -> Config:
         """
         See `config` on the Autonity contract.
@@ -133,6 +165,12 @@ class Autonity(ERC20):
         """
         return self.contract.functions.lastEpochBlock().call()
 
+    def last_epoch_time(self) -> int:
+        """
+        See `lastEpochTime` on the Autonity contract.
+        """
+        return self.contract.functions.lastEpochTime().call()
+
     def epoch_total_bonded_stake(self) -> int:
         """
         See `epochTotalBondedStake` on the Autonity contract.
@@ -150,6 +188,18 @@ class Autonity(ERC20):
         See `epochReward` on the Autonity contract.
         """
         return self.contract.functions.epochReward().call()
+
+    def staking_gas_price(self) -> int:
+        """
+        See `stakingGasPrice` on the Autonity contract.
+        """
+        return self.contract.functions.stakingGasPrice().call()
+
+    def inflation_reserve(self) -> int:
+        """
+        See `inflationReserve` on the Autonity contract.
+        """
+        return self.contract.functions.inflationReserve().call()
 
     def deployer(self) -> ChecksumAddress:
         """
@@ -258,6 +308,20 @@ class Autonity(ERC20):
         """
         return self.contract.functions.getProposer(height, round_idx).call()
 
+    def get_unbonding_release_state(self, unbonding_id: int) -> int:
+        """
+        See `getUnbondingReleaseState` on the Autonity contract.
+        """
+        return UnbondingReleaseState(
+            self.contract.functions.getUnbondingReleaseState().call()
+        )
+
+    def get_reverting_amount(self, unbonding_id: int) -> int:
+        """
+        See `getRevertingAmount` on the Autonity contract.
+        """
+        return self.contract.functions.getRevertingAmount(unbonding_id).call()
+
     def get_epoch_from_block(self, block: int) -> int:
         """
         See `getEpochFromBlock` on the Autonity contract.
@@ -328,6 +392,41 @@ class Autonity(ERC20):
         return self.contract.functions.updateEnode(validator, enode)
 
     # Functions below here are operatorOnly
+
+    def set_max_bond_applied_gas(self, gas: int) -> ContractFunction:
+        """
+        Set the maximum bond applied gas. Restricted to the operator account.
+        See `setMaxBondAppliedGas` on the Autonity contract.
+        """
+        return self.contract.functions.setMaxBondAppliedGas(gas)
+
+    def set_max_unbond_applied_gas(self, gas: int) -> ContractFunction:
+        """
+        Set the maximum unbond applied gas. Restricted to the operator account.
+        See `setMaxUnbondAppliedGas` on the Autonity contract.
+        """
+        return self.contract.functions.setMaxUnbondAppliedGas(gas)
+
+    def set_max_unbond_released_gas(self, gas: int) -> ContractFunction:
+        """
+        Set the maximum unbond released gas. Restricted to the operator account.
+        See `setMaxUnbondReleasedGas` on the Autonity contract.
+        """
+        return self.contract.functions.setMaxUnbondReleasedGas(gas)
+
+    def set_max_rewards_distribution_gas(self, gas: int) -> ContractFunction:
+        """
+        Set the maximum rewards distrbution gas. Restricted to the operator account.
+        See `setMaxRewardsDistributionGas` on the Autonity contract.
+        """
+        return self.contract.functions.setMaxRewardsDistributionGas(gas)
+
+    def set_staking_gas_price(self, price: int) -> ContractFunction:
+        """
+        Set the gas price for notification on staking operation. Restricted to the
+        operator account. See `setStakingGasPrice` on the Autonity contract.
+        """
+        return self.contract.functions.setStakingGasPrice(price)
 
     def set_minimum_base_fee(self, base_fee: Wei) -> ContractFunction:
         """
@@ -420,6 +519,15 @@ class Autonity(ERC20):
         """
         return self.contract.functions.setStabilizationContract(address)
 
+    def set_inflation_controller_contract(
+        self, address: ChecksumAddress
+    ) -> ContractFunction:
+        """
+        Set the inflation controller contract address. Restricted to the Operator
+        account.  See `setStabilizationContract` on Autonity contract.
+        """
+        return self.contract.functions.setInflationControllerContract(address)
+
     def set_upgrade_manager_contract(
         self, address: ChecksumAddress
     ) -> ContractFunction:
@@ -428,6 +536,15 @@ class Autonity(ERC20):
         See `setUpgradeManagerContract` on Autonity contract.
         """
         return self.contract.functions.setStabilizationContract(address)
+
+    def set_non_stakable_vesting_contract(
+        self, address: ChecksumAddress
+    ) -> ContractFunction:
+        """
+        Set the non stakable vesting contract address. Restricted to the Operator
+        account. See `setNonStakableVestingContract` on Autonity contract.
+        """
+        return self.contract.functions.setNonStakableVestingContract(address)
 
     def mint(self, address: ChecksumAddress, amount: int) -> ContractFunction:
         """
@@ -458,7 +575,9 @@ class Autonity(ERC20):
 
     # TODO: events
     # event ActivatedValidator(address indexed treasury, address indexed addr, uint256 effectiveBlock);
-    # event BondingRejected(address delegator, address delegatee, uint256 amount, ValidatorState state);
+    # event AppliedUnbondingReverted(address indexed validator, address indexed delegator, bool selfBonded, uint256 amount);
+    # event BondingRejected(address indexed validator, address indexed delegator, uint256 amount, ValidatorState state);
+    # event BondingReverted(address indexed validator, address indexed delegator, uint256 amount);
     # event BurnedStake(address addr, uint256 amount);
     # event CommissionRateChange(address validator, uint256 rate);
     # event EpochPeriodUpdated(uint256 period);
@@ -469,4 +588,7 @@ class Autonity(ERC20):
     # event NewUnbondingRequest(address indexed validator, address indexed delegator, bool selfBonded, uint256 amount);
     # event PausedValidator(address indexed treasury, address indexed addr, uint256 effectiveBlock);
     # event RegisteredValidator(address treasury, address addr, address oracleAddress, string enode, address liquidContract);
-    # event Rewarded(address indexed addr, uint256 amount);
+    # event ReleasedUnbondingReverted(address indexed validator, address indexed delegator, bool selfBonded, uint256 amount);
+    # event Rewarded(address indexed addr, uint256 atnAmount, uint256 ntnAmount);
+    # event UnbondingRejected(address indexed validator, address indexed delegator, bool selfBonded, uint256 amount);
+    # event UnlockingScheduleFailed(uint256 epochTime);
