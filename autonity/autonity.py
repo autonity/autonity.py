@@ -457,16 +457,16 @@ class Autonity(ERC20):
         return self.contract.functions.changeCommissionRate(validator, rate)
 
     # TODO: events
-    # event MintedStake(address addr, uint256 amount);
+    # event ActivatedValidator(address indexed treasury, address indexed addr, uint256 effectiveBlock);
+    # event BondingRejected(address delegator, address delegatee, uint256 amount, ValidatorState state);
     # event BurnedStake(address addr, uint256 amount);
     # event CommissionRateChange(address validator, uint256 rate);
-    # event BondingRejected(address delegator, address delegatee, uint256 amount, ValidatorState state);
-    # event NewBondingRequest(address indexed validator, address indexed delegator, bool selfBonded, uint256 amount);
-    # event NewUnbondingRequest(address indexed validator, address indexed delegator, bool selfBonded, uint256 amount);
-    # event RegisteredValidator(address treasury, address addr, address oracleAddress, string enode, address liquidContract);
-    # event PausedValidator(address indexed treasury, address indexed addr, uint256 effectiveBlock);
-    # event ActivatedValidator(address indexed treasury, address indexed addr, uint256 effectiveBlock);
-    # event Rewarded(address indexed addr, uint256 amount);
     # event EpochPeriodUpdated(uint256 period);
-    # event NewEpoch(uint256 epoch);
     # event MinimumBaseFeeUpdated(uint256 gasPrice);
+    # event MintedStake(address addr, uint256 amount);
+    # event NewBondingRequest(address indexed validator, address indexed delegator, bool selfBonded, uint256 amount);
+    # event NewEpoch(uint256 epoch);
+    # event NewUnbondingRequest(address indexed validator, address indexed delegator, bool selfBonded, uint256 amount);
+    # event PausedValidator(address indexed treasury, address indexed addr, uint256 effectiveBlock);
+    # event RegisteredValidator(address treasury, address addr, address oracleAddress, string enode, address liquidContract);
+    # event Rewarded(address indexed addr, uint256 amount);
