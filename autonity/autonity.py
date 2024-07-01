@@ -321,6 +321,12 @@ class Autonity(ERC20):
         """
         return self.contract.functions.activateValidator(validator_addr)
 
+    def update_enode(self, validator: NodeAddress, enode: str) -> ContractFunction:
+        """
+        Update enode of a registered validator.
+        """
+        return self.contract.functions.updateEnode(validator, enode)
+
     # Functions below here are operatorOnly
 
     def set_minimum_base_fee(self, base_fee: Wei) -> ContractFunction:
@@ -449,12 +455,6 @@ class Autonity(ERC20):
         `changeCommissionRate` on the Autonity contract.
         """
         return self.contract.functions.changeCommissionRate(validator, rate)
-
-    def update_enode(self, validator: NodeAddress, enode: str) -> ContractFunction:
-        """
-        Update enode of a registered validator.
-        """
-        return self.contract.functions.updateEnode(validator, enode)
 
     # TODO: events
     # event MintedStake(address addr, uint256 amount);
