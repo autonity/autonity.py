@@ -59,3 +59,15 @@ class Liquid(ERC20):
         transaction.  See function `claimRewards` on LiquidNewton.sol.
         """
         return self.contract.functions.claimRewards()
+
+    def locked_balance_of(self, delegator: ChecksumAddress) -> Wei:
+        """
+        See function `lockedBalanceOf` on Liquid.sol
+        """
+        return self.contract.functions.lockedBalanceOf(delegator).call()
+
+    def unlocked_balance_of(self, delegator: ChecksumAddress) -> Wei:
+        """
+        See function `unlockedBalanceOf` on Liquid.sol
+        """
+        return self.contract.functions.unlockedBalanceOf(delegator).call()
