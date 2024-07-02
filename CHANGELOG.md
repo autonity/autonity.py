@@ -1,5 +1,16 @@
 # Changelog
 
+## [v4.0.0] - 2024-07-02
+
+### Changed
+
+- Support the Autonity Yamuna protocol ([#53](https://github.com/autonity/autonity.py/issues/53))
+- Update web3.py to `6.19.0` ([`1a2ca6b`](https://github.com/autonity/autonity.py/commit/1a2ca6b))
+
+### Fixed
+
+- Fix error in code example in the README ([`2600363`](https://github.com/autonity/autonity.py/commit/2600363))
+
 ## [v3.0.0] - 2024-03-05
 
 ### Changed
@@ -47,6 +58,7 @@
 
 _First release._
 
+[v4.0.0]: https://github.com/autonity/autonity.py/releases/tag/v4.0.0
 [v3.0.0]: https://github.com/autonity/autonity.py/releases/tag/v3.0.0
 [v2.0.0]: https://github.com/autonity/autonity.py/releases/tag/v2.0.0
 [v1.0.1]: https://github.com/autonity/autonity.py/releases/tag/v1.0.1
