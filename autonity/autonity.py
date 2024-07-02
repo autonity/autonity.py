@@ -313,7 +313,7 @@ class Autonity(ERC20):
         See `getUnbondingReleaseState` on the Autonity contract.
         """
         return UnbondingReleaseState(
-            self.contract.functions.getUnbondingReleaseState().call()
+            self.contract.functions.getUnbondingReleaseState(unbonding_id).call()
         )
 
     def get_reverting_amount(self, unbonding_id: int) -> int:
