@@ -524,7 +524,7 @@ class Autonity(ERC20):
     ) -> ContractFunction:
         """
         Set the inflation controller contract address. Restricted to the Operator
-        account.  See `setStabilizationContract` on Autonity contract.
+        account.  See `setInflationControllerContract` on Autonity contract.
         """
         return self.contract.functions.setInflationControllerContract(address)
 
