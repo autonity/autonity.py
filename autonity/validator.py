@@ -6,6 +6,7 @@ Model holding Validator information.
 
 from __future__ import annotations
 
+import warnings
 from enum import IntEnum
 from typing import NewType, Tuple, TypedDict
 
@@ -14,8 +15,7 @@ from web3 import Web3
 from web3.contract.contract import ContractFunction
 from web3.types import ChecksumAddress, Wei
 
-from autonity.erc20 import ERC20
-from autonity.liquid_newton import LiquidNewton
+from autonity.liquid import Liquid
 
 # pylint: disable=too-many-instance-attributes
 
@@ -84,7 +84,7 @@ def validator_descriptor_from_tuple(
         int,
         bytes,
         ValidatorState,
-    ]
+    ],
 ) -> ValidatorDescriptor:
     """
     Create an instance from the tuple returned by Web3 contract calls.
@@ -154,7 +154,7 @@ class Validator:
     self_unbonding_stake: int
     self_unbonding_shares: int
     self_unbonding_stake_locked: int
-    lntn_contract: ERC20
+    liquid_contract: Liquid
     liquid_supply: int
     registration_block: int
     total_slashed: int
@@ -163,7 +163,6 @@ class Validator:
     consensus_key: str
     state: ValidatorState
 
-    _liquid_contract: LiquidNewton
     """
     Internally this provides access to the extra functions.  Publicly,
     LNTN is exposed as a plain ERC20 token, via lntn_contract.
@@ -182,8 +181,7 @@ class Validator:
         self.self_unbonding_stake = vdesc["self_unbonding_stake"]
         self.self_unbonding_shares = vdesc["self_unbonding_shares"]
         self.self_unbonding_stake_locked = vdesc["self_unbonding_stake_locked"]
-        self._liquid_contract = LiquidNewton(w3, vdesc["liquid_contract"])
-        self.lntn_contract = self._liquid_contract
+        self.liquid_contract = Liquid(w3, vdesc["liquid_contract"])
         self.liquid_supply = vdesc["liquid_supply"]
         self.registration_block = vdesc["registration_block"]
         self.total_slashed = vdesc["total_slashed"]
@@ -196,10 +194,19 @@ class Validator:
         """
         Query the rewards for this validator, claimable by `account`.
         """
-        return self._liquid_contract.unclaimed_rewards(account)
+        return self.liquid_contract.unclaimed_rewards(account)
 
     def claim_rewards(self) -> ContractFunction:
         """
         Create a ContractFunction to claim the rewards due from this validator.
         """
-        return self._liquid_contract.claim_rewards()
+        return self.liquid_contract.claim_rewards()
+
+    @property
+    def lntn_contract(self) -> Liquid:
+        warnings.warn(
+            "The Validator.lntn_contract property has been renamed to liquid_contract "
+            "and will be removed in a future release",
+            DeprecationWarning,
+        )
+        return self.liquid_contract

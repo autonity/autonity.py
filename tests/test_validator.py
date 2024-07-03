@@ -1,7 +1,7 @@
 # Copyright (C) 2015-2022 Clearmatics Technologies Ltd - All Rights Reserved.
 
 """
-LiquidNewton token tests
+Liquid contract tests
 """
 
 from unittest import TestCase
@@ -30,7 +30,7 @@ class TestValidator(TestCase):
         holders = [val.treasury for val in validators]
 
         validator = validators[0]
-        lntn = validator.lntn_contract
+        lntn = validator.liquid_contract
         lntn_symbol = lntn.symbol() or "LNTN"
         print(
             f"Validator: {validator.node_address}, {lntn_symbol}: "
