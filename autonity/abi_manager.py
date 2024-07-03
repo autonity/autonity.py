@@ -4,13 +4,11 @@
 ABIManager class
 """
 
-import importlib.resources  # type: ignore
 import json
+from os import path
 from typing import Dict
 
 from web3.contract.contract import ABI
-
-import autonity.abi
 
 _CACHE: Dict[str, ABI] = {}
 
@@ -26,8 +24,9 @@ class ABIManager:
         Load (and cache) the ABI for a protocol contract.
         """
         if contract_name not in _CACHE:
-            text = importlib.resources.read_text(autonity.abi, contract_name + ".abi")
-            _CACHE[contract_name] = json.loads(text)
+            _CACHE[contract_name] = ABIManager.load_abi_file(
+                path.join(path.dirname(__file__), "abi", f"{contract_name}.abi")
+            )
 
         return _CACHE[contract_name]
 
@@ -36,5 +35,5 @@ class ABIManager:
         """
         Load an ABI from a file.
         """
-        with open(file_name, "r", encoding="utf8") as abi_f:
+        with open(file_name, "r", encoding="utf-8") as abi_f:
             return json.load(abi_f)
