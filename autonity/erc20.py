@@ -9,7 +9,7 @@ from typing import Optional, Union
 from web3 import Web3
 from web3.contract.contract import ABI, Contract, ContractFunction
 from web3.exceptions import BadFunctionCallOutput, ContractLogicError
-from web3.types import ABIFunction, Address, ChecksumAddress
+from web3.types import ABIFunction, Address, ChecksumAddress, Wei
 
 from autonity.abi_manager import ABIManager
 
@@ -118,14 +118,14 @@ class ERC20:
         """
         return self.contract.functions.totalSupply().call()
 
-    def balance_of(self, account: ChecksumAddress) -> int:
+    def balance_of(self, account: ChecksumAddress) -> Wei:
         """
         Returns the balance of a particular address in "token units"
         (divide by 10^decimals for value in whole tokens).
         """
         return self.contract.functions.balanceOf(account).call()
 
-    def allowance(self, owner: ChecksumAddress, spender: ChecksumAddress) -> int:
+    def allowance(self, owner: ChecksumAddress, spender: ChecksumAddress) -> Wei:
         """
         Returns the quantity that `owner` has granted `spender` permission
         to spend.  Given in "token units" (divide by 10^decimals for
