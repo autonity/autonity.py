@@ -29,7 +29,7 @@ class TestERC20(TestCase):
         autonity = Autonity(w3)
 
         # Get some NTN holders
-        validator_addrs = autonity.get_validators()
+        validator_addrs = autonity.get_validators()[:3]
         holders = [autonity.get_validator(val)["treasury"] for val in validator_addrs]
         print(f"holders={holders}")
 

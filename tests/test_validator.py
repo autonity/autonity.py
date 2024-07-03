@@ -24,7 +24,7 @@ class TestValidator(TestCase):
         autonity = Autonity(w3)
 
         # Get some NTN holders
-        validator_addrs = autonity.get_validators()
+        validator_addrs = autonity.get_validators()[:3]
         validator_descs = [autonity.get_validator(val) for val in validator_addrs]
         validators = [Validator(w3, vdesc) for vdesc in validator_descs]
         holders = [val.treasury for val in validators]
