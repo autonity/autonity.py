@@ -26,4 +26,4 @@ jobs:
       - name: Lint
         run: hatch run lint:check
       - name: Test
-        run: hatch run +py=${{ matrix.python-version }} test:all
+        run: hatch run +py=${{ matrix.python-ver }} test:all
