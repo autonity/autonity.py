@@ -12,7 +12,7 @@ from unittest import TestCase
 from web3 import Web3
 from web3.types import ABI
 
-from autonity.abi_manager import ABIManager
+from autonity.abi_manager import load_abi_file
 from autonity.abi_parser import find_abi_function, parse_arguments, parse_return_value
 
 MOCK_ABI = cast(
@@ -238,7 +238,7 @@ class TestABIParser(TestCase):
             },
         ]
         # execute tests
-        abi = ABIManager.load_abi_file(
+        abi = load_abi_file(
             os.path.join(os.path.dirname(__file__), "abi", "TestTypes.abi")
         )
         for test in tests:

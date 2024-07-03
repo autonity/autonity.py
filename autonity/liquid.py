@@ -11,7 +11,7 @@ from web3 import Web3
 from web3.contract.contract import ContractFunction
 from web3.types import ChecksumAddress, Wei
 
-from autonity.abi_manager import ABIManager
+from autonity.abi_manager import load_abi
 from autonity.erc20 import ERC20
 
 
@@ -26,7 +26,7 @@ class Liquid(ERC20):
     """
 
     def __init__(self, web3: Web3, address: ChecksumAddress):
-        super().__init__(web3, address, ABIManager.load_abi("Liquid"))
+        super().__init__(web3, address, load_abi("Liquid"))
 
     def validator(self) -> ChecksumAddress:
         """

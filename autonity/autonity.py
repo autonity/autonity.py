@@ -16,7 +16,7 @@ from web3 import Web3
 from web3.contract.contract import ContractFunction
 from web3.types import Wei
 
-from autonity.abi_manager import ABIManager
+from autonity.abi_manager import load_abi
 from autonity.committee_member import CommitteeMember, committee_member_from_tuple
 from autonity.config import Config, config_from_tuple
 from autonity.erc20 import ERC20
@@ -105,7 +105,7 @@ class Autonity(ERC20):
         super().__init__(
             web3,
             web3.to_checksum_address(AUTONITY_CONTRACT_ADDRESS),
-            ABIManager.load_abi("Autonity"),
+            load_abi("Autonity"),
         )
 
         # TODO: What contract version checks can be performed here?

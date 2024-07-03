@@ -11,7 +11,7 @@ from web3.contract.contract import ABI, Contract, ContractFunction
 from web3.exceptions import BadFunctionCallOutput, ContractLogicError
 from web3.types import ABIFunction, Address, ChecksumAddress, Wei
 
-from autonity.abi_manager import ABIManager
+from autonity.abi_manager import load_abi
 
 # pylint: disable=too-many-arguments
 
@@ -77,7 +77,7 @@ class ERC20:
         abi: Optional[ABI] = None,
     ):
         if not abi:
-            abi = add_missing_erc20_functions(ABIManager.load_abi("IERC20"))
+            abi = add_missing_erc20_functions(load_abi("IERC20"))
         self.contract = web3.eth.contract(address, abi=abi)
 
     def name(self) -> Optional[str]:
