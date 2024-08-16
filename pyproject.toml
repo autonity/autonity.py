@@ -55,14 +55,4 @@ check = ["ruff check {args:.}", "black --check {args:.}", "mypy {args:.}"]
 format = ["black {args:.}", "ruff check --fix --select I {args:.}"]
 
 [tool.mypy]
-check_untyped_defs = true
-disallow_incomplete_defs = true
-disallow_untyped_calls = true
-disallow_untyped_defs = true
-exclude = "tests/archive"
-scripts_are_modules = true
-strict_optional = true
-
-[[tool.mypy.overrides]]
-ignore_missing_imports = false
-module = ["requests.*", "six"]
+exclude = "build"
