@@ -39,22 +39,19 @@ detached = true
 dependencies = ["pyabigen@git+https://github.com/clearmatics/pyabigen@v0.2.0"]
 
 [tool.hatch.envs.test]
-dependencies = ["mypy", "python-dotenv"]
+dependencies = ["python-dotenv"]
 
 [[tool.hatch.envs.test.matrix]]
 python = ["3.8", "3.9", "3.10", "3.11", "3.12"]
 
 [tool.hatch.envs.test.scripts]
-main = "python -m unittest discover {args:tests}"
-types = "mypy {args:.}"
-all = ["main", "types"]
+all = "python -m unittest discover {args:tests}"
 
 [tool.hatch.envs.lint]
-detached = true
-dependencies = ["black", "ruff"]
+dependencies = ["black", "ruff", "mypy"]
 
 [tool.hatch.envs.lint.scripts]
-check = ["ruff check {args:.}", "black --check {args:.}"]
+check = ["ruff check {args:.}", "black --check {args:.}", "mypy {args:.}"]
 format = ["black {args:.}", "ruff check --fix --select I {args:.}"]
 
 [tool.mypy]
