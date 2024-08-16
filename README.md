@@ -17,37 +17,35 @@ pip install autonity
 
 ## Usage
 
-The primary utility of this library is the typed wrappers around the Autonity
-protocol contract, which provides access to Autonity-specific functionality.
+Example usage:
 
 ```python
-from autonity.utils.web3 import create_web3_for_endpoint
-from autonity import Autonity, Validator
+from web3 import Web3
+from autonity.contracts import Autonity, Liquid
+from autonity.networks import piccadilly
 
-w3 = create_web3_for_endpoint("<RPC_ENDPOINT>")
+# Connect to the default RPC provider on the Autonity Piccadilly Testnet
+w3 = Web3(piccadilly.http_provider)
 
-# Create the typed wrapper around the Autonity contract.
+# Create the typed wrapper around the Autonity contract
 autonity = Autonity(w3)
 
-# Get total supply of Newton
+# Get the total supply of Newton
 ntn_supply = autonity.total_supply()
+print(f"Total NTN supply: {ntn_supply}")
 
 # Get the current validator list
-validator_ids = autonity.get_validators()
+validator_addresses = autonity.get_validators()
 
-# Get descriptor for the 0-th validator.  Print LNTN contract address.
-validator_desc_0 = autonity.get_validator(validator_ids[0])
-print(f"LNTN contract addr: {validator_desc_0['liquid_contract']}")
+# Get the description of the 0-th validator and print its Liquid contract address
+validator = autonity.get_validator(validator_addresses[0])
+print(f"LNTN contract address: {validator.liquid_contract}")
 
-# Typed validator Liquid Newton contract.  Query unclaimed fees for <ADDRESS>.
-validator_0 = Validator(w3, validator_desc_0)
-unclaimed_atn, unclaimed_ntn = validator_0.unclaimed_rewards("<ADDRESS>")
-print(f"unclaimed rewards: {unclaimed_atn} ATN, {unclaimed_ntn} NTN")
+# Query unclaimed fees for <ADDRESS> from the validator's Liquid contract
+liquid = Liquid(w3, validator.liquid_contract)
+unclaimed_atn, unclaimed_ntn = liquid.unclaimed_rewards("<ADDRESS>")
+print(f"Unclaimed rewards: {unclaimed_atn} ATN, {unclaimed_ntn} NTN")
 ```
-
-Where`<RPC_ENDPOINT>` is the name of the Autonity network being connected to.
-See <https://docs.autonity.org/networks/> for information about specific
-networks.
 
 ## Development
 
