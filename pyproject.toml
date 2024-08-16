@@ -34,6 +34,10 @@ include = ["autonity/**"]
 [tool.hatch.version]
 path = "autonity/__version__.py"
 
+[tool.hatch.envs.generate]
+detached = true
+dependencies = ["pyabigen@git+https://github.com/clearmatics/pyabigen@v0.2.0"]
+
 [tool.hatch.envs.test]
 dependencies = ["mypy", "python-dotenv"]
 
