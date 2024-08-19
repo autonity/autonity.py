@@ -50,7 +50,9 @@ print(f"Unclaimed rewards: {unclaimed_atn} ATN, {unclaimed_ntn} NTN")
 ## Development
 
 The project uses [hatch](https://hatch.pypa.io/latest/install/#pipx) as the
-build tool. To launch the tests, run:
+build tool.
+
+To launch the tests, run:
 
 ```console
 hatch run test:all
@@ -62,15 +64,23 @@ For linting use the command:
 hatch run lint:check
 ```
 
-### Updating the Contract ABIs
+### Updating the Contract Wrappers
 
-The script `script/update_abi.sh [AUTONITY_COMMIT]` builds the contract ABIs
-using AGC at the specified Git commit ID or tag. Keys are ordered via the `jq`
-tool, in order to produce deterministic output, and the results written to the
-`autonity/abi` directory. Further, it normalizes the commit ID that was used.
+To update contract wrappers for a new version of the Autonity protocol, add the
+new [AGC](https://github.com/autonity/autonity) version (Git tag or commit ID)
+to `AUTONITY_VERSION`, then generate the contract wrappers with `make`:
 
-After executing the script against a new version of the code, the diffs can be
-reviewed to determine which methods have been modified, removed or added.
+```console
+echo v0.14.0 > AUTONITY_VERSION
+make
+```
+
+Contract functions are ordered alphabetically in order to produce deterministic
+output. After executing the script against a new version of the code, the diffs
+can be reviewed to determine which methods have been modified, removed or
+added. The generated Python wrappers include the contract ABIs as Python dictionaries.
+
+If there is a new contract to include, add a new target to `Makefile`.
 
 ## Reporting a Vulnerability
 
