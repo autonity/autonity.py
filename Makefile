@@ -1,5 +1,3 @@
-AUTONITY_ADDRESS = 0xBd770416a3345F91E4B34576cb804a576fa48EB1
-
 VERSION = $(shell cat AUTONITY_VERSION)
 AUTONITY = build/autonity
 ABIDIR = $(AUTONITY)/params/generated
@@ -26,10 +24,7 @@ $(OUTDIR)/acu.py: $(ABIDIR)/ACU.abi
 	$(ABIGEN) --exclude setOperator,setOracle,update $< >$@
 
 $(OUTDIR)/autonity.py: $(ABIDIR)/Autonity.abi
-	$(ABIGEN) \
-		--address $(AUTONITY_ADDRESS) \
-		--exclude computeCommittee,finalize,finalizeInitialization \
-		$< >$@
+	$(ABIGEN) --exclude computeCommittee,finalize,finalizeInitialization $< >$@
 
 $(OUTDIR)/inflation_controller.py: $(ABIDIR)/InflationController.abi
 	$(ABIGEN) $< >$@
