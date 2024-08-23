@@ -10,10 +10,6 @@ from web3.contract import contract
 
 __version__ = "v0.14.0"
 
-ADDRESS = typing.cast(
-    eth_typing.ChecksumAddress, "0xBd770416a3345F91E4B34576cb804a576fa48EB1"
-)
-
 
 class ValidatorState(enum.IntEnum):
     """See `enum ValidatorState` on the Autonity contract."""
@@ -116,9 +112,10 @@ class Autonity:
     def __init__(
         self,
         w3: web3.Web3,
+        address: eth_typing.ChecksumAddress,
     ):
         self._contract = w3.eth.contract(
-            address=ADDRESS,
+            address=address,
             abi=abi,
         )
 
