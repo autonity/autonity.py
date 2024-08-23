@@ -5,6 +5,7 @@ from eth_typing import ChecksumAddress
 from web3 import Web3
 
 from .__version__ import __version__
+from .constants import AUTONITY_CONTRACT_ADDRESS, AUTONITY_CONTRACT_VERSION
 from .contracts import (
     accountability,
     acu,
@@ -18,8 +19,6 @@ from .contracts import (
     upgrade_manager,
 )
 
-CONTRACT_VERSION = 1
-
 
 @lru_cache()
 def _config(w3: Web3) -> autonity.Config:
@@ -30,11 +29,11 @@ def _config(w3: Web3) -> autonity.Config:
             f"version {w3.client_version}"
         )
 
-    config = autonity.Autonity(w3).config()
-    if config.contract_version != CONTRACT_VERSION:
+    config = autonity.Autonity(w3, AUTONITY_CONTRACT_ADDRESS).config()
+    if config.contract_version != AUTONITY_CONTRACT_VERSION:
         raise RuntimeError(
             f"Contract version mismatch: autonity.py {__version__} supports "
-            f"version {CONTRACT_VERSION}, the Autonity contract is "
+            f"version {AUTONITY_CONTRACT_VERSION}, the Autonity contract is "
             f"version {config.contract_version}"
         )
 
@@ -53,7 +52,7 @@ def ACU(w3: Web3) -> acu.ACU:
 
 def Autonity(w3: Web3) -> autonity.Autonity:
     assert _config(w3)
-    return autonity.Autonity(w3)
+    return autonity.Autonity(w3, AUTONITY_CONTRACT_ADDRESS)
 
 
 def InflationController(w3: Web3) -> inflation_controller.InflationController:
