@@ -3,20 +3,20 @@ from typing import Callable
 
 from web3 import Web3
 
-from autonity import contracts, networks
+from autonity import factories, networks
 
 
-WRAPPER_CLASSES = [
-    contracts.Accountability,
-    contracts.ACU,
-    contracts.Autonity,
-    contracts.InflationController,
-    contracts.Liquid,
-    contracts.NonStakableVesting,
-    contracts.Oracle,
-    contracts.Stabilization,
-    contracts.SupplyControl,
-    contracts.UpgradeManager,
+WRAPPERS = [
+    factories.Accountability,
+    factories.ACU,
+    factories.Autonity,
+    factories.InflationController,
+    factories.Liquid,
+    factories.NonStakableVesting,
+    factories.Oracle,
+    factories.Stabilization,
+    factories.SupplyControl,
+    factories.UpgradeManager,
 ]
 
 
@@ -27,15 +27,15 @@ def pytest_generate_tests(metafunc):
     functions = []
     ids = []
 
-    for wrapper_class in WRAPPER_CLASSES:
+    for wrapper in WRAPPERS:
         w3 = Web3(networks.piccadilly.http_provider)
 
-        if wrapper_class is contracts.Liquid:
-            autonity = contracts.Autonity(w3)
+        if wrapper.__name__ == "Liquid":
+            autonity = factories.Autonity(w3)
             validator = autonity.get_validator(autonity.get_validators()[0])
-            contract = wrapper_class(w3, validator.liquid_contract)
+            contract = wrapper(w3, validator.liquid_contract)
         else:
-            contract = wrapper_class(w3)
+            contract = wrapper(w3)
 
         for attr_name in dir(contract):
             if attr_name.startswith("_"):
@@ -43,7 +43,7 @@ def pytest_generate_tests(metafunc):
             attr = getattr(contract, attr_name)
             if isinstance(attr, Callable) and len(signature(attr).parameters) == 0:
                 functions.append(attr)
-                ids.append(f"{wrapper_class.__name__}.{attr_name}()")
+                ids.append(f"{wrapper.__name__}.{attr_name}()")
 
     metafunc.parametrize("contract_function", functions, ids=ids)
 
