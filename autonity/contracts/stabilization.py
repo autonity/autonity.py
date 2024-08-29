@@ -149,7 +149,7 @@ class Stabilization:
         )
 
     @dispatch  # type: ignore
-    def debt_amount(  # noqa: F811
+    def debt_amount(  # type: ignore # noqa: F811
         self,
         account: eth_typing.ChecksumAddress,
         timestamp: int,
@@ -162,7 +162,7 @@ class Stabilization:
         return int(return_value)
 
     @dispatch  # type: ignore
-    def debt_amount(  # noqa: F811
+    def debt_amount(  # type: ignore # noqa: F811
         self,
         account: eth_typing.ChecksumAddress,
     ) -> int:
