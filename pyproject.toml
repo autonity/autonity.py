@@ -48,11 +48,13 @@ python = ["3.8", "3.9", "3.10", "3.11", "3.12"]
 all = "pytest -v {args:tests}"
 
 [tool.hatch.envs.lint]
-dependencies = ["black", "ruff", "mypy"]
+dependencies = ["black", "ruff", "mypy", "pyright"]
 
 [tool.hatch.envs.lint.scripts]
-check = ["ruff check {args:.}", "black --check {args:.}", "mypy {args:.}"]
+check = [
+    "ruff check {args:.}",
+    "black --check {args:.}",
+    "mypy {args:autonity}",
+    "pyright {args:autonity}",
+]
 format = ["black {args:.}", "ruff check --fix --select I {args:.}"]
-
-[tool.mypy]
-exclude = "build"
