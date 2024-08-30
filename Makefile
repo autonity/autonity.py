@@ -9,6 +9,7 @@ ABIGEN = hatch run generate:pyabigen \
 all: $(OUTDIR)/accountability.py \
 	 $(OUTDIR)/acu.py \
 	 $(OUTDIR)/autonity.py \
+	 $(OUTDIR)/ierc20.py \
 	 $(OUTDIR)/inflation_controller.py \
 	 $(OUTDIR)/liquid.py \
 	 $(OUTDIR)/non_stakable_vesting.py \
@@ -25,6 +26,9 @@ $(OUTDIR)/acu.py: $(ABIDIR)/ACU.abi
 
 $(OUTDIR)/autonity.py: $(ABIDIR)/Autonity.abi
 	$(ABIGEN) --exclude computeCommittee,finalize,finalizeInitialization $< >$@
+
+$(OUTDIR)/ierc20.py: $(ABIDIR)/IERC20.abi
+	$(ABIGEN) $< >$@
 
 $(OUTDIR)/inflation_controller.py: $(ABIDIR)/InflationController.abi
 	$(ABIGEN) $< >$@
