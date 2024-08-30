@@ -1,10 +1,13 @@
-VERSION = $(shell cat AUTONITY_VERSION)
-AUTONITY = build/autonity
-ABIDIR = $(AUTONITY)/params/generated
-OUTDIR = autonity/contracts
+VERSION := $(shell cat AUTONITY_VERSION)
+AUTONITY := build/autonity
+ABIDIR := $(AUTONITY)/params/generated
+OUTDIR := autonity/contracts
 ABIGEN = hatch run generate:pyabigen \
 			--srcdir $(AUTONITY)/autonity/solidity/contracts \
-			--version $(VERSION)
+			--version $(VERSION) \
+			--userdoc $(word 2,$(1)) \
+			--devdoc $(word 3,$(1)) \
+			$(word 1,$(1))
 
 all: $(OUTDIR)/accountability.py \
 	 $(OUTDIR)/acu.py \
@@ -18,44 +21,50 @@ all: $(OUTDIR)/accountability.py \
 	 $(OUTDIR)/supply_control.py \
 	 $(OUTDIR)/upgrade_manager.py
 
-$(OUTDIR)/accountability.py: $(ABIDIR)/Accountability.abi
-	$(ABIGEN) --exclude distributeRewards,finalize,setEpochPeriod $< >$@
+$(OUTDIR)/accountability.py: $(addprefix $(ABIDIR)/Accountability,.abi .docuser .docdev)
+	$(call ABIGEN,$^) --exclude distributeRewards,finalize,setEpochPeriod >$@
 
-$(OUTDIR)/acu.py: $(ABIDIR)/ACU.abi
-	$(ABIGEN) --exclude setOperator,setOracle,update $< >$@
+$(OUTDIR)/acu.py: $(addprefix $(ABIDIR)/ACU,.abi .docuser .docdev)
+	$(call ABIGEN,$^) --exclude setOperator,setOracle,update >$@
 
-$(OUTDIR)/autonity.py: $(ABIDIR)/Autonity.abi
-	$(ABIGEN) --exclude computeCommittee,finalize,finalizeInitialization $< >$@
+$(OUTDIR)/autonity.py: $(addprefix $(ABIDIR)/Autonity,.abi .docuser .docdev)
+	$(call ABIGEN,$^) --exclude computeCommittee,finalize,finalizeInitialization >$@
 
-$(OUTDIR)/ierc20.py: $(ABIDIR)/IERC20.abi
-	$(ABIGEN) $< >$@
+$(OUTDIR)/ierc20.py: $(addprefix $(ABIDIR)/IERC20,.abi .docuser .docdev)
+	$(call ABIGEN,$^) >$@
 
-$(OUTDIR)/inflation_controller.py: $(ABIDIR)/InflationController.abi
-	$(ABIGEN) $< >$@
+$(OUTDIR)/inflation_controller.py: $(addprefix $(ABIDIR)/InflationController,.abi .docuser .docdev)
+	$(call ABIGEN,$^) >$@
 
-$(OUTDIR)/liquid.py: $(ABIDIR)/Liquid.abi
-	$(ABIGEN) --exclude burn,lock,mint,redistribute,setCommissionRate,unlock $< >$@
+$(OUTDIR)/liquid.py: $(addprefix $(ABIDIR)/Liquid,.abi .docuser .docdev)
+	$(call ABIGEN,$^) --exclude burn,lock,mint,redistribute,setCommissionRate,unlock >$@
 
-$(OUTDIR)/non_stakable_vesting.py: $(ABIDIR)/NonStakableVesting.abi
-	$(ABIGEN) --exclude unlockTokens $< >$@
+$(OUTDIR)/non_stakable_vesting.py: $(addprefix $(ABIDIR)/NonStakableVesting,.abi .docuser .docdev)
+	$(call ABIGEN,$^) --exclude unlockTokens >$@
 
-$(OUTDIR)/oracle.py: $(ABIDIR)/Oracle.abi
-	$(ABIGEN) --exclude finalize,setOperator,setVoters $< >$@
+$(OUTDIR)/oracle.py: $(addprefix $(ABIDIR)/Oracle,.abi .docuser .docdev)
+	$(call ABIGEN,$^) --exclude finalize,setOperator,setVoters >$@
 
-$(OUTDIR)/stabilization.py: $(ABIDIR)/Stabilization.abi
-	$(ABIGEN) --exclude setOperator,setOracle $< >$@
+$(OUTDIR)/stabilization.py: $(addprefix $(ABIDIR)/Stabilization,.abi .docuser .docdev)
+	$(call ABIGEN,$^) --exclude setOperator,setOracle >$@
 
-$(OUTDIR)/supply_control.py: $(ABIDIR)/SupplyControl.abi
-	$(ABIGEN) --exclude setOperator $< >$@
+$(OUTDIR)/supply_control.py: $(addprefix $(ABIDIR)/SupplyControl,.abi .docuser .docdev)
+	$(call ABIGEN,$^) --exclude setOperator >$@
 
-$(OUTDIR)/upgrade_manager.py: $(ABIDIR)/UpgradeManager.abi
-	$(ABIGEN) --exclude setOperator $< >$@
+$(OUTDIR)/upgrade_manager.py: $(addprefix $(ABIDIR)/UpgradeManager,.abi .docuser .docdev)
+	$(call ABIGEN,$^) --exclude setOperator >$@
 
 $(ABIDIR)/%.abi: $(AUTONITY) AUTONITY_VERSION
 	cd $< && \
 	git fetch origin && \
 	git checkout $(VERSION) && \
 	make contracts
+
+# This recipe can be removed after https://github.com/autonity/autonity/pull/1035 is released
+$(ABIDIR)/%.docuser $(ABIDIR)/%.docdev: $(ABIDIR)/%.abi
+	$(AUTONITY)/build/bin/solc_static_linux_v0.8.21 \
+		--overwrite --userdoc --devdoc -o $(ABIDIR) \
+		$$(find $(AUTONITY)/autonity/solidity/contracts -name $(basename $(notdir $<)).sol)
 
 $(AUTONITY):
 	git clone git@github.com:autonity/autonity.git $@
