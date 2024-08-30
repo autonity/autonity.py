@@ -4,6 +4,8 @@ from typing import Callable
 from web3 import Web3
 
 from autonity import factories, networks
+from autonity.constants import AUTONITY_CONTRACT_ADDRESS
+from autonity.contracts import ierc20
 
 
 WRAPPERS = [
@@ -17,6 +19,7 @@ WRAPPERS = [
     factories.Stabilization,
     factories.SupplyControl,
     factories.UpgradeManager,
+    ierc20.IERC20,
 ]
 
 
@@ -33,7 +36,9 @@ def pytest_generate_tests(metafunc):
         if wrapper.__name__ == "Liquid":
             autonity = factories.Autonity(w3)
             validator = autonity.get_validator(autonity.get_validators()[0])
-            contract = wrapper(w3, validator.liquid_contract)
+            contract = binding(w3, validator.liquid_contract)  # type: ignore
+        elif wrapper.__name__ == "IERC20":
+            contract = wrapper(w3, AUTONITY_CONTRACT_ADDRESS)  # type: ignore
         else:
             contract = wrapper(w3)
 
