@@ -1,3 +1,5 @@
+"""Protocol parameters."""
+
 from typing import cast
 
 from eth_typing import ChecksumAddress
