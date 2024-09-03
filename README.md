@@ -5,9 +5,10 @@ settlement infrastructure specialized for developing new risk markets. It is a
 fork of the [Ethereum protocol](https://ethereum.org/). See the
 [Autonity documentation](https://docs.autonity.org) for further information.
 
-This package provides typed wrappers around the Autonity-specific extensions of
-Ethereum, using the [Web3.py](https://github.com/ethereum/web3.py) framework,
-for convenient and statically checked interactions with the Autonity network.
+This package provides typed bindings (a.k.a. wrappers) around the
+Autonity-specific extensions of Ethereum, using the
+[Web3.py](https://github.com/ethereum/web3.py) framework, for convenient and
+statically checked interactions with the Autonity network.
 
 ## Installation
 
@@ -27,7 +28,7 @@ from autonity.factories import Autonity, Liquid
 # Connect to the default RPC provider on the Autonity Piccadilly Testnet
 w3 = Web3(networks.piccadilly.http_provider)
 
-# Create the typed wrapper around the Autonity contract
+# Create the typed binding around the Autonity contract
 autonity = Autonity(w3)
 
 # Get the total supply of Newton
@@ -64,11 +65,11 @@ For linting use the command:
 hatch run lint:check
 ```
 
-### Updating the Contract Wrappers
+### Updating the Contract Bindings
 
-To update contract wrappers for a new version of the Autonity protocol, add the
+To update contract bindings for a new version of the Autonity protocol, add the
 new [AGC](https://github.com/autonity/autonity) version (Git tag or commit ID)
-to `AUTONITY_VERSION`, then generate the contract wrappers with `make`:
+to `AUTONITY_VERSION`, then generate the contract bindings with `make`:
 
 ```console
 echo v0.14.0 > AUTONITY_VERSION
@@ -78,7 +79,7 @@ make
 Contract functions are ordered alphabetically in order to produce deterministic
 output. After executing the script against a new version of the code, the diffs
 can be reviewed to determine which methods have been modified, removed or
-added. The generated Python wrappers include the contract ABIs as Python dictionaries.
+added. The generated Python bindings include the contract ABIs as Python dictionaries.
 
 If there is a new contract to include, add a new target to `Makefile` and a new
 factory function to `autonity/factories.py`.

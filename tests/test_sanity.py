@@ -13,7 +13,7 @@ from autonity.constants import AUTONITY_CONTRACT_ADDRESS
 from autonity.contracts import ierc20
 
 
-WRAPPERS = [
+BINDINGS = [
     factories.Accountability,
     factories.ACU,
     factories.Autonity,
@@ -46,17 +46,17 @@ def pytest_generate_tests(metafunc):
     functions = []
     ids = []
 
-    for wrapper in WRAPPERS:
+    for binding in BINDINGS:
         w3 = Web3(networks.piccadilly.http_provider)
 
-        if wrapper.__name__ == "Liquid":
+        if binding.__name__ == "Liquid":
             autonity = factories.Autonity(w3)
             validator = autonity.get_validator(autonity.get_validators()[0])
             contract = binding(w3, validator.liquid_contract)  # type: ignore
-        elif wrapper.__name__ == "IERC20":
-            contract = wrapper(w3, AUTONITY_CONTRACT_ADDRESS)  # type: ignore
+        elif binding.__name__ == "IERC20":
+            contract = binding(w3, AUTONITY_CONTRACT_ADDRESS)  # type: ignore
         else:
-            contract = wrapper(w3)  # type: ignore
+            contract = binding(w3)  # type: ignore
 
         for attr_name in dir(contract):
             if attr_name.startswith("_"):
@@ -64,7 +64,7 @@ def pytest_generate_tests(metafunc):
             attr = getattr(contract, attr_name)
             if isinstance(attr, Callable):
                 functions.append(attr)
-                ids.append(f"{wrapper.__name__}.{attr_name}")
+                ids.append(f"{binding.__name__}.{attr_name}")
 
     metafunc.parametrize("contract_function", functions, ids=ids)
 

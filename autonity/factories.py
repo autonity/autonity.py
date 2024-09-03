@@ -1,5 +1,5 @@
-"""Factory functions that return instances of Autonity protocol contract wrappers bound
-to the current contract addresses.
+"""Factory functions that find the addresses of Autonity protocol contracts and return
+the contract bindings.
 """
 
 from functools import lru_cache
@@ -45,7 +45,7 @@ def _config(w3: Web3) -> autonity.Config:
 
 
 def Accountability(w3: Web3) -> accountability.Accountability:
-    """Accountability contract wrapper factory.
+    """Accountability contract binding factory.
 
     Parameters
     ----------
@@ -55,7 +55,7 @@ def Accountability(w3: Web3) -> accountability.Accountability:
     Returns
     -------
     autonity.contracts.accountability.Accountability
-        A contract wrapper instance.
+        A contract binding instance.
     """
     return accountability.Accountability(
         w3, _config(w3).contracts.accountability_contract
@@ -63,7 +63,7 @@ def Accountability(w3: Web3) -> accountability.Accountability:
 
 
 def ACU(w3: Web3) -> acu.ACU:
-    """ACU contract wrapper factory.
+    """ACU contract binding factory.
 
     Parameters
     ----------
@@ -73,13 +73,13 @@ def ACU(w3: Web3) -> acu.ACU:
     Returns
     -------
     autonity.contracts.acu.ACU
-        A contract wrapper instance.
+        A contract binding instance.
     """
     return acu.ACU(w3, _config(w3).contracts.acu_contract)
 
 
 def Autonity(w3: Web3) -> autonity.Autonity:
-    """Autonity contract wrapper factory.
+    """Autonity contract binding factory.
 
     Parameters
     ----------
@@ -89,14 +89,14 @@ def Autonity(w3: Web3) -> autonity.Autonity:
     Returns
     -------
     autonity.contracts.autonity.Autonity
-        A contract wrapper instance.
+        A contract binding instance.
     """
     assert _config(w3)
     return autonity.Autonity(w3, AUTONITY_CONTRACT_ADDRESS)
 
 
 def InflationController(w3: Web3) -> inflation_controller.InflationController:
-    """InflationController contract wrapper factory.
+    """InflationController contract binding factory.
 
     Parameters
     ----------
@@ -106,7 +106,7 @@ def InflationController(w3: Web3) -> inflation_controller.InflationController:
     Returns
     -------
     autonity.contracts.inflation_controller.InflationController
-        A contract wrapper instance.
+        A contract binding instance.
     """
     return inflation_controller.InflationController(
         w3, _config(w3).contracts.inflation_controller_contract
@@ -114,7 +114,7 @@ def InflationController(w3: Web3) -> inflation_controller.InflationController:
 
 
 def Liquid(w3: Web3, address: ChecksumAddress) -> liquid.Liquid:
-    """Liquid contract wrapper factory.
+    """Liquid contract binding factory.
 
     Parameters
     ----------
@@ -126,14 +126,14 @@ def Liquid(w3: Web3, address: ChecksumAddress) -> liquid.Liquid:
     Returns
     -------
     autonity.contracts.liquid.Liquid
-        A contract wrapper instance.
+        A contract binding instance.
     """
     assert _config(w3)
     return liquid.Liquid(w3, address)
 
 
 def NonStakableVesting(w3: Web3) -> non_stakable_vesting.NonStakableVesting:
-    """NonStakableVesting contract wrapper factory.
+    """NonStakableVesting contract binding factory.
 
     Parameters
     ----------
@@ -143,7 +143,7 @@ def NonStakableVesting(w3: Web3) -> non_stakable_vesting.NonStakableVesting:
     Returns
     -------
     autonity.contracts.non_stakable_vesting.NonStakableVesting
-        A contract wrapper instance.
+        A contract binding instance.
     """
     return non_stakable_vesting.NonStakableVesting(
         w3, _config(w3).contracts.non_stakable_vesting_contract
@@ -151,7 +151,7 @@ def NonStakableVesting(w3: Web3) -> non_stakable_vesting.NonStakableVesting:
 
 
 def Oracle(w3: Web3) -> oracle.Oracle:
-    """Oracle contract wrapper factory.
+    """Oracle contract binding factory.
 
     Parameters
     ----------
@@ -161,13 +161,13 @@ def Oracle(w3: Web3) -> oracle.Oracle:
     Returns
     -------
     autonity.contracts.oracle.Oracle
-        A contract wrapper instance.
+        A contract binding instance.
     """
     return oracle.Oracle(w3, _config(w3).contracts.oracle_contract)
 
 
 def Stabilization(w3: Web3) -> stabilization.Stabilization:
-    """Stabilization contract wrapper factory.
+    """Stabilization contract binding factory.
 
     Parameters
     ----------
@@ -177,13 +177,13 @@ def Stabilization(w3: Web3) -> stabilization.Stabilization:
     Returns
     -------
     autonity.contracts.stabilization.Stabilization
-        A contract wrapper instance.
+        A contract binding instance.
     """
     return stabilization.Stabilization(w3, _config(w3).contracts.stabilization_contract)
 
 
 def SupplyControl(w3: Web3) -> supply_control.SupplyControl:
-    """SupplyControl contract wrapper factory.
+    """SupplyControl contract binding factory.
 
     Parameters
     ----------
@@ -193,7 +193,7 @@ def SupplyControl(w3: Web3) -> supply_control.SupplyControl:
     Returns
     -------
     autonity.contracts.supply_control.SupplyControl
-        A contract wrapper instance.
+        A contract binding instance.
     """
     return supply_control.SupplyControl(
         w3, _config(w3).contracts.supply_control_contract
@@ -201,7 +201,7 @@ def SupplyControl(w3: Web3) -> supply_control.SupplyControl:
 
 
 def UpgradeManager(w3: Web3) -> upgrade_manager.UpgradeManager:
-    """UpgradeManager contract wrapper factory.
+    """UpgradeManager contract binding factory.
 
     Parameters
     ----------
@@ -211,7 +211,7 @@ def UpgradeManager(w3: Web3) -> upgrade_manager.UpgradeManager:
     Returns
     -------
     autonity.contracts.upgrade_manager.UpgradeManager
-        A contract wrapper instance.
+        A contract binding instance.
     """
     return upgrade_manager.UpgradeManager(
         w3, _config(w3).contracts.upgrade_manager_contract
