@@ -36,7 +36,7 @@ path = "autonity/__version__.py"
 
 [tool.hatch.envs.generate]
 detached = true
-dependencies = ["pyabigen@git+https://github.com/clearmatics/pyabigen@v0.2.4"]
+dependencies = ["pyabigen@git+https://github.com/clearmatics/pyabigen@v0.2.5"]
 
 [tool.hatch.envs.test]
 dependencies = ["pytest"]
