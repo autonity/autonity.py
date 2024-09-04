@@ -1,17 +1,19 @@
 """NonStakableVesting contract binding and data structures."""
 
-# This module has been generated using pyabigen v0.2.5
+# This module has been generated using pyabigen v0.2.8
 
 import typing
 
 import eth_typing
 import web3
+from dataclasses import dataclass
 from web3.contract import contract
 
 __version__ = "v0.14.0"
 
 
-class Contract(typing.NamedTuple):
+@dataclass
+class Contract:
     """Port of `struct Contract` on the ContractBase contract."""
 
     current_ntn_amount: int
@@ -22,7 +24,8 @@ class Contract(typing.NamedTuple):
     can_stake: bool
 
 
-class Schedule(typing.NamedTuple):
+@dataclass
+class Schedule:
     """Port of `struct Schedule` on the NonStakableVesting contract."""
 
     start: int
@@ -446,269 +449,292 @@ class NonStakableVesting:
         return int(return_value)
 
 
-ABI = [
-    {
-        "inputs": [
-            {"internalType": "address payable", "name": "_autonity", "type": "address"},
-            {"internalType": "address", "name": "_operator", "type": "address"},
-        ],
-        "stateMutability": "nonpayable",
-        "type": "constructor",
-    },
-    {
-        "inputs": [
-            {"internalType": "address", "name": "_beneficiary", "type": "address"},
-            {"internalType": "uint256", "name": "_id", "type": "uint256"},
-        ],
-        "name": "canStake",
-        "outputs": [{"internalType": "bool", "name": "", "type": "bool"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [
-            {"internalType": "address", "name": "_beneficiary", "type": "address"},
-            {"internalType": "uint256", "name": "_id", "type": "uint256"},
-            {"internalType": "address", "name": "_recipient", "type": "address"},
-        ],
-        "name": "changeContractBeneficiary",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [
-            {"internalType": "uint256", "name": "_amount", "type": "uint256"},
-            {"internalType": "uint256", "name": "_startTime", "type": "uint256"},
-            {"internalType": "uint256", "name": "_cliffDuration", "type": "uint256"},
-            {"internalType": "uint256", "name": "_totalDuration", "type": "uint256"},
-        ],
-        "name": "createSchedule",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [
-            {"internalType": "address", "name": "_beneficiary", "type": "address"},
-            {"internalType": "uint256", "name": "_id", "type": "uint256"},
-        ],
-        "name": "getContract",
-        "outputs": [
-            {
-                "components": [
-                    {
-                        "internalType": "uint256",
-                        "name": "currentNTNAmount",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "withdrawnValue",
-                        "type": "uint256",
-                    },
-                    {"internalType": "uint256", "name": "start", "type": "uint256"},
-                    {
-                        "internalType": "uint256",
-                        "name": "cliffDuration",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "totalDuration",
-                        "type": "uint256",
-                    },
-                    {"internalType": "bool", "name": "canStake", "type": "bool"},
-                ],
-                "internalType": "struct ContractBase.Contract",
-                "name": "",
-                "type": "tuple",
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [
-            {"internalType": "address", "name": "_beneficiary", "type": "address"}
-        ],
-        "name": "getContracts",
-        "outputs": [
-            {
-                "components": [
-                    {
-                        "internalType": "uint256",
-                        "name": "currentNTNAmount",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "withdrawnValue",
-                        "type": "uint256",
-                    },
-                    {"internalType": "uint256", "name": "start", "type": "uint256"},
-                    {
-                        "internalType": "uint256",
-                        "name": "cliffDuration",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "totalDuration",
-                        "type": "uint256",
-                    },
-                    {"internalType": "bool", "name": "canStake", "type": "bool"},
-                ],
-                "internalType": "struct ContractBase.Contract[]",
-                "name": "",
-                "type": "tuple[]",
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [{"internalType": "uint256", "name": "_id", "type": "uint256"}],
-        "name": "getSchedule",
-        "outputs": [
-            {
-                "components": [
-                    {"internalType": "uint256", "name": "start", "type": "uint256"},
-                    {
-                        "internalType": "uint256",
-                        "name": "cliffDuration",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "totalDuration",
-                        "type": "uint256",
-                    },
-                    {"internalType": "uint256", "name": "amount", "type": "uint256"},
-                    {
-                        "internalType": "uint256",
-                        "name": "unsubscribedAmount",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "totalUnlocked",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "totalUnlockedUnsubscribed",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "lastUnlockTime",
-                        "type": "uint256",
-                    },
-                ],
-                "internalType": "struct NonStakableVesting.Schedule",
-                "name": "",
-                "type": "tuple",
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "maxAllowedDuration",
-        "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [
-            {"internalType": "address", "name": "_beneficiary", "type": "address"},
-            {"internalType": "uint256", "name": "_amount", "type": "uint256"},
-            {"internalType": "uint256", "name": "_scheduleID", "type": "uint256"},
-        ],
-        "name": "newContract",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [{"internalType": "uint256", "name": "_id", "type": "uint256"}],
-        "name": "releaseAllFunds",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [
-            {"internalType": "uint256", "name": "_id", "type": "uint256"},
-            {"internalType": "uint256", "name": "_amount", "type": "uint256"},
-        ],
-        "name": "releaseFund",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [
-            {"internalType": "uint256", "name": "_newMaxDuration", "type": "uint256"}
-        ],
-        "name": "setMaxAllowedDuration",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [
-            {"internalType": "uint256", "name": "_totalNominal", "type": "uint256"}
-        ],
-        "name": "setTotalNominal",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [
-            {"internalType": "address", "name": "_beneficiary", "type": "address"}
-        ],
-        "name": "totalContracts",
-        "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "totalNominal",
-        "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "unlockTokens",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "_newUnlockedSubscribed",
-                "type": "uint256",
-            },
-            {
-                "internalType": "uint256",
-                "name": "_newUnlockedUnsubscribed",
-                "type": "uint256",
-            },
-        ],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [
-            {"internalType": "address", "name": "_beneficiary", "type": "address"},
-            {"internalType": "uint256", "name": "_id", "type": "uint256"},
-        ],
-        "name": "unlockedFunds",
-        "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-]
+ABI = typing.cast(
+    eth_typing.ABI,
+    [
+        {
+            "inputs": [
+                {
+                    "internalType": "address payable",
+                    "name": "_autonity",
+                    "type": "address",
+                },
+                {"internalType": "address", "name": "_operator", "type": "address"},
+            ],
+            "stateMutability": "nonpayable",
+            "type": "constructor",
+        },
+        {
+            "inputs": [
+                {"internalType": "address", "name": "_beneficiary", "type": "address"},
+                {"internalType": "uint256", "name": "_id", "type": "uint256"},
+            ],
+            "name": "canStake",
+            "outputs": [{"internalType": "bool", "name": "", "type": "bool"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "address", "name": "_beneficiary", "type": "address"},
+                {"internalType": "uint256", "name": "_id", "type": "uint256"},
+                {"internalType": "address", "name": "_recipient", "type": "address"},
+            ],
+            "name": "changeContractBeneficiary",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "uint256", "name": "_amount", "type": "uint256"},
+                {"internalType": "uint256", "name": "_startTime", "type": "uint256"},
+                {
+                    "internalType": "uint256",
+                    "name": "_cliffDuration",
+                    "type": "uint256",
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "_totalDuration",
+                    "type": "uint256",
+                },
+            ],
+            "name": "createSchedule",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "address", "name": "_beneficiary", "type": "address"},
+                {"internalType": "uint256", "name": "_id", "type": "uint256"},
+            ],
+            "name": "getContract",
+            "outputs": [
+                {
+                    "components": [
+                        {
+                            "internalType": "uint256",
+                            "name": "currentNTNAmount",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "withdrawnValue",
+                            "type": "uint256",
+                        },
+                        {"internalType": "uint256", "name": "start", "type": "uint256"},
+                        {
+                            "internalType": "uint256",
+                            "name": "cliffDuration",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "totalDuration",
+                            "type": "uint256",
+                        },
+                        {"internalType": "bool", "name": "canStake", "type": "bool"},
+                    ],
+                    "internalType": "struct ContractBase.Contract",
+                    "name": "",
+                    "type": "tuple",
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "address", "name": "_beneficiary", "type": "address"}
+            ],
+            "name": "getContracts",
+            "outputs": [
+                {
+                    "components": [
+                        {
+                            "internalType": "uint256",
+                            "name": "currentNTNAmount",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "withdrawnValue",
+                            "type": "uint256",
+                        },
+                        {"internalType": "uint256", "name": "start", "type": "uint256"},
+                        {
+                            "internalType": "uint256",
+                            "name": "cliffDuration",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "totalDuration",
+                            "type": "uint256",
+                        },
+                        {"internalType": "bool", "name": "canStake", "type": "bool"},
+                    ],
+                    "internalType": "struct ContractBase.Contract[]",
+                    "name": "",
+                    "type": "tuple[]",
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [{"internalType": "uint256", "name": "_id", "type": "uint256"}],
+            "name": "getSchedule",
+            "outputs": [
+                {
+                    "components": [
+                        {"internalType": "uint256", "name": "start", "type": "uint256"},
+                        {
+                            "internalType": "uint256",
+                            "name": "cliffDuration",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "totalDuration",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "amount",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "unsubscribedAmount",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "totalUnlocked",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "totalUnlockedUnsubscribed",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "lastUnlockTime",
+                            "type": "uint256",
+                        },
+                    ],
+                    "internalType": "struct NonStakableVesting.Schedule",
+                    "name": "",
+                    "type": "tuple",
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "maxAllowedDuration",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "address", "name": "_beneficiary", "type": "address"},
+                {"internalType": "uint256", "name": "_amount", "type": "uint256"},
+                {"internalType": "uint256", "name": "_scheduleID", "type": "uint256"},
+            ],
+            "name": "newContract",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [{"internalType": "uint256", "name": "_id", "type": "uint256"}],
+            "name": "releaseAllFunds",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "uint256", "name": "_id", "type": "uint256"},
+                {"internalType": "uint256", "name": "_amount", "type": "uint256"},
+            ],
+            "name": "releaseFund",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "_newMaxDuration",
+                    "type": "uint256",
+                }
+            ],
+            "name": "setMaxAllowedDuration",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "uint256", "name": "_totalNominal", "type": "uint256"}
+            ],
+            "name": "setTotalNominal",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "address", "name": "_beneficiary", "type": "address"}
+            ],
+            "name": "totalContracts",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "totalNominal",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "unlockTokens",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "_newUnlockedSubscribed",
+                    "type": "uint256",
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "_newUnlockedUnsubscribed",
+                    "type": "uint256",
+                },
+            ],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "address", "name": "_beneficiary", "type": "address"},
+                {"internalType": "uint256", "name": "_id", "type": "uint256"},
+            ],
+            "name": "unlockedFunds",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+    ],
+)

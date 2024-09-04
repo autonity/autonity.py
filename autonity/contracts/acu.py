@@ -1,6 +1,6 @@
 """ACU contract binding and data structures."""
 
-# This module has been generated using pyabigen v0.2.5
+# This module has been generated using pyabigen v0.2.8
 
 import typing
 
@@ -13,6 +13,9 @@ __version__ = "v0.14.0"
 
 class ACU:
     """ACU contract binding.
+
+    Computes the value of the ACU, an optimal currency basket of 7 free-floating fiat
+    currencies. Intended to be deployed by the protocol at genesis.
 
     Parameters
     ----------
@@ -169,150 +172,165 @@ class ACU:
         return int(return_value)
 
 
-ABI = [
-    {
-        "inputs": [
-            {"internalType": "string[]", "name": "symbols_", "type": "string[]"},
-            {"internalType": "uint256[]", "name": "quantities_", "type": "uint256[]"},
-            {"internalType": "uint256", "name": "scale_", "type": "uint256"},
-            {"internalType": "address", "name": "autonity", "type": "address"},
-            {"internalType": "address", "name": "operator", "type": "address"},
-            {"internalType": "address", "name": "oracle", "type": "address"},
-        ],
-        "stateMutability": "nonpayable",
-        "type": "constructor",
-    },
-    {
-        "anonymous": False,
-        "inputs": [
-            {
-                "indexed": False,
-                "internalType": "string[]",
-                "name": "symbols",
-                "type": "string[]",
-            },
-            {
-                "indexed": False,
-                "internalType": "uint256[]",
-                "name": "quantities",
-                "type": "uint256[]",
-            },
-            {
-                "indexed": False,
-                "internalType": "uint256",
-                "name": "scale",
-                "type": "uint256",
-            },
-        ],
-        "name": "BasketModified",
-        "type": "event",
-    },
-    {"inputs": [], "name": "InvalidBasket", "type": "error"},
-    {"inputs": [], "name": "NoACUValue", "type": "error"},
-    {"inputs": [], "name": "Unauthorized", "type": "error"},
-    {
-        "anonymous": False,
-        "inputs": [
-            {
-                "indexed": False,
-                "internalType": "uint256",
-                "name": "height",
-                "type": "uint256",
-            },
-            {
-                "indexed": False,
-                "internalType": "uint256",
-                "name": "timestamp",
-                "type": "uint256",
-            },
-            {
-                "indexed": False,
-                "internalType": "uint256",
-                "name": "round",
-                "type": "uint256",
-            },
-            {
-                "indexed": False,
-                "internalType": "int256",
-                "name": "value",
-                "type": "int256",
-            },
-        ],
-        "name": "Updated",
-        "type": "event",
-    },
-    {
-        "inputs": [
-            {"internalType": "string[]", "name": "symbols_", "type": "string[]"},
-            {"internalType": "uint256[]", "name": "quantities_", "type": "uint256[]"},
-            {"internalType": "uint256", "name": "scale_", "type": "uint256"},
-        ],
-        "name": "modifyBasket",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "quantities",
-        "outputs": [{"internalType": "uint256[]", "name": "", "type": "uint256[]"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "round",
-        "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "scale",
-        "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "scaleFactor",
-        "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [{"internalType": "address", "name": "operator", "type": "address"}],
-        "name": "setOperator",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [{"internalType": "address", "name": "oracle", "type": "address"}],
-        "name": "setOracle",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "symbols",
-        "outputs": [{"internalType": "string[]", "name": "", "type": "string[]"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "update",
-        "outputs": [{"internalType": "bool", "name": "status", "type": "bool"}],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "value",
-        "outputs": [{"internalType": "int256", "name": "", "type": "int256"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-]
+ABI = typing.cast(
+    eth_typing.ABI,
+    [
+        {
+            "inputs": [
+                {"internalType": "string[]", "name": "symbols_", "type": "string[]"},
+                {
+                    "internalType": "uint256[]",
+                    "name": "quantities_",
+                    "type": "uint256[]",
+                },
+                {"internalType": "uint256", "name": "scale_", "type": "uint256"},
+                {"internalType": "address", "name": "autonity", "type": "address"},
+                {"internalType": "address", "name": "operator", "type": "address"},
+                {"internalType": "address", "name": "oracle", "type": "address"},
+            ],
+            "stateMutability": "nonpayable",
+            "type": "constructor",
+        },
+        {"inputs": [], "name": "InvalidBasket", "type": "error"},
+        {"inputs": [], "name": "NoACUValue", "type": "error"},
+        {"inputs": [], "name": "Unauthorized", "type": "error"},
+        {
+            "anonymous": False,
+            "inputs": [
+                {
+                    "indexed": False,
+                    "internalType": "string[]",
+                    "name": "symbols",
+                    "type": "string[]",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "uint256[]",
+                    "name": "quantities",
+                    "type": "uint256[]",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "uint256",
+                    "name": "scale",
+                    "type": "uint256",
+                },
+            ],
+            "name": "BasketModified",
+            "type": "event",
+        },
+        {
+            "anonymous": False,
+            "inputs": [
+                {
+                    "indexed": False,
+                    "internalType": "uint256",
+                    "name": "height",
+                    "type": "uint256",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "uint256",
+                    "name": "timestamp",
+                    "type": "uint256",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "uint256",
+                    "name": "round",
+                    "type": "uint256",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "int256",
+                    "name": "value",
+                    "type": "int256",
+                },
+            ],
+            "name": "Updated",
+            "type": "event",
+        },
+        {
+            "inputs": [
+                {"internalType": "string[]", "name": "symbols_", "type": "string[]"},
+                {
+                    "internalType": "uint256[]",
+                    "name": "quantities_",
+                    "type": "uint256[]",
+                },
+                {"internalType": "uint256", "name": "scale_", "type": "uint256"},
+            ],
+            "name": "modifyBasket",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "quantities",
+            "outputs": [{"internalType": "uint256[]", "name": "", "type": "uint256[]"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "round",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "scale",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "scaleFactor",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "address", "name": "operator", "type": "address"}
+            ],
+            "name": "setOperator",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "address", "name": "oracle", "type": "address"}
+            ],
+            "name": "setOracle",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "symbols",
+            "outputs": [{"internalType": "string[]", "name": "", "type": "string[]"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "update",
+            "outputs": [{"internalType": "bool", "name": "status", "type": "bool"}],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "value",
+            "outputs": [{"internalType": "int256", "name": "", "type": "int256"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+    ],
+)

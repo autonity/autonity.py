@@ -1,6 +1,6 @@
 """Autonity contract binding and data structures."""
 
-# This module has been generated using pyabigen v0.2.5
+# This module has been generated using pyabigen v0.2.8
 
 import enum
 import typing
@@ -8,6 +8,7 @@ import typing
 import eth_typing
 import hexbytes
 import web3
+from dataclasses import dataclass
 from web3.contract import base_contract, contract
 
 __version__ = "v0.14.0"
@@ -31,7 +32,8 @@ class UnbondingReleaseState(enum.IntEnum):
     REVERTED = 3
 
 
-class Validator(typing.NamedTuple):
+@dataclass
+class Validator:
     """Port of `struct Validator` on the Autonity contract."""
 
     treasury: eth_typing.ChecksumAddress
@@ -56,7 +58,8 @@ class Validator(typing.NamedTuple):
     state: ValidatorState
 
 
-class Policy(typing.NamedTuple):
+@dataclass
+class Policy:
     """Port of `struct Policy` on the Autonity contract."""
 
     treasury_fee: int
@@ -67,7 +70,8 @@ class Policy(typing.NamedTuple):
     treasury_account: eth_typing.ChecksumAddress
 
 
-class Contracts(typing.NamedTuple):
+@dataclass
+class Contracts:
     """Port of `struct Contracts` on the Autonity contract."""
 
     accountability_contract: eth_typing.ChecksumAddress
@@ -80,7 +84,8 @@ class Contracts(typing.NamedTuple):
     non_stakable_vesting_contract: eth_typing.ChecksumAddress
 
 
-class Protocol(typing.NamedTuple):
+@dataclass
+class Protocol:
     """Port of `struct Protocol` on the Autonity contract."""
 
     operator_account: eth_typing.ChecksumAddress
@@ -89,7 +94,8 @@ class Protocol(typing.NamedTuple):
     committee_size: int
 
 
-class Config(typing.NamedTuple):
+@dataclass
+class Config:
     """Port of `struct Config` on the Autonity contract."""
 
     policy: Policy
@@ -98,7 +104,8 @@ class Config(typing.NamedTuple):
     contract_version: int
 
 
-class CommitteeMember(typing.NamedTuple):
+@dataclass
+class CommitteeMember:
     """Port of `struct CommitteeMember` on the Autonity contract."""
 
     addr: eth_typing.ChecksumAddress
@@ -1689,25 +1696,6 @@ class Autonity:
             _enode,
         )
 
-    def update_validator_and_transfer_slashed_funds(
-        self,
-        _val: Validator,
-    ) -> contract.ContractFunction:
-        """Binding for `updateValidatorAndTransferSlashedFunds` on the Autonity contract.
-
-        Parameters
-        ----------
-        _val : Validator
-
-        Returns
-        -------
-        web3.contract.contract.ContractFunction
-            A contract function instance to be sent in a transaction.
-        """
-        return self._contract.functions.updateValidatorAndTransferSlashedFunds(
-            _val,
-        )
-
     def upgrade_contract(
         self,
         _bytecode: hexbytes.HexBytes,
@@ -1734,1727 +1722,1782 @@ class Autonity:
         )
 
 
-ABI = [
-    {
-        "inputs": [
-            {
-                "components": [
-                    {
-                        "internalType": "address payable",
-                        "name": "treasury",
-                        "type": "address",
-                    },
-                    {
-                        "internalType": "address",
-                        "name": "nodeAddress",
-                        "type": "address",
-                    },
-                    {
-                        "internalType": "address",
-                        "name": "oracleAddress",
-                        "type": "address",
-                    },
-                    {"internalType": "string", "name": "enode", "type": "string"},
-                    {
-                        "internalType": "uint256",
-                        "name": "commissionRate",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "bondedStake",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "unbondingStake",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "unbondingShares",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "selfBondedStake",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "selfUnbondingStake",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "selfUnbondingShares",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "selfUnbondingStakeLocked",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "contract Liquid",
-                        "name": "liquidContract",
-                        "type": "address",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "liquidSupply",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "registrationBlock",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "totalSlashed",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "jailReleaseBlock",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "provableFaultCount",
-                        "type": "uint256",
-                    },
-                    {"internalType": "bytes", "name": "consensusKey", "type": "bytes"},
-                    {
-                        "internalType": "enum ValidatorState",
-                        "name": "state",
-                        "type": "uint8",
-                    },
-                ],
-                "internalType": "struct Autonity.Validator[]",
-                "name": "_validators",
-                "type": "tuple[]",
-            },
-            {
-                "components": [
-                    {
-                        "components": [
-                            {
-                                "internalType": "uint256",
-                                "name": "treasuryFee",
-                                "type": "uint256",
-                            },
-                            {
-                                "internalType": "uint256",
-                                "name": "minBaseFee",
-                                "type": "uint256",
-                            },
-                            {
-                                "internalType": "uint256",
-                                "name": "delegationRate",
-                                "type": "uint256",
-                            },
-                            {
-                                "internalType": "uint256",
-                                "name": "unbondingPeriod",
-                                "type": "uint256",
-                            },
-                            {
-                                "internalType": "uint256",
-                                "name": "initialInflationReserve",
-                                "type": "uint256",
-                            },
-                            {
-                                "internalType": "address payable",
-                                "name": "treasuryAccount",
-                                "type": "address",
-                            },
-                        ],
-                        "internalType": "struct Autonity.Policy",
-                        "name": "policy",
-                        "type": "tuple",
-                    },
-                    {
-                        "components": [
-                            {
-                                "internalType": "contract IAccountability",
-                                "name": "accountabilityContract",
-                                "type": "address",
-                            },
-                            {
-                                "internalType": "contract IOracle",
-                                "name": "oracleContract",
-                                "type": "address",
-                            },
-                            {
-                                "internalType": "contract IACU",
-                                "name": "acuContract",
-                                "type": "address",
-                            },
-                            {
-                                "internalType": "contract ISupplyControl",
-                                "name": "supplyControlContract",
-                                "type": "address",
-                            },
-                            {
-                                "internalType": "contract IStabilization",
-                                "name": "stabilizationContract",
-                                "type": "address",
-                            },
-                            {
-                                "internalType": "contract UpgradeManager",
-                                "name": "upgradeManagerContract",
-                                "type": "address",
-                            },
-                            {
-                                "internalType": "contract IInflationController",
-                                "name": "inflationControllerContract",
-                                "type": "address",
-                            },
-                            {
-                                "internalType": "contract INonStakableVestingVault",
-                                "name": "nonStakableVestingContract",
-                                "type": "address",
-                            },
-                        ],
-                        "internalType": "struct Autonity.Contracts",
-                        "name": "contracts",
-                        "type": "tuple",
-                    },
-                    {
-                        "components": [
-                            {
-                                "internalType": "address",
-                                "name": "operatorAccount",
-                                "type": "address",
-                            },
-                            {
-                                "internalType": "uint256",
-                                "name": "epochPeriod",
-                                "type": "uint256",
-                            },
-                            {
-                                "internalType": "uint256",
-                                "name": "blockPeriod",
-                                "type": "uint256",
-                            },
-                            {
-                                "internalType": "uint256",
-                                "name": "committeeSize",
-                                "type": "uint256",
-                            },
-                        ],
-                        "internalType": "struct Autonity.Protocol",
-                        "name": "protocol",
-                        "type": "tuple",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "contractVersion",
-                        "type": "uint256",
-                    },
-                ],
-                "internalType": "struct Autonity.Config",
-                "name": "_config",
-                "type": "tuple",
-            },
-        ],
-        "stateMutability": "nonpayable",
-        "type": "constructor",
-    },
-    {"stateMutability": "payable", "type": "fallback"},
-    {"stateMutability": "payable", "type": "receive"},
-    {
-        "anonymous": False,
-        "inputs": [
-            {
-                "indexed": True,
-                "internalType": "address",
-                "name": "treasury",
-                "type": "address",
-            },
-            {
-                "indexed": True,
-                "internalType": "address",
-                "name": "addr",
-                "type": "address",
-            },
-            {
-                "indexed": False,
-                "internalType": "uint256",
-                "name": "effectiveBlock",
-                "type": "uint256",
-            },
-        ],
-        "name": "ActivatedValidator",
-        "type": "event",
-    },
-    {
-        "anonymous": False,
-        "inputs": [
-            {
-                "indexed": True,
-                "internalType": "address",
-                "name": "validator",
-                "type": "address",
-            },
-            {
-                "indexed": True,
-                "internalType": "address",
-                "name": "delegator",
-                "type": "address",
-            },
-            {
-                "indexed": False,
-                "internalType": "bool",
-                "name": "selfBonded",
-                "type": "bool",
-            },
-            {
-                "indexed": False,
-                "internalType": "uint256",
-                "name": "amount",
-                "type": "uint256",
-            },
-        ],
-        "name": "AppliedUnbondingReverted",
-        "type": "event",
-    },
-    {
-        "anonymous": False,
-        "inputs": [
-            {
-                "indexed": True,
-                "internalType": "address",
-                "name": "owner",
-                "type": "address",
-            },
-            {
-                "indexed": True,
-                "internalType": "address",
-                "name": "spender",
-                "type": "address",
-            },
-            {
-                "indexed": False,
-                "internalType": "uint256",
-                "name": "value",
-                "type": "uint256",
-            },
-        ],
-        "name": "Approval",
-        "type": "event",
-    },
-    {
-        "anonymous": False,
-        "inputs": [
-            {
-                "indexed": True,
-                "internalType": "address",
-                "name": "validator",
-                "type": "address",
-            },
-            {
-                "indexed": True,
-                "internalType": "address",
-                "name": "delegator",
-                "type": "address",
-            },
-            {
-                "indexed": False,
-                "internalType": "uint256",
-                "name": "amount",
-                "type": "uint256",
-            },
-            {
-                "indexed": False,
-                "internalType": "enum ValidatorState",
-                "name": "state",
-                "type": "uint8",
-            },
-        ],
-        "name": "BondingRejected",
-        "type": "event",
-    },
-    {
-        "anonymous": False,
-        "inputs": [
-            {
-                "indexed": True,
-                "internalType": "address",
-                "name": "validator",
-                "type": "address",
-            },
-            {
-                "indexed": True,
-                "internalType": "address",
-                "name": "delegator",
-                "type": "address",
-            },
-            {
-                "indexed": False,
-                "internalType": "uint256",
-                "name": "amount",
-                "type": "uint256",
-            },
-        ],
-        "name": "BondingReverted",
-        "type": "event",
-    },
-    {
-        "anonymous": False,
-        "inputs": [
-            {
-                "indexed": True,
-                "internalType": "address",
-                "name": "addr",
-                "type": "address",
-            },
-            {
-                "indexed": False,
-                "internalType": "uint256",
-                "name": "amount",
-                "type": "uint256",
-            },
-        ],
-        "name": "BurnedStake",
-        "type": "event",
-    },
-    {
-        "inputs": [],
-        "name": "COMMISSION_RATE_PRECISION",
-        "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "anonymous": False,
-        "inputs": [
-            {
-                "indexed": True,
-                "internalType": "address",
-                "name": "validator",
-                "type": "address",
-            },
-            {
-                "indexed": False,
-                "internalType": "uint256",
-                "name": "rate",
-                "type": "uint256",
-            },
-        ],
-        "name": "CommissionRateChange",
-        "type": "event",
-    },
-    {
-        "anonymous": False,
-        "inputs": [
-            {
-                "indexed": False,
-                "internalType": "uint256",
-                "name": "period",
-                "type": "uint256",
-            }
-        ],
-        "name": "EpochPeriodUpdated",
-        "type": "event",
-    },
-    {
-        "anonymous": False,
-        "inputs": [
-            {
-                "indexed": False,
-                "internalType": "uint256",
-                "name": "gasPrice",
-                "type": "uint256",
-            }
-        ],
-        "name": "MinimumBaseFeeUpdated",
-        "type": "event",
-    },
-    {
-        "anonymous": False,
-        "inputs": [
-            {
-                "indexed": True,
-                "internalType": "address",
-                "name": "addr",
-                "type": "address",
-            },
-            {
-                "indexed": False,
-                "internalType": "uint256",
-                "name": "amount",
-                "type": "uint256",
-            },
-        ],
-        "name": "MintedStake",
-        "type": "event",
-    },
-    {
-        "anonymous": False,
-        "inputs": [
-            {
-                "indexed": True,
-                "internalType": "address",
-                "name": "validator",
-                "type": "address",
-            },
-            {
-                "indexed": True,
-                "internalType": "address",
-                "name": "delegator",
-                "type": "address",
-            },
-            {
-                "indexed": False,
-                "internalType": "bool",
-                "name": "selfBonded",
-                "type": "bool",
-            },
-            {
-                "indexed": False,
-                "internalType": "uint256",
-                "name": "amount",
-                "type": "uint256",
-            },
-        ],
-        "name": "NewBondingRequest",
-        "type": "event",
-    },
-    {
-        "anonymous": False,
-        "inputs": [
-            {
-                "indexed": False,
-                "internalType": "uint256",
-                "name": "epoch",
-                "type": "uint256",
-            }
-        ],
-        "name": "NewEpoch",
-        "type": "event",
-    },
-    {
-        "anonymous": False,
-        "inputs": [
-            {
-                "indexed": True,
-                "internalType": "address",
-                "name": "validator",
-                "type": "address",
-            },
-            {
-                "indexed": True,
-                "internalType": "address",
-                "name": "delegator",
-                "type": "address",
-            },
-            {
-                "indexed": False,
-                "internalType": "bool",
-                "name": "selfBonded",
-                "type": "bool",
-            },
-            {
-                "indexed": False,
-                "internalType": "uint256",
-                "name": "amount",
-                "type": "uint256",
-            },
-        ],
-        "name": "NewUnbondingRequest",
-        "type": "event",
-    },
-    {
-        "anonymous": False,
-        "inputs": [
-            {
-                "indexed": True,
-                "internalType": "address",
-                "name": "treasury",
-                "type": "address",
-            },
-            {
-                "indexed": True,
-                "internalType": "address",
-                "name": "addr",
-                "type": "address",
-            },
-            {
-                "indexed": False,
-                "internalType": "uint256",
-                "name": "effectiveBlock",
-                "type": "uint256",
-            },
-        ],
-        "name": "PausedValidator",
-        "type": "event",
-    },
-    {
-        "anonymous": False,
-        "inputs": [
-            {
-                "indexed": False,
-                "internalType": "address",
-                "name": "treasury",
-                "type": "address",
-            },
-            {
-                "indexed": False,
-                "internalType": "address",
-                "name": "addr",
-                "type": "address",
-            },
-            {
-                "indexed": False,
-                "internalType": "address",
-                "name": "oracleAddress",
-                "type": "address",
-            },
-            {
-                "indexed": False,
-                "internalType": "string",
-                "name": "enode",
-                "type": "string",
-            },
-            {
-                "indexed": False,
-                "internalType": "address",
-                "name": "liquidContract",
-                "type": "address",
-            },
-        ],
-        "name": "RegisteredValidator",
-        "type": "event",
-    },
-    {
-        "anonymous": False,
-        "inputs": [
-            {
-                "indexed": True,
-                "internalType": "address",
-                "name": "validator",
-                "type": "address",
-            },
-            {
-                "indexed": True,
-                "internalType": "address",
-                "name": "delegator",
-                "type": "address",
-            },
-            {
-                "indexed": False,
-                "internalType": "bool",
-                "name": "selfBonded",
-                "type": "bool",
-            },
-            {
-                "indexed": False,
-                "internalType": "uint256",
-                "name": "amount",
-                "type": "uint256",
-            },
-        ],
-        "name": "ReleasedUnbondingReverted",
-        "type": "event",
-    },
-    {
-        "anonymous": False,
-        "inputs": [
-            {
-                "indexed": True,
-                "internalType": "address",
-                "name": "addr",
-                "type": "address",
-            },
-            {
-                "indexed": False,
-                "internalType": "uint256",
-                "name": "atnAmount",
-                "type": "uint256",
-            },
-            {
-                "indexed": False,
-                "internalType": "uint256",
-                "name": "ntnAmount",
-                "type": "uint256",
-            },
-        ],
-        "name": "Rewarded",
-        "type": "event",
-    },
-    {
-        "anonymous": False,
-        "inputs": [
-            {
-                "indexed": True,
-                "internalType": "address",
-                "name": "from",
-                "type": "address",
-            },
-            {
-                "indexed": True,
-                "internalType": "address",
-                "name": "to",
-                "type": "address",
-            },
-            {
-                "indexed": False,
-                "internalType": "uint256",
-                "name": "value",
-                "type": "uint256",
-            },
-        ],
-        "name": "Transfer",
-        "type": "event",
-    },
-    {
-        "anonymous": False,
-        "inputs": [
-            {
-                "indexed": True,
-                "internalType": "address",
-                "name": "validator",
-                "type": "address",
-            },
-            {
-                "indexed": True,
-                "internalType": "address",
-                "name": "delegator",
-                "type": "address",
-            },
-            {
-                "indexed": False,
-                "internalType": "bool",
-                "name": "selfBonded",
-                "type": "bool",
-            },
-            {
-                "indexed": False,
-                "internalType": "uint256",
-                "name": "amount",
-                "type": "uint256",
-            },
-        ],
-        "name": "UnbondingRejected",
-        "type": "event",
-    },
-    {
-        "anonymous": False,
-        "inputs": [
-            {
-                "indexed": False,
-                "internalType": "uint256",
-                "name": "epochTime",
-                "type": "uint256",
-            }
-        ],
-        "name": "UnlockingScheduleFailed",
-        "type": "event",
-    },
-    {
-        "inputs": [{"internalType": "address", "name": "_address", "type": "address"}],
-        "name": "activateValidator",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [
-            {"internalType": "address", "name": "owner", "type": "address"},
-            {"internalType": "address", "name": "spender", "type": "address"},
-        ],
-        "name": "allowance",
-        "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [
-            {"internalType": "address", "name": "spender", "type": "address"},
-            {"internalType": "uint256", "name": "amount", "type": "uint256"},
-        ],
-        "name": "approve",
-        "outputs": [{"internalType": "bool", "name": "", "type": "bool"}],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "atnTotalRedistributed",
-        "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [{"internalType": "address", "name": "_addr", "type": "address"}],
-        "name": "balanceOf",
-        "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [
-            {"internalType": "address", "name": "_validator", "type": "address"},
-            {"internalType": "uint256", "name": "_amount", "type": "uint256"},
-        ],
-        "name": "bond",
-        "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-        "stateMutability": "payable",
-        "type": "function",
-    },
-    {
-        "inputs": [
-            {"internalType": "address", "name": "_addr", "type": "address"},
-            {"internalType": "uint256", "name": "_amount", "type": "uint256"},
-        ],
-        "name": "burn",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [
-            {"internalType": "address", "name": "_validator", "type": "address"},
-            {"internalType": "uint256", "name": "_rate", "type": "uint256"},
-        ],
-        "name": "changeCommissionRate",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "completeContractUpgrade",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "computeCommittee",
-        "outputs": [{"internalType": "address[]", "name": "", "type": "address[]"}],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "config",
-        "outputs": [
-            {
-                "components": [
-                    {
-                        "internalType": "uint256",
-                        "name": "treasuryFee",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "minBaseFee",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "delegationRate",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "unbondingPeriod",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "initialInflationReserve",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "address payable",
-                        "name": "treasuryAccount",
-                        "type": "address",
-                    },
-                ],
-                "internalType": "struct Autonity.Policy",
-                "name": "policy",
-                "type": "tuple",
-            },
-            {
-                "components": [
-                    {
-                        "internalType": "contract IAccountability",
-                        "name": "accountabilityContract",
-                        "type": "address",
-                    },
-                    {
-                        "internalType": "contract IOracle",
-                        "name": "oracleContract",
-                        "type": "address",
-                    },
-                    {
-                        "internalType": "contract IACU",
-                        "name": "acuContract",
-                        "type": "address",
-                    },
-                    {
-                        "internalType": "contract ISupplyControl",
-                        "name": "supplyControlContract",
-                        "type": "address",
-                    },
-                    {
-                        "internalType": "contract IStabilization",
-                        "name": "stabilizationContract",
-                        "type": "address",
-                    },
-                    {
-                        "internalType": "contract UpgradeManager",
-                        "name": "upgradeManagerContract",
-                        "type": "address",
-                    },
-                    {
-                        "internalType": "contract IInflationController",
-                        "name": "inflationControllerContract",
-                        "type": "address",
-                    },
-                    {
-                        "internalType": "contract INonStakableVestingVault",
-                        "name": "nonStakableVestingContract",
-                        "type": "address",
-                    },
-                ],
-                "internalType": "struct Autonity.Contracts",
-                "name": "contracts",
-                "type": "tuple",
-            },
-            {
-                "components": [
-                    {
-                        "internalType": "address",
-                        "name": "operatorAccount",
-                        "type": "address",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "epochPeriod",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "blockPeriod",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "committeeSize",
-                        "type": "uint256",
-                    },
-                ],
-                "internalType": "struct Autonity.Protocol",
-                "name": "protocol",
-                "type": "tuple",
-            },
-            {"internalType": "uint256", "name": "contractVersion", "type": "uint256"},
-        ],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "decimals",
-        "outputs": [{"internalType": "uint8", "name": "", "type": "uint8"}],
-        "stateMutability": "pure",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "deployer",
-        "outputs": [{"internalType": "address", "name": "", "type": "address"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "epochID",
-        "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "epochReward",
-        "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "epochTotalBondedStake",
-        "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "finalize",
-        "outputs": [
-            {"internalType": "bool", "name": "", "type": "bool"},
-            {
-                "components": [
-                    {"internalType": "address", "name": "addr", "type": "address"},
-                    {
-                        "internalType": "uint256",
-                        "name": "votingPower",
-                        "type": "uint256",
-                    },
-                    {"internalType": "bytes", "name": "consensusKey", "type": "bytes"},
-                ],
-                "internalType": "struct Autonity.CommitteeMember[]",
-                "name": "",
-                "type": "tuple[]",
-            },
-        ],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "finalizeInitialization",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "getBlockPeriod",
-        "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "getCommittee",
-        "outputs": [
-            {
-                "components": [
-                    {"internalType": "address", "name": "addr", "type": "address"},
-                    {
-                        "internalType": "uint256",
-                        "name": "votingPower",
-                        "type": "uint256",
-                    },
-                    {"internalType": "bytes", "name": "consensusKey", "type": "bytes"},
-                ],
-                "internalType": "struct Autonity.CommitteeMember[]",
-                "name": "",
-                "type": "tuple[]",
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "getCommitteeEnodes",
-        "outputs": [{"internalType": "string[]", "name": "", "type": "string[]"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [{"internalType": "uint256", "name": "_block", "type": "uint256"}],
-        "name": "getEpochFromBlock",
-        "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "getEpochPeriod",
-        "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "getLastEpochBlock",
-        "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "getMaxCommitteeSize",
-        "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "getMinimumBaseFee",
-        "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "getNewContract",
-        "outputs": [
-            {"internalType": "bytes", "name": "", "type": "bytes"},
-            {"internalType": "string", "name": "", "type": "string"},
-        ],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "getOperator",
-        "outputs": [{"internalType": "address", "name": "", "type": "address"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "getOracle",
-        "outputs": [{"internalType": "address", "name": "", "type": "address"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [
-            {"internalType": "uint256", "name": "height", "type": "uint256"},
-            {"internalType": "uint256", "name": "round", "type": "uint256"},
-        ],
-        "name": "getProposer",
-        "outputs": [{"internalType": "address", "name": "", "type": "address"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [
-            {"internalType": "uint256", "name": "_unbondingID", "type": "uint256"}
-        ],
-        "name": "getRevertingAmount",
-        "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "getTreasuryAccount",
-        "outputs": [{"internalType": "address", "name": "", "type": "address"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "getTreasuryFee",
-        "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "getUnbondingPeriod",
-        "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [
-            {"internalType": "uint256", "name": "_unbondingID", "type": "uint256"}
-        ],
-        "name": "getUnbondingReleaseState",
-        "outputs": [
-            {
-                "internalType": "enum Autonity.UnbondingReleaseState",
-                "name": "",
-                "type": "uint8",
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [{"internalType": "address", "name": "_addr", "type": "address"}],
-        "name": "getValidator",
-        "outputs": [
-            {
-                "components": [
-                    {
-                        "internalType": "address payable",
-                        "name": "treasury",
-                        "type": "address",
-                    },
-                    {
-                        "internalType": "address",
-                        "name": "nodeAddress",
-                        "type": "address",
-                    },
-                    {
-                        "internalType": "address",
-                        "name": "oracleAddress",
-                        "type": "address",
-                    },
-                    {"internalType": "string", "name": "enode", "type": "string"},
-                    {
-                        "internalType": "uint256",
-                        "name": "commissionRate",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "bondedStake",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "unbondingStake",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "unbondingShares",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "selfBondedStake",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "selfUnbondingStake",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "selfUnbondingShares",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "selfUnbondingStakeLocked",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "contract Liquid",
-                        "name": "liquidContract",
-                        "type": "address",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "liquidSupply",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "registrationBlock",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "totalSlashed",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "jailReleaseBlock",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "provableFaultCount",
-                        "type": "uint256",
-                    },
-                    {"internalType": "bytes", "name": "consensusKey", "type": "bytes"},
-                    {
-                        "internalType": "enum ValidatorState",
-                        "name": "state",
-                        "type": "uint8",
-                    },
-                ],
-                "internalType": "struct Autonity.Validator",
-                "name": "",
-                "type": "tuple",
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "getValidators",
-        "outputs": [{"internalType": "address[]", "name": "", "type": "address[]"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "getVersion",
-        "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "inflationReserve",
-        "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "lastEpochBlock",
-        "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "lastEpochTime",
-        "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "maxBondAppliedGas",
-        "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "maxRewardsDistributionGas",
-        "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "maxUnbondAppliedGas",
-        "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "maxUnbondReleasedGas",
-        "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [
-            {"internalType": "address", "name": "_addr", "type": "address"},
-            {"internalType": "uint256", "name": "_amount", "type": "uint256"},
-        ],
-        "name": "mint",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "name",
-        "outputs": [{"internalType": "string", "name": "", "type": "string"}],
-        "stateMutability": "pure",
-        "type": "function",
-    },
-    {
-        "inputs": [{"internalType": "address", "name": "_address", "type": "address"}],
-        "name": "pauseValidator",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "receiveATN",
-        "outputs": [],
-        "stateMutability": "payable",
-        "type": "function",
-    },
-    {
-        "inputs": [
-            {"internalType": "string", "name": "_enode", "type": "string"},
-            {"internalType": "address", "name": "_oracleAddress", "type": "address"},
-            {"internalType": "bytes", "name": "_consensusKey", "type": "bytes"},
-            {"internalType": "bytes", "name": "_signatures", "type": "bytes"},
-        ],
-        "name": "registerValidator",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "resetContractUpgrade",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "contract IAccountability",
-                "name": "_address",
-                "type": "address",
-            }
-        ],
-        "name": "setAccountabilityContract",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [
-            {"internalType": "contract IACU", "name": "_address", "type": "address"}
-        ],
-        "name": "setAcuContract",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [{"internalType": "uint256", "name": "_size", "type": "uint256"}],
-        "name": "setCommitteeSize",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [{"internalType": "uint256", "name": "_period", "type": "uint256"}],
-        "name": "setEpochPeriod",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "contract IInflationController",
-                "name": "_address",
-                "type": "address",
-            }
-        ],
-        "name": "setInflationControllerContract",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [{"internalType": "uint256", "name": "_gas", "type": "uint256"}],
-        "name": "setMaxBondAppliedGas",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [{"internalType": "uint256", "name": "_gas", "type": "uint256"}],
-        "name": "setMaxRewardsDistributionGas",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [{"internalType": "uint256", "name": "_gas", "type": "uint256"}],
-        "name": "setMaxUnbondAppliedGas",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [{"internalType": "uint256", "name": "_gas", "type": "uint256"}],
-        "name": "setMaxUnbondReleasedGas",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [{"internalType": "uint256", "name": "_price", "type": "uint256"}],
-        "name": "setMinimumBaseFee",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "contract INonStakableVestingVault",
-                "name": "_address",
-                "type": "address",
-            }
-        ],
-        "name": "setNonStakableVestingContract",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [{"internalType": "address", "name": "_account", "type": "address"}],
-        "name": "setOperatorAccount",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [
-            {"internalType": "address payable", "name": "_address", "type": "address"}
-        ],
-        "name": "setOracleContract",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "contract IStabilization",
-                "name": "_address",
-                "type": "address",
-            }
-        ],
-        "name": "setStabilizationContract",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [{"internalType": "uint256", "name": "_price", "type": "uint256"}],
-        "name": "setStakingGasPrice",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "contract ISupplyControl",
-                "name": "_address",
-                "type": "address",
-            }
-        ],
-        "name": "setSupplyControlContract",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [
-            {"internalType": "address payable", "name": "_account", "type": "address"}
-        ],
-        "name": "setTreasuryAccount",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [
-            {"internalType": "uint256", "name": "_treasuryFee", "type": "uint256"}
-        ],
-        "name": "setTreasuryFee",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [{"internalType": "uint256", "name": "_period", "type": "uint256"}],
-        "name": "setUnbondingPeriod",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "contract UpgradeManager",
-                "name": "_address",
-                "type": "address",
-            }
-        ],
-        "name": "setUpgradeManagerContract",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "stakingGasPrice",
-        "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "symbol",
-        "outputs": [{"internalType": "string", "name": "", "type": "string"}],
-        "stateMutability": "pure",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "totalSupply",
-        "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [
-            {"internalType": "address", "name": "_recipient", "type": "address"},
-            {"internalType": "uint256", "name": "_amount", "type": "uint256"},
-        ],
-        "name": "transfer",
-        "outputs": [{"internalType": "bool", "name": "", "type": "bool"}],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [
-            {"internalType": "address", "name": "_sender", "type": "address"},
-            {"internalType": "address", "name": "_recipient", "type": "address"},
-            {"internalType": "uint256", "name": "_amount", "type": "uint256"},
-        ],
-        "name": "transferFrom",
-        "outputs": [{"internalType": "bool", "name": "", "type": "bool"}],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [
-            {"internalType": "address", "name": "_validator", "type": "address"},
-            {"internalType": "uint256", "name": "_amount", "type": "uint256"},
-        ],
-        "name": "unbond",
-        "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-        "stateMutability": "payable",
-        "type": "function",
-    },
-    {
-        "inputs": [
-            {"internalType": "address", "name": "_nodeAddress", "type": "address"},
-            {"internalType": "string", "name": "_enode", "type": "string"},
-        ],
-        "name": "updateEnode",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [
-            {
-                "components": [
-                    {
-                        "internalType": "address payable",
-                        "name": "treasury",
-                        "type": "address",
-                    },
-                    {
-                        "internalType": "address",
-                        "name": "nodeAddress",
-                        "type": "address",
-                    },
-                    {
-                        "internalType": "address",
-                        "name": "oracleAddress",
-                        "type": "address",
-                    },
-                    {"internalType": "string", "name": "enode", "type": "string"},
-                    {
-                        "internalType": "uint256",
-                        "name": "commissionRate",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "bondedStake",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "unbondingStake",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "unbondingShares",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "selfBondedStake",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "selfUnbondingStake",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "selfUnbondingShares",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "selfUnbondingStakeLocked",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "contract Liquid",
-                        "name": "liquidContract",
-                        "type": "address",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "liquidSupply",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "registrationBlock",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "totalSlashed",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "jailReleaseBlock",
-                        "type": "uint256",
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "provableFaultCount",
-                        "type": "uint256",
-                    },
-                    {"internalType": "bytes", "name": "consensusKey", "type": "bytes"},
-                    {
-                        "internalType": "enum ValidatorState",
-                        "name": "state",
-                        "type": "uint8",
-                    },
-                ],
-                "internalType": "struct Autonity.Validator",
-                "name": "_val",
-                "type": "tuple",
-            }
-        ],
-        "name": "updateValidatorAndTransferSlashedFunds",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [
-            {"internalType": "bytes", "name": "_bytecode", "type": "bytes"},
-            {"internalType": "string", "name": "_abi", "type": "string"},
-        ],
-        "name": "upgradeContract",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-]
+ABI = typing.cast(
+    eth_typing.ABI,
+    [
+        {
+            "inputs": [
+                {
+                    "components": [
+                        {
+                            "internalType": "address payable",
+                            "name": "treasury",
+                            "type": "address",
+                        },
+                        {
+                            "internalType": "address",
+                            "name": "nodeAddress",
+                            "type": "address",
+                        },
+                        {
+                            "internalType": "address",
+                            "name": "oracleAddress",
+                            "type": "address",
+                        },
+                        {"internalType": "string", "name": "enode", "type": "string"},
+                        {
+                            "internalType": "uint256",
+                            "name": "commissionRate",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "bondedStake",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "unbondingStake",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "unbondingShares",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "selfBondedStake",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "selfUnbondingStake",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "selfUnbondingShares",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "selfUnbondingStakeLocked",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "contract Liquid",
+                            "name": "liquidContract",
+                            "type": "address",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "liquidSupply",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "registrationBlock",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "totalSlashed",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "jailReleaseBlock",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "provableFaultCount",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "bytes",
+                            "name": "consensusKey",
+                            "type": "bytes",
+                        },
+                        {
+                            "internalType": "enum ValidatorState",
+                            "name": "state",
+                            "type": "uint8",
+                        },
+                    ],
+                    "internalType": "struct Autonity.Validator[]",
+                    "name": "_validators",
+                    "type": "tuple[]",
+                },
+                {
+                    "components": [
+                        {
+                            "components": [
+                                {
+                                    "internalType": "uint256",
+                                    "name": "treasuryFee",
+                                    "type": "uint256",
+                                },
+                                {
+                                    "internalType": "uint256",
+                                    "name": "minBaseFee",
+                                    "type": "uint256",
+                                },
+                                {
+                                    "internalType": "uint256",
+                                    "name": "delegationRate",
+                                    "type": "uint256",
+                                },
+                                {
+                                    "internalType": "uint256",
+                                    "name": "unbondingPeriod",
+                                    "type": "uint256",
+                                },
+                                {
+                                    "internalType": "uint256",
+                                    "name": "initialInflationReserve",
+                                    "type": "uint256",
+                                },
+                                {
+                                    "internalType": "address payable",
+                                    "name": "treasuryAccount",
+                                    "type": "address",
+                                },
+                            ],
+                            "internalType": "struct Autonity.Policy",
+                            "name": "policy",
+                            "type": "tuple",
+                        },
+                        {
+                            "components": [
+                                {
+                                    "internalType": "contract IAccountability",
+                                    "name": "accountabilityContract",
+                                    "type": "address",
+                                },
+                                {
+                                    "internalType": "contract IOracle",
+                                    "name": "oracleContract",
+                                    "type": "address",
+                                },
+                                {
+                                    "internalType": "contract IACU",
+                                    "name": "acuContract",
+                                    "type": "address",
+                                },
+                                {
+                                    "internalType": "contract ISupplyControl",
+                                    "name": "supplyControlContract",
+                                    "type": "address",
+                                },
+                                {
+                                    "internalType": "contract IStabilization",
+                                    "name": "stabilizationContract",
+                                    "type": "address",
+                                },
+                                {
+                                    "internalType": "contract UpgradeManager",
+                                    "name": "upgradeManagerContract",
+                                    "type": "address",
+                                },
+                                {
+                                    "internalType": "contract IInflationController",
+                                    "name": "inflationControllerContract",
+                                    "type": "address",
+                                },
+                                {
+                                    "internalType": "contract INonStakableVestingVault",
+                                    "name": "nonStakableVestingContract",
+                                    "type": "address",
+                                },
+                            ],
+                            "internalType": "struct Autonity.Contracts",
+                            "name": "contracts",
+                            "type": "tuple",
+                        },
+                        {
+                            "components": [
+                                {
+                                    "internalType": "address",
+                                    "name": "operatorAccount",
+                                    "type": "address",
+                                },
+                                {
+                                    "internalType": "uint256",
+                                    "name": "epochPeriod",
+                                    "type": "uint256",
+                                },
+                                {
+                                    "internalType": "uint256",
+                                    "name": "blockPeriod",
+                                    "type": "uint256",
+                                },
+                                {
+                                    "internalType": "uint256",
+                                    "name": "committeeSize",
+                                    "type": "uint256",
+                                },
+                            ],
+                            "internalType": "struct Autonity.Protocol",
+                            "name": "protocol",
+                            "type": "tuple",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "contractVersion",
+                            "type": "uint256",
+                        },
+                    ],
+                    "internalType": "struct Autonity.Config",
+                    "name": "_config",
+                    "type": "tuple",
+                },
+            ],
+            "stateMutability": "nonpayable",
+            "type": "constructor",
+        },
+        {
+            "anonymous": False,
+            "inputs": [
+                {
+                    "indexed": True,
+                    "internalType": "address",
+                    "name": "treasury",
+                    "type": "address",
+                },
+                {
+                    "indexed": True,
+                    "internalType": "address",
+                    "name": "addr",
+                    "type": "address",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "uint256",
+                    "name": "effectiveBlock",
+                    "type": "uint256",
+                },
+            ],
+            "name": "ActivatedValidator",
+            "type": "event",
+        },
+        {
+            "anonymous": False,
+            "inputs": [
+                {
+                    "indexed": True,
+                    "internalType": "address",
+                    "name": "validator",
+                    "type": "address",
+                },
+                {
+                    "indexed": True,
+                    "internalType": "address",
+                    "name": "delegator",
+                    "type": "address",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "bool",
+                    "name": "selfBonded",
+                    "type": "bool",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "uint256",
+                    "name": "amount",
+                    "type": "uint256",
+                },
+            ],
+            "name": "AppliedUnbondingReverted",
+            "type": "event",
+        },
+        {
+            "anonymous": False,
+            "inputs": [
+                {
+                    "indexed": True,
+                    "internalType": "address",
+                    "name": "owner",
+                    "type": "address",
+                },
+                {
+                    "indexed": True,
+                    "internalType": "address",
+                    "name": "spender",
+                    "type": "address",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "uint256",
+                    "name": "value",
+                    "type": "uint256",
+                },
+            ],
+            "name": "Approval",
+            "type": "event",
+        },
+        {
+            "anonymous": False,
+            "inputs": [
+                {
+                    "indexed": True,
+                    "internalType": "address",
+                    "name": "validator",
+                    "type": "address",
+                },
+                {
+                    "indexed": True,
+                    "internalType": "address",
+                    "name": "delegator",
+                    "type": "address",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "uint256",
+                    "name": "amount",
+                    "type": "uint256",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "enum ValidatorState",
+                    "name": "state",
+                    "type": "uint8",
+                },
+            ],
+            "name": "BondingRejected",
+            "type": "event",
+        },
+        {
+            "anonymous": False,
+            "inputs": [
+                {
+                    "indexed": True,
+                    "internalType": "address",
+                    "name": "validator",
+                    "type": "address",
+                },
+                {
+                    "indexed": True,
+                    "internalType": "address",
+                    "name": "delegator",
+                    "type": "address",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "uint256",
+                    "name": "amount",
+                    "type": "uint256",
+                },
+            ],
+            "name": "BondingReverted",
+            "type": "event",
+        },
+        {
+            "anonymous": False,
+            "inputs": [
+                {
+                    "indexed": True,
+                    "internalType": "address",
+                    "name": "addr",
+                    "type": "address",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "uint256",
+                    "name": "amount",
+                    "type": "uint256",
+                },
+            ],
+            "name": "BurnedStake",
+            "type": "event",
+        },
+        {
+            "anonymous": False,
+            "inputs": [
+                {
+                    "indexed": True,
+                    "internalType": "address",
+                    "name": "validator",
+                    "type": "address",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "uint256",
+                    "name": "rate",
+                    "type": "uint256",
+                },
+            ],
+            "name": "CommissionRateChange",
+            "type": "event",
+        },
+        {
+            "anonymous": False,
+            "inputs": [
+                {
+                    "indexed": False,
+                    "internalType": "uint256",
+                    "name": "period",
+                    "type": "uint256",
+                }
+            ],
+            "name": "EpochPeriodUpdated",
+            "type": "event",
+        },
+        {
+            "anonymous": False,
+            "inputs": [
+                {
+                    "indexed": False,
+                    "internalType": "uint256",
+                    "name": "gasPrice",
+                    "type": "uint256",
+                }
+            ],
+            "name": "MinimumBaseFeeUpdated",
+            "type": "event",
+        },
+        {
+            "anonymous": False,
+            "inputs": [
+                {
+                    "indexed": True,
+                    "internalType": "address",
+                    "name": "addr",
+                    "type": "address",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "uint256",
+                    "name": "amount",
+                    "type": "uint256",
+                },
+            ],
+            "name": "MintedStake",
+            "type": "event",
+        },
+        {
+            "anonymous": False,
+            "inputs": [
+                {
+                    "indexed": True,
+                    "internalType": "address",
+                    "name": "validator",
+                    "type": "address",
+                },
+                {
+                    "indexed": True,
+                    "internalType": "address",
+                    "name": "delegator",
+                    "type": "address",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "bool",
+                    "name": "selfBonded",
+                    "type": "bool",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "uint256",
+                    "name": "amount",
+                    "type": "uint256",
+                },
+            ],
+            "name": "NewBondingRequest",
+            "type": "event",
+        },
+        {
+            "anonymous": False,
+            "inputs": [
+                {
+                    "indexed": False,
+                    "internalType": "uint256",
+                    "name": "epoch",
+                    "type": "uint256",
+                }
+            ],
+            "name": "NewEpoch",
+            "type": "event",
+        },
+        {
+            "anonymous": False,
+            "inputs": [
+                {
+                    "indexed": True,
+                    "internalType": "address",
+                    "name": "validator",
+                    "type": "address",
+                },
+                {
+                    "indexed": True,
+                    "internalType": "address",
+                    "name": "delegator",
+                    "type": "address",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "bool",
+                    "name": "selfBonded",
+                    "type": "bool",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "uint256",
+                    "name": "amount",
+                    "type": "uint256",
+                },
+            ],
+            "name": "NewUnbondingRequest",
+            "type": "event",
+        },
+        {
+            "anonymous": False,
+            "inputs": [
+                {
+                    "indexed": True,
+                    "internalType": "address",
+                    "name": "treasury",
+                    "type": "address",
+                },
+                {
+                    "indexed": True,
+                    "internalType": "address",
+                    "name": "addr",
+                    "type": "address",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "uint256",
+                    "name": "effectiveBlock",
+                    "type": "uint256",
+                },
+            ],
+            "name": "PausedValidator",
+            "type": "event",
+        },
+        {
+            "anonymous": False,
+            "inputs": [
+                {
+                    "indexed": False,
+                    "internalType": "address",
+                    "name": "treasury",
+                    "type": "address",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "address",
+                    "name": "addr",
+                    "type": "address",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "address",
+                    "name": "oracleAddress",
+                    "type": "address",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "string",
+                    "name": "enode",
+                    "type": "string",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "address",
+                    "name": "liquidContract",
+                    "type": "address",
+                },
+            ],
+            "name": "RegisteredValidator",
+            "type": "event",
+        },
+        {
+            "anonymous": False,
+            "inputs": [
+                {
+                    "indexed": True,
+                    "internalType": "address",
+                    "name": "validator",
+                    "type": "address",
+                },
+                {
+                    "indexed": True,
+                    "internalType": "address",
+                    "name": "delegator",
+                    "type": "address",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "bool",
+                    "name": "selfBonded",
+                    "type": "bool",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "uint256",
+                    "name": "amount",
+                    "type": "uint256",
+                },
+            ],
+            "name": "ReleasedUnbondingReverted",
+            "type": "event",
+        },
+        {
+            "anonymous": False,
+            "inputs": [
+                {
+                    "indexed": True,
+                    "internalType": "address",
+                    "name": "addr",
+                    "type": "address",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "uint256",
+                    "name": "atnAmount",
+                    "type": "uint256",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "uint256",
+                    "name": "ntnAmount",
+                    "type": "uint256",
+                },
+            ],
+            "name": "Rewarded",
+            "type": "event",
+        },
+        {
+            "anonymous": False,
+            "inputs": [
+                {
+                    "indexed": True,
+                    "internalType": "address",
+                    "name": "from",
+                    "type": "address",
+                },
+                {
+                    "indexed": True,
+                    "internalType": "address",
+                    "name": "to",
+                    "type": "address",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "uint256",
+                    "name": "value",
+                    "type": "uint256",
+                },
+            ],
+            "name": "Transfer",
+            "type": "event",
+        },
+        {
+            "anonymous": False,
+            "inputs": [
+                {
+                    "indexed": True,
+                    "internalType": "address",
+                    "name": "validator",
+                    "type": "address",
+                },
+                {
+                    "indexed": True,
+                    "internalType": "address",
+                    "name": "delegator",
+                    "type": "address",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "bool",
+                    "name": "selfBonded",
+                    "type": "bool",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "uint256",
+                    "name": "amount",
+                    "type": "uint256",
+                },
+            ],
+            "name": "UnbondingRejected",
+            "type": "event",
+        },
+        {
+            "anonymous": False,
+            "inputs": [
+                {
+                    "indexed": False,
+                    "internalType": "uint256",
+                    "name": "epochTime",
+                    "type": "uint256",
+                }
+            ],
+            "name": "UnlockingScheduleFailed",
+            "type": "event",
+        },
+        {"stateMutability": "payable", "type": "fallback"},
+        {
+            "inputs": [],
+            "name": "COMMISSION_RATE_PRECISION",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "address", "name": "_address", "type": "address"}
+            ],
+            "name": "activateValidator",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "address", "name": "owner", "type": "address"},
+                {"internalType": "address", "name": "spender", "type": "address"},
+            ],
+            "name": "allowance",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "address", "name": "spender", "type": "address"},
+                {"internalType": "uint256", "name": "amount", "type": "uint256"},
+            ],
+            "name": "approve",
+            "outputs": [{"internalType": "bool", "name": "", "type": "bool"}],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "atnTotalRedistributed",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [{"internalType": "address", "name": "_addr", "type": "address"}],
+            "name": "balanceOf",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "address", "name": "_validator", "type": "address"},
+                {"internalType": "uint256", "name": "_amount", "type": "uint256"},
+            ],
+            "name": "bond",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "payable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "address", "name": "_addr", "type": "address"},
+                {"internalType": "uint256", "name": "_amount", "type": "uint256"},
+            ],
+            "name": "burn",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "address", "name": "_validator", "type": "address"},
+                {"internalType": "uint256", "name": "_rate", "type": "uint256"},
+            ],
+            "name": "changeCommissionRate",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "completeContractUpgrade",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "computeCommittee",
+            "outputs": [{"internalType": "address[]", "name": "", "type": "address[]"}],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "config",
+            "outputs": [
+                {
+                    "components": [
+                        {
+                            "internalType": "uint256",
+                            "name": "treasuryFee",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "minBaseFee",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "delegationRate",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "unbondingPeriod",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "initialInflationReserve",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "address payable",
+                            "name": "treasuryAccount",
+                            "type": "address",
+                        },
+                    ],
+                    "internalType": "struct Autonity.Policy",
+                    "name": "policy",
+                    "type": "tuple",
+                },
+                {
+                    "components": [
+                        {
+                            "internalType": "contract IAccountability",
+                            "name": "accountabilityContract",
+                            "type": "address",
+                        },
+                        {
+                            "internalType": "contract IOracle",
+                            "name": "oracleContract",
+                            "type": "address",
+                        },
+                        {
+                            "internalType": "contract IACU",
+                            "name": "acuContract",
+                            "type": "address",
+                        },
+                        {
+                            "internalType": "contract ISupplyControl",
+                            "name": "supplyControlContract",
+                            "type": "address",
+                        },
+                        {
+                            "internalType": "contract IStabilization",
+                            "name": "stabilizationContract",
+                            "type": "address",
+                        },
+                        {
+                            "internalType": "contract UpgradeManager",
+                            "name": "upgradeManagerContract",
+                            "type": "address",
+                        },
+                        {
+                            "internalType": "contract IInflationController",
+                            "name": "inflationControllerContract",
+                            "type": "address",
+                        },
+                        {
+                            "internalType": "contract INonStakableVestingVault",
+                            "name": "nonStakableVestingContract",
+                            "type": "address",
+                        },
+                    ],
+                    "internalType": "struct Autonity.Contracts",
+                    "name": "contracts",
+                    "type": "tuple",
+                },
+                {
+                    "components": [
+                        {
+                            "internalType": "address",
+                            "name": "operatorAccount",
+                            "type": "address",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "epochPeriod",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "blockPeriod",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "committeeSize",
+                            "type": "uint256",
+                        },
+                    ],
+                    "internalType": "struct Autonity.Protocol",
+                    "name": "protocol",
+                    "type": "tuple",
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "contractVersion",
+                    "type": "uint256",
+                },
+            ],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "decimals",
+            "outputs": [{"internalType": "uint8", "name": "", "type": "uint8"}],
+            "stateMutability": "pure",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "deployer",
+            "outputs": [{"internalType": "address", "name": "", "type": "address"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "epochID",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "epochReward",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "epochTotalBondedStake",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "finalize",
+            "outputs": [
+                {"internalType": "bool", "name": "", "type": "bool"},
+                {
+                    "components": [
+                        {"internalType": "address", "name": "addr", "type": "address"},
+                        {
+                            "internalType": "uint256",
+                            "name": "votingPower",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "bytes",
+                            "name": "consensusKey",
+                            "type": "bytes",
+                        },
+                    ],
+                    "internalType": "struct Autonity.CommitteeMember[]",
+                    "name": "",
+                    "type": "tuple[]",
+                },
+            ],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "finalizeInitialization",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "getBlockPeriod",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "getCommittee",
+            "outputs": [
+                {
+                    "components": [
+                        {"internalType": "address", "name": "addr", "type": "address"},
+                        {
+                            "internalType": "uint256",
+                            "name": "votingPower",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "bytes",
+                            "name": "consensusKey",
+                            "type": "bytes",
+                        },
+                    ],
+                    "internalType": "struct Autonity.CommitteeMember[]",
+                    "name": "",
+                    "type": "tuple[]",
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "getCommitteeEnodes",
+            "outputs": [{"internalType": "string[]", "name": "", "type": "string[]"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "uint256", "name": "_block", "type": "uint256"}
+            ],
+            "name": "getEpochFromBlock",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "getEpochPeriod",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "getLastEpochBlock",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "getMaxCommitteeSize",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "getMinimumBaseFee",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "getNewContract",
+            "outputs": [
+                {"internalType": "bytes", "name": "", "type": "bytes"},
+                {"internalType": "string", "name": "", "type": "string"},
+            ],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "getOperator",
+            "outputs": [{"internalType": "address", "name": "", "type": "address"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "getOracle",
+            "outputs": [{"internalType": "address", "name": "", "type": "address"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "uint256", "name": "height", "type": "uint256"},
+                {"internalType": "uint256", "name": "round", "type": "uint256"},
+            ],
+            "name": "getProposer",
+            "outputs": [{"internalType": "address", "name": "", "type": "address"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "uint256", "name": "_unbondingID", "type": "uint256"}
+            ],
+            "name": "getRevertingAmount",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "getTreasuryAccount",
+            "outputs": [{"internalType": "address", "name": "", "type": "address"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "getTreasuryFee",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "getUnbondingPeriod",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "uint256", "name": "_unbondingID", "type": "uint256"}
+            ],
+            "name": "getUnbondingReleaseState",
+            "outputs": [
+                {
+                    "internalType": "enum Autonity.UnbondingReleaseState",
+                    "name": "",
+                    "type": "uint8",
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [{"internalType": "address", "name": "_addr", "type": "address"}],
+            "name": "getValidator",
+            "outputs": [
+                {
+                    "components": [
+                        {
+                            "internalType": "address payable",
+                            "name": "treasury",
+                            "type": "address",
+                        },
+                        {
+                            "internalType": "address",
+                            "name": "nodeAddress",
+                            "type": "address",
+                        },
+                        {
+                            "internalType": "address",
+                            "name": "oracleAddress",
+                            "type": "address",
+                        },
+                        {"internalType": "string", "name": "enode", "type": "string"},
+                        {
+                            "internalType": "uint256",
+                            "name": "commissionRate",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "bondedStake",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "unbondingStake",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "unbondingShares",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "selfBondedStake",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "selfUnbondingStake",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "selfUnbondingShares",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "selfUnbondingStakeLocked",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "contract Liquid",
+                            "name": "liquidContract",
+                            "type": "address",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "liquidSupply",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "registrationBlock",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "totalSlashed",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "jailReleaseBlock",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "provableFaultCount",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "bytes",
+                            "name": "consensusKey",
+                            "type": "bytes",
+                        },
+                        {
+                            "internalType": "enum ValidatorState",
+                            "name": "state",
+                            "type": "uint8",
+                        },
+                    ],
+                    "internalType": "struct Autonity.Validator",
+                    "name": "",
+                    "type": "tuple",
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "getValidators",
+            "outputs": [{"internalType": "address[]", "name": "", "type": "address[]"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "getVersion",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "inflationReserve",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "lastEpochBlock",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "lastEpochTime",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "maxBondAppliedGas",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "maxRewardsDistributionGas",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "maxUnbondAppliedGas",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "maxUnbondReleasedGas",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "address", "name": "_addr", "type": "address"},
+                {"internalType": "uint256", "name": "_amount", "type": "uint256"},
+            ],
+            "name": "mint",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "name",
+            "outputs": [{"internalType": "string", "name": "", "type": "string"}],
+            "stateMutability": "pure",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "address", "name": "_address", "type": "address"}
+            ],
+            "name": "pauseValidator",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "receiveATN",
+            "outputs": [],
+            "stateMutability": "payable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "string", "name": "_enode", "type": "string"},
+                {
+                    "internalType": "address",
+                    "name": "_oracleAddress",
+                    "type": "address",
+                },
+                {"internalType": "bytes", "name": "_consensusKey", "type": "bytes"},
+                {"internalType": "bytes", "name": "_signatures", "type": "bytes"},
+            ],
+            "name": "registerValidator",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "resetContractUpgrade",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "contract IAccountability",
+                    "name": "_address",
+                    "type": "address",
+                }
+            ],
+            "name": "setAccountabilityContract",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "contract IACU", "name": "_address", "type": "address"}
+            ],
+            "name": "setAcuContract",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [{"internalType": "uint256", "name": "_size", "type": "uint256"}],
+            "name": "setCommitteeSize",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "uint256", "name": "_period", "type": "uint256"}
+            ],
+            "name": "setEpochPeriod",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "contract IInflationController",
+                    "name": "_address",
+                    "type": "address",
+                }
+            ],
+            "name": "setInflationControllerContract",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [{"internalType": "uint256", "name": "_gas", "type": "uint256"}],
+            "name": "setMaxBondAppliedGas",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [{"internalType": "uint256", "name": "_gas", "type": "uint256"}],
+            "name": "setMaxRewardsDistributionGas",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [{"internalType": "uint256", "name": "_gas", "type": "uint256"}],
+            "name": "setMaxUnbondAppliedGas",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [{"internalType": "uint256", "name": "_gas", "type": "uint256"}],
+            "name": "setMaxUnbondReleasedGas",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "uint256", "name": "_price", "type": "uint256"}
+            ],
+            "name": "setMinimumBaseFee",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "contract INonStakableVestingVault",
+                    "name": "_address",
+                    "type": "address",
+                }
+            ],
+            "name": "setNonStakableVestingContract",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "address", "name": "_account", "type": "address"}
+            ],
+            "name": "setOperatorAccount",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address payable",
+                    "name": "_address",
+                    "type": "address",
+                }
+            ],
+            "name": "setOracleContract",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "contract IStabilization",
+                    "name": "_address",
+                    "type": "address",
+                }
+            ],
+            "name": "setStabilizationContract",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "uint256", "name": "_price", "type": "uint256"}
+            ],
+            "name": "setStakingGasPrice",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "contract ISupplyControl",
+                    "name": "_address",
+                    "type": "address",
+                }
+            ],
+            "name": "setSupplyControlContract",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address payable",
+                    "name": "_account",
+                    "type": "address",
+                }
+            ],
+            "name": "setTreasuryAccount",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "uint256", "name": "_treasuryFee", "type": "uint256"}
+            ],
+            "name": "setTreasuryFee",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "uint256", "name": "_period", "type": "uint256"}
+            ],
+            "name": "setUnbondingPeriod",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "contract UpgradeManager",
+                    "name": "_address",
+                    "type": "address",
+                }
+            ],
+            "name": "setUpgradeManagerContract",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "stakingGasPrice",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "symbol",
+            "outputs": [{"internalType": "string", "name": "", "type": "string"}],
+            "stateMutability": "pure",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "totalSupply",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "address", "name": "_recipient", "type": "address"},
+                {"internalType": "uint256", "name": "_amount", "type": "uint256"},
+            ],
+            "name": "transfer",
+            "outputs": [{"internalType": "bool", "name": "", "type": "bool"}],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "address", "name": "_sender", "type": "address"},
+                {"internalType": "address", "name": "_recipient", "type": "address"},
+                {"internalType": "uint256", "name": "_amount", "type": "uint256"},
+            ],
+            "name": "transferFrom",
+            "outputs": [{"internalType": "bool", "name": "", "type": "bool"}],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "address", "name": "_validator", "type": "address"},
+                {"internalType": "uint256", "name": "_amount", "type": "uint256"},
+            ],
+            "name": "unbond",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "payable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "address", "name": "_nodeAddress", "type": "address"},
+                {"internalType": "string", "name": "_enode", "type": "string"},
+            ],
+            "name": "updateEnode",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {
+                    "components": [
+                        {
+                            "internalType": "address payable",
+                            "name": "treasury",
+                            "type": "address",
+                        },
+                        {
+                            "internalType": "address",
+                            "name": "nodeAddress",
+                            "type": "address",
+                        },
+                        {
+                            "internalType": "address",
+                            "name": "oracleAddress",
+                            "type": "address",
+                        },
+                        {"internalType": "string", "name": "enode", "type": "string"},
+                        {
+                            "internalType": "uint256",
+                            "name": "commissionRate",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "bondedStake",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "unbondingStake",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "unbondingShares",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "selfBondedStake",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "selfUnbondingStake",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "selfUnbondingShares",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "selfUnbondingStakeLocked",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "contract Liquid",
+                            "name": "liquidContract",
+                            "type": "address",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "liquidSupply",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "registrationBlock",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "totalSlashed",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "jailReleaseBlock",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "provableFaultCount",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "bytes",
+                            "name": "consensusKey",
+                            "type": "bytes",
+                        },
+                        {
+                            "internalType": "enum ValidatorState",
+                            "name": "state",
+                            "type": "uint8",
+                        },
+                    ],
+                    "internalType": "struct Autonity.Validator",
+                    "name": "_val",
+                    "type": "tuple",
+                }
+            ],
+            "name": "updateValidatorAndTransferSlashedFunds",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "bytes", "name": "_bytecode", "type": "bytes"},
+                {"internalType": "string", "name": "_abi", "type": "string"},
+            ],
+            "name": "upgradeContract",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {"stateMutability": "payable", "type": "receive"},
+    ],
+)
