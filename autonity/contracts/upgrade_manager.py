@@ -1,10 +1,12 @@
 """UpgradeManager contract binding and data structures."""
 
-# This module has been generated using pyabigen v0.2.5
+# This module has been generated using pyabigen v0.2.6
 
+import typing
 
 import eth_typing
 import web3
+from web3 import types
 from web3.contract import contract
 
 __version__ = "v0.14.0"
@@ -84,44 +86,49 @@ class UpgradeManager:
         )
 
 
-ABI = [
-    {
-        "inputs": [
-            {"internalType": "address", "name": "_autonity", "type": "address"},
-            {"internalType": "address", "name": "_operator", "type": "address"},
-        ],
-        "stateMutability": "nonpayable",
-        "type": "constructor",
-    },
-    {
-        "inputs": [],
-        "name": "autonity",
-        "outputs": [{"internalType": "address", "name": "", "type": "address"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "operator",
-        "outputs": [{"internalType": "address", "name": "", "type": "address"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [{"internalType": "address", "name": "_account", "type": "address"}],
-        "name": "setOperator",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [
-            {"internalType": "address", "name": "_target", "type": "address"},
-            {"internalType": "string", "name": "_data", "type": "string"},
-        ],
-        "name": "upgrade",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-]
+ABI = typing.cast(
+    types.ABI,
+    [
+        {
+            "inputs": [
+                {"internalType": "address", "name": "_autonity", "type": "address"},
+                {"internalType": "address", "name": "_operator", "type": "address"},
+            ],
+            "stateMutability": "nonpayable",
+            "type": "constructor",
+        },
+        {
+            "inputs": [],
+            "name": "autonity",
+            "outputs": [{"internalType": "address", "name": "", "type": "address"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "operator",
+            "outputs": [{"internalType": "address", "name": "", "type": "address"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "address", "name": "_account", "type": "address"}
+            ],
+            "name": "setOperator",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "address", "name": "_target", "type": "address"},
+                {"internalType": "string", "name": "_data", "type": "string"},
+            ],
+            "name": "upgrade",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+    ],
+)
