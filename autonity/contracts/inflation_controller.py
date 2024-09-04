@@ -1,17 +1,19 @@
 """InflationController contract binding and data structures."""
 
-# This module has been generated using pyabigen v0.2.5
+# This module has been generated using pyabigen v0.2.8
 
 import typing
 
 import eth_typing
 import web3
+from dataclasses import dataclass
 from web3.contract import contract
 
 __version__ = "v0.14.0"
 
 
-class Params(typing.NamedTuple):
+@dataclass
+class Params:
     """Port of `struct Params` on the InflationController contract."""
 
     inflation_rate_initial: int
@@ -92,143 +94,162 @@ class InflationController:
         )
 
 
-ABI = [
-    {
-        "inputs": [
-            {
-                "components": [
-                    {
-                        "internalType": "SD59x18",
-                        "name": "inflationRateInitial",
-                        "type": "int256",
-                    },
-                    {
-                        "internalType": "SD59x18",
-                        "name": "inflationRateTransition",
-                        "type": "int256",
-                    },
-                    {
-                        "internalType": "SD59x18",
-                        "name": "inflationCurveConvexity",
-                        "type": "int256",
-                    },
-                    {
-                        "internalType": "SD59x18",
-                        "name": "inflationTransitionPeriod",
-                        "type": "int256",
-                    },
-                    {
-                        "internalType": "SD59x18",
-                        "name": "inflationReserveDecayRate",
-                        "type": "int256",
-                    },
-                ],
-                "internalType": "struct InflationController.Params",
-                "name": "_params",
-                "type": "tuple",
-            }
-        ],
-        "stateMutability": "nonpayable",
-        "type": "constructor",
-    },
-    {
-        "inputs": [
-            {"internalType": "uint256", "name": "x", "type": "uint256"},
-            {"internalType": "uint256", "name": "y", "type": "uint256"},
-        ],
-        "name": "PRBMath_MulDiv18_Overflow",
-        "type": "error",
-    },
-    {
-        "inputs": [
-            {"internalType": "uint256", "name": "x", "type": "uint256"},
-            {"internalType": "uint256", "name": "y", "type": "uint256"},
-            {"internalType": "uint256", "name": "denominator", "type": "uint256"},
-        ],
-        "name": "PRBMath_MulDiv_Overflow",
-        "type": "error",
-    },
-    {
-        "inputs": [{"internalType": "int256", "name": "x", "type": "int256"}],
-        "name": "PRBMath_SD59x18_Convert_Overflow",
-        "type": "error",
-    },
-    {
-        "inputs": [{"internalType": "int256", "name": "x", "type": "int256"}],
-        "name": "PRBMath_SD59x18_Convert_Underflow",
-        "type": "error",
-    },
-    {"inputs": [], "name": "PRBMath_SD59x18_Div_InputTooSmall", "type": "error"},
-    {
-        "inputs": [
-            {"internalType": "SD59x18", "name": "x", "type": "int256"},
-            {"internalType": "SD59x18", "name": "y", "type": "int256"},
-        ],
-        "name": "PRBMath_SD59x18_Div_Overflow",
-        "type": "error",
-    },
-    {
-        "inputs": [{"internalType": "SD59x18", "name": "x", "type": "int256"}],
-        "name": "PRBMath_SD59x18_Exp2_InputTooBig",
-        "type": "error",
-    },
-    {
-        "inputs": [{"internalType": "SD59x18", "name": "x", "type": "int256"}],
-        "name": "PRBMath_SD59x18_Exp_InputTooBig",
-        "type": "error",
-    },
-    {"inputs": [], "name": "PRBMath_SD59x18_Mul_InputTooSmall", "type": "error"},
-    {
-        "inputs": [
-            {"internalType": "SD59x18", "name": "x", "type": "int256"},
-            {"internalType": "SD59x18", "name": "y", "type": "int256"},
-        ],
-        "name": "PRBMath_SD59x18_Mul_Overflow",
-        "type": "error",
-    },
-    {
-        "inputs": [
-            {"internalType": "uint256", "name": "_currentSupply", "type": "uint256"},
-            {"internalType": "uint256", "name": "_inflationReserve", "type": "uint256"},
-            {"internalType": "uint256", "name": "_lastEpochTime", "type": "uint256"},
-            {"internalType": "uint256", "name": "_currentEpochTime", "type": "uint256"},
-        ],
-        "name": "calculateSupplyDelta",
-        "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "params",
-        "outputs": [
-            {
-                "internalType": "SD59x18",
-                "name": "inflationRateInitial",
-                "type": "int256",
-            },
-            {
-                "internalType": "SD59x18",
-                "name": "inflationRateTransition",
-                "type": "int256",
-            },
-            {
-                "internalType": "SD59x18",
-                "name": "inflationCurveConvexity",
-                "type": "int256",
-            },
-            {
-                "internalType": "SD59x18",
-                "name": "inflationTransitionPeriod",
-                "type": "int256",
-            },
-            {
-                "internalType": "SD59x18",
-                "name": "inflationReserveDecayRate",
-                "type": "int256",
-            },
-        ],
-        "stateMutability": "view",
-        "type": "function",
-    },
-]
+ABI = typing.cast(
+    eth_typing.ABI,
+    [
+        {
+            "inputs": [
+                {
+                    "components": [
+                        {
+                            "internalType": "SD59x18",
+                            "name": "inflationRateInitial",
+                            "type": "int256",
+                        },
+                        {
+                            "internalType": "SD59x18",
+                            "name": "inflationRateTransition",
+                            "type": "int256",
+                        },
+                        {
+                            "internalType": "SD59x18",
+                            "name": "inflationCurveConvexity",
+                            "type": "int256",
+                        },
+                        {
+                            "internalType": "SD59x18",
+                            "name": "inflationTransitionPeriod",
+                            "type": "int256",
+                        },
+                        {
+                            "internalType": "SD59x18",
+                            "name": "inflationReserveDecayRate",
+                            "type": "int256",
+                        },
+                    ],
+                    "internalType": "struct InflationController.Params",
+                    "name": "_params",
+                    "type": "tuple",
+                }
+            ],
+            "stateMutability": "nonpayable",
+            "type": "constructor",
+        },
+        {
+            "inputs": [
+                {"internalType": "uint256", "name": "x", "type": "uint256"},
+                {"internalType": "uint256", "name": "y", "type": "uint256"},
+            ],
+            "name": "PRBMath_MulDiv18_Overflow",
+            "type": "error",
+        },
+        {
+            "inputs": [
+                {"internalType": "uint256", "name": "x", "type": "uint256"},
+                {"internalType": "uint256", "name": "y", "type": "uint256"},
+                {"internalType": "uint256", "name": "denominator", "type": "uint256"},
+            ],
+            "name": "PRBMath_MulDiv_Overflow",
+            "type": "error",
+        },
+        {
+            "inputs": [{"internalType": "int256", "name": "x", "type": "int256"}],
+            "name": "PRBMath_SD59x18_Convert_Overflow",
+            "type": "error",
+        },
+        {
+            "inputs": [{"internalType": "int256", "name": "x", "type": "int256"}],
+            "name": "PRBMath_SD59x18_Convert_Underflow",
+            "type": "error",
+        },
+        {"inputs": [], "name": "PRBMath_SD59x18_Div_InputTooSmall", "type": "error"},
+        {
+            "inputs": [
+                {"internalType": "SD59x18", "name": "x", "type": "int256"},
+                {"internalType": "SD59x18", "name": "y", "type": "int256"},
+            ],
+            "name": "PRBMath_SD59x18_Div_Overflow",
+            "type": "error",
+        },
+        {
+            "inputs": [{"internalType": "SD59x18", "name": "x", "type": "int256"}],
+            "name": "PRBMath_SD59x18_Exp2_InputTooBig",
+            "type": "error",
+        },
+        {
+            "inputs": [{"internalType": "SD59x18", "name": "x", "type": "int256"}],
+            "name": "PRBMath_SD59x18_Exp_InputTooBig",
+            "type": "error",
+        },
+        {"inputs": [], "name": "PRBMath_SD59x18_Mul_InputTooSmall", "type": "error"},
+        {
+            "inputs": [
+                {"internalType": "SD59x18", "name": "x", "type": "int256"},
+                {"internalType": "SD59x18", "name": "y", "type": "int256"},
+            ],
+            "name": "PRBMath_SD59x18_Mul_Overflow",
+            "type": "error",
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "_currentSupply",
+                    "type": "uint256",
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "_inflationReserve",
+                    "type": "uint256",
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "_lastEpochTime",
+                    "type": "uint256",
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "_currentEpochTime",
+                    "type": "uint256",
+                },
+            ],
+            "name": "calculateSupplyDelta",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "params",
+            "outputs": [
+                {
+                    "internalType": "SD59x18",
+                    "name": "inflationRateInitial",
+                    "type": "int256",
+                },
+                {
+                    "internalType": "SD59x18",
+                    "name": "inflationRateTransition",
+                    "type": "int256",
+                },
+                {
+                    "internalType": "SD59x18",
+                    "name": "inflationCurveConvexity",
+                    "type": "int256",
+                },
+                {
+                    "internalType": "SD59x18",
+                    "name": "inflationTransitionPeriod",
+                    "type": "int256",
+                },
+                {
+                    "internalType": "SD59x18",
+                    "name": "inflationReserveDecayRate",
+                    "type": "int256",
+                },
+            ],
+            "stateMutability": "view",
+            "type": "function",
+        },
+    ],
+)

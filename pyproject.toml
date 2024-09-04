@@ -36,7 +36,7 @@ path = "autonity/__version__.py"
 
 [tool.hatch.envs.generate]
 detached = true
-dependencies = ["pyabigen@git+https://github.com/clearmatics/pyabigen@v0.2.5"]
+dependencies = ["pyabigen@git+https://github.com/clearmatics/pyabigen@v0.2.8"]
 
 [tool.hatch.envs.test]
 dependencies = ["pytest"]
@@ -58,3 +58,6 @@ check = [
     "pyright {args:autonity}",
 ]
 format = ["black {args:.}", "ruff check --fix --select I {args:.}"]
+
+[tool.pyright]
+strict = ["autonity"]

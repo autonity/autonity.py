@@ -1,6 +1,6 @@
 """SupplyControl contract binding and data structures."""
 
-# This module has been generated using pyabigen v0.2.5
+# This module has been generated using pyabigen v0.2.8
 
 import typing
 
@@ -13,6 +13,9 @@ __version__ = "v0.14.0"
 
 class SupplyControl:
     """SupplyControl contract binding.
+
+    Controls the supply of Auton on the network. Intended to be deployed by the protocol
+    at genesis. The stabilizer is expected to be the Stabilization Contract.
 
     Parameters
     ----------
@@ -157,104 +160,109 @@ class SupplyControl:
         return int(return_value)
 
 
-ABI = [
-    {
-        "inputs": [
-            {"internalType": "address", "name": "autonity", "type": "address"},
-            {"internalType": "address", "name": "operator", "type": "address"},
-            {"internalType": "address", "name": "stabilizer_", "type": "address"},
-        ],
-        "stateMutability": "payable",
-        "type": "constructor",
-    },
-    {
-        "anonymous": False,
-        "inputs": [
-            {
-                "indexed": False,
-                "internalType": "uint256",
-                "name": "amount",
-                "type": "uint256",
-            }
-        ],
-        "name": "Burn",
-        "type": "event",
-    },
-    {"inputs": [], "name": "InvalidAmount", "type": "error"},
-    {"inputs": [], "name": "InvalidRecipient", "type": "error"},
-    {
-        "anonymous": False,
-        "inputs": [
-            {
-                "indexed": False,
-                "internalType": "address",
-                "name": "recipient",
-                "type": "address",
-            },
-            {
-                "indexed": False,
-                "internalType": "uint256",
-                "name": "amount",
-                "type": "uint256",
-            },
-        ],
-        "name": "Mint",
-        "type": "event",
-    },
-    {"inputs": [], "name": "Unauthorized", "type": "error"},
-    {"inputs": [], "name": "ZeroValue", "type": "error"},
-    {
-        "inputs": [],
-        "name": "availableSupply",
-        "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "burn",
-        "outputs": [],
-        "stateMutability": "payable",
-        "type": "function",
-    },
-    {
-        "inputs": [
-            {"internalType": "address", "name": "recipient", "type": "address"},
-            {"internalType": "uint256", "name": "amount", "type": "uint256"},
-        ],
-        "name": "mint",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [{"internalType": "address", "name": "operator", "type": "address"}],
-        "name": "setOperator",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [
-            {"internalType": "address", "name": "stabilizer_", "type": "address"}
-        ],
-        "name": "setStabilizer",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "stabilizer",
-        "outputs": [{"internalType": "address", "name": "", "type": "address"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "totalSupply",
-        "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-]
+ABI = typing.cast(
+    eth_typing.ABI,
+    [
+        {
+            "inputs": [
+                {"internalType": "address", "name": "autonity", "type": "address"},
+                {"internalType": "address", "name": "operator", "type": "address"},
+                {"internalType": "address", "name": "stabilizer_", "type": "address"},
+            ],
+            "stateMutability": "payable",
+            "type": "constructor",
+        },
+        {"inputs": [], "name": "InvalidAmount", "type": "error"},
+        {"inputs": [], "name": "InvalidRecipient", "type": "error"},
+        {"inputs": [], "name": "Unauthorized", "type": "error"},
+        {"inputs": [], "name": "ZeroValue", "type": "error"},
+        {
+            "anonymous": False,
+            "inputs": [
+                {
+                    "indexed": False,
+                    "internalType": "uint256",
+                    "name": "amount",
+                    "type": "uint256",
+                }
+            ],
+            "name": "Burn",
+            "type": "event",
+        },
+        {
+            "anonymous": False,
+            "inputs": [
+                {
+                    "indexed": False,
+                    "internalType": "address",
+                    "name": "recipient",
+                    "type": "address",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "uint256",
+                    "name": "amount",
+                    "type": "uint256",
+                },
+            ],
+            "name": "Mint",
+            "type": "event",
+        },
+        {
+            "inputs": [],
+            "name": "availableSupply",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "burn",
+            "outputs": [],
+            "stateMutability": "payable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "address", "name": "recipient", "type": "address"},
+                {"internalType": "uint256", "name": "amount", "type": "uint256"},
+            ],
+            "name": "mint",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "address", "name": "operator", "type": "address"}
+            ],
+            "name": "setOperator",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "address", "name": "stabilizer_", "type": "address"}
+            ],
+            "name": "setStabilizer",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "stabilizer",
+            "outputs": [{"internalType": "address", "name": "", "type": "address"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "totalSupply",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+    ],
+)
