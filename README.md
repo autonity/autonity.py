@@ -48,6 +48,8 @@ unclaimed_atn, unclaimed_ntn = liquid.unclaimed_rewards("<ADDRESS>")
 print(f"Unclaimed rewards: {unclaimed_atn} ATN, {unclaimed_ntn} NTN")
 ```
 
+For more complex examples see [`examples`](./examples).
+
 ## Development
 
 The project uses [hatch](https://hatch.pypa.io/latest/install/#pipx) as the
