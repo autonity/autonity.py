@@ -1,12 +1,11 @@
 """UpgradeManager contract binding and data structures."""
 
-# This module has been generated using pyabigen v0.2.6
+# This module has been generated using pyabigen v0.2.8
 
 import typing
 
 import eth_typing
 import web3
-from web3 import types
 from web3.contract import contract
 
 __version__ = "v0.14.0"
@@ -87,7 +86,7 @@ class UpgradeManager:
 
 
 ABI = typing.cast(
-    types.ABI,
+    eth_typing.ABI,
     [
         {
             "inputs": [

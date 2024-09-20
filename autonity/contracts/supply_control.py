@@ -1,12 +1,11 @@
 """SupplyControl contract binding and data structures."""
 
-# This module has been generated using pyabigen v0.2.6
+# This module has been generated using pyabigen v0.2.8
 
 import typing
 
 import eth_typing
 import web3
-from web3 import types
 from web3.contract import base_contract, contract
 
 __version__ = "v0.14.0"
@@ -14,6 +13,9 @@ __version__ = "v0.14.0"
 
 class SupplyControl:
     """SupplyControl contract binding.
+
+    Controls the supply of Auton on the network. Intended to be deployed by the protocol
+    at genesis. The stabilizer is expected to be the Stabilization Contract.
 
     Parameters
     ----------
@@ -159,7 +161,7 @@ class SupplyControl:
 
 
 ABI = typing.cast(
-    types.ABI,
+    eth_typing.ABI,
     [
         {
             "inputs": [
@@ -170,6 +172,10 @@ ABI = typing.cast(
             "stateMutability": "payable",
             "type": "constructor",
         },
+        {"inputs": [], "name": "InvalidAmount", "type": "error"},
+        {"inputs": [], "name": "InvalidRecipient", "type": "error"},
+        {"inputs": [], "name": "Unauthorized", "type": "error"},
+        {"inputs": [], "name": "ZeroValue", "type": "error"},
         {
             "anonymous": False,
             "inputs": [
@@ -183,8 +189,6 @@ ABI = typing.cast(
             "name": "Burn",
             "type": "event",
         },
-        {"inputs": [], "name": "InvalidAmount", "type": "error"},
-        {"inputs": [], "name": "InvalidRecipient", "type": "error"},
         {
             "anonymous": False,
             "inputs": [
@@ -204,8 +208,6 @@ ABI = typing.cast(
             "name": "Mint",
             "type": "event",
         },
-        {"inputs": [], "name": "Unauthorized", "type": "error"},
-        {"inputs": [], "name": "ZeroValue", "type": "error"},
         {
             "inputs": [],
             "name": "availableSupply",

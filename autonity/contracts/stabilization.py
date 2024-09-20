@@ -1,19 +1,20 @@
 """Stabilization contract binding and data structures."""
 
-# This module has been generated using pyabigen v0.2.6
+# This module has been generated using pyabigen v0.2.8
 
 import typing
 
 import eth_typing
 import web3
+from dataclasses import dataclass
 from plum import dispatch
-from web3 import types
 from web3.contract import base_contract, contract
 
 __version__ = "v0.14.0"
 
 
-class Config(typing.NamedTuple):
+@dataclass
+class Config:
     """Port of `struct Config` on the Stabilization contract."""
 
     borrow_interest_rate: int
@@ -25,6 +26,10 @@ class Config(typing.NamedTuple):
 
 class Stabilization:
     """Stabilization contract binding.
+
+    A CDP-based stabilization mechanism for the Auton. Intended to be deployed by the
+    protocol at genesis. Note that all rates, ratios, prices, and amounts are
+    represented as fixed-point integers with `SCALE` decimal places.
 
     Parameters
     ----------
@@ -623,7 +628,7 @@ class Stabilization:
 
 
 ABI = typing.cast(
-    types.ABI,
+    eth_typing.ABI,
     [
         {
             "inputs": [
@@ -672,6 +677,47 @@ ABI = typing.cast(
             "stateMutability": "nonpayable",
             "type": "constructor",
         },
+        {"inputs": [], "name": "InsufficientAllowance", "type": "error"},
+        {"inputs": [], "name": "InsufficientCollateral", "type": "error"},
+        {"inputs": [], "name": "InsufficientPayment", "type": "error"},
+        {"inputs": [], "name": "InvalidAmount", "type": "error"},
+        {"inputs": [], "name": "InvalidDebtPosition", "type": "error"},
+        {"inputs": [], "name": "InvalidParameter", "type": "error"},
+        {"inputs": [], "name": "InvalidPrice", "type": "error"},
+        {"inputs": [], "name": "Liquidatable", "type": "error"},
+        {"inputs": [], "name": "NoDebtPosition", "type": "error"},
+        {"inputs": [], "name": "NotLiquidatable", "type": "error"},
+        {
+            "inputs": [
+                {"internalType": "uint256", "name": "x", "type": "uint256"},
+                {"internalType": "uint256", "name": "y", "type": "uint256"},
+            ],
+            "name": "PRBMath_MulDiv18_Overflow",
+            "type": "error",
+        },
+        {
+            "inputs": [
+                {"internalType": "uint256", "name": "x", "type": "uint256"},
+                {"internalType": "uint256", "name": "y", "type": "uint256"},
+                {"internalType": "uint256", "name": "denominator", "type": "uint256"},
+            ],
+            "name": "PRBMath_MulDiv_Overflow",
+            "type": "error",
+        },
+        {
+            "inputs": [{"internalType": "UD60x18", "name": "x", "type": "uint256"}],
+            "name": "PRBMath_UD60x18_Exp2_InputTooBig",
+            "type": "error",
+        },
+        {
+            "inputs": [{"internalType": "UD60x18", "name": "x", "type": "uint256"}],
+            "name": "PRBMath_UD60x18_Exp_InputTooBig",
+            "type": "error",
+        },
+        {"inputs": [], "name": "PriceUnavailable", "type": "error"},
+        {"inputs": [], "name": "TransferFailed", "type": "error"},
+        {"inputs": [], "name": "Unauthorized", "type": "error"},
+        {"inputs": [], "name": "ZeroValue", "type": "error"},
         {
             "anonymous": False,
             "inputs": [
@@ -710,14 +756,6 @@ ABI = typing.cast(
             "name": "Deposit",
             "type": "event",
         },
-        {"inputs": [], "name": "InsufficientAllowance", "type": "error"},
-        {"inputs": [], "name": "InsufficientCollateral", "type": "error"},
-        {"inputs": [], "name": "InsufficientPayment", "type": "error"},
-        {"inputs": [], "name": "InvalidAmount", "type": "error"},
-        {"inputs": [], "name": "InvalidDebtPosition", "type": "error"},
-        {"inputs": [], "name": "InvalidParameter", "type": "error"},
-        {"inputs": [], "name": "InvalidPrice", "type": "error"},
-        {"inputs": [], "name": "Liquidatable", "type": "error"},
         {
             "anonymous": False,
             "inputs": [
@@ -737,36 +775,6 @@ ABI = typing.cast(
             "name": "Liquidate",
             "type": "event",
         },
-        {"inputs": [], "name": "NoDebtPosition", "type": "error"},
-        {"inputs": [], "name": "NotLiquidatable", "type": "error"},
-        {
-            "inputs": [
-                {"internalType": "uint256", "name": "x", "type": "uint256"},
-                {"internalType": "uint256", "name": "y", "type": "uint256"},
-            ],
-            "name": "PRBMath_MulDiv18_Overflow",
-            "type": "error",
-        },
-        {
-            "inputs": [
-                {"internalType": "uint256", "name": "x", "type": "uint256"},
-                {"internalType": "uint256", "name": "y", "type": "uint256"},
-                {"internalType": "uint256", "name": "denominator", "type": "uint256"},
-            ],
-            "name": "PRBMath_MulDiv_Overflow",
-            "type": "error",
-        },
-        {
-            "inputs": [{"internalType": "UD60x18", "name": "x", "type": "uint256"}],
-            "name": "PRBMath_UD60x18_Exp2_InputTooBig",
-            "type": "error",
-        },
-        {
-            "inputs": [{"internalType": "UD60x18", "name": "x", "type": "uint256"}],
-            "name": "PRBMath_UD60x18_Exp_InputTooBig",
-            "type": "error",
-        },
-        {"inputs": [], "name": "PriceUnavailable", "type": "error"},
         {
             "anonymous": False,
             "inputs": [
@@ -784,6 +792,25 @@ ABI = typing.cast(
                 },
             ],
             "name": "Repay",
+            "type": "event",
+        },
+        {
+            "anonymous": False,
+            "inputs": [
+                {
+                    "indexed": True,
+                    "internalType": "address",
+                    "name": "account",
+                    "type": "address",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "uint256",
+                    "name": "amount",
+                    "type": "uint256",
+                },
+            ],
+            "name": "Withdraw",
             "type": "event",
         },
         {
@@ -807,28 +834,6 @@ ABI = typing.cast(
             "stateMutability": "view",
             "type": "function",
         },
-        {"inputs": [], "name": "TransferFailed", "type": "error"},
-        {"inputs": [], "name": "Unauthorized", "type": "error"},
-        {
-            "anonymous": False,
-            "inputs": [
-                {
-                    "indexed": True,
-                    "internalType": "address",
-                    "name": "account",
-                    "type": "address",
-                },
-                {
-                    "indexed": False,
-                    "internalType": "uint256",
-                    "name": "amount",
-                    "type": "uint256",
-                },
-            ],
-            "name": "Withdraw",
-            "type": "event",
-        },
-        {"inputs": [], "name": "ZeroValue", "type": "error"},
         {
             "inputs": [],
             "name": "accounts",

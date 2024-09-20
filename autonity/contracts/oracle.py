@@ -1,18 +1,19 @@
 """Oracle contract binding and data structures."""
 
-# This module has been generated using pyabigen v0.2.6
+# This module has been generated using pyabigen v0.2.8
 
 import typing
 
 import eth_typing
 import web3
-from web3 import types
+from dataclasses import dataclass
 from web3.contract import base_contract, contract
 
 __version__ = "v0.14.0"
 
 
-class RoundData(typing.NamedTuple):
+@dataclass
+class RoundData:
     """Port of `struct RoundData` on the IOracle contract."""
 
     round: int
@@ -23,6 +24,9 @@ class RoundData(typing.NamedTuple):
 
 class Oracle:
     """Oracle contract binding.
+
+    This would likely be set behind an open zeppeling proxy contract OR we  should keep
+    our upgrade mechanism
 
     Parameters
     ----------
@@ -403,7 +407,7 @@ class Oracle:
 
 
 ABI = typing.cast(
-    types.ABI,
+    eth_typing.ABI,
     [
         {
             "inputs": [
@@ -416,8 +420,6 @@ ABI = typing.cast(
             "stateMutability": "nonpayable",
             "type": "constructor",
         },
-        {"stateMutability": "payable", "type": "fallback"},
-        {"stateMutability": "payable", "type": "receive"},
         {
             "anonymous": False,
             "inputs": [
@@ -487,6 +489,7 @@ ABI = typing.cast(
             "name": "Voted",
             "type": "event",
         },
+        {"stateMutability": "payable", "type": "fallback"},
         {
             "inputs": [],
             "name": "finalize",
@@ -686,5 +689,6 @@ ABI = typing.cast(
             "stateMutability": "view",
             "type": "function",
         },
+        {"stateMutability": "payable", "type": "receive"},
     ],
 )

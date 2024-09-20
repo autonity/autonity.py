@@ -1,12 +1,11 @@
 """IERC20 contract binding and data structures."""
 
-# This module has been generated using pyabigen v0.2.6
+# This module has been generated using pyabigen v0.2.8
 
 import typing
 
 import eth_typing
 import web3
-from web3 import types
 from web3.contract import base_contract, contract
 
 __version__ = "v0.14.0"
@@ -14,6 +13,8 @@ __version__ = "v0.14.0"
 
 class IERC20:
     """IERC20 contract binding.
+
+    Interface of the ERC20 standard as defined in the EIP.
 
     Parameters
     ----------
@@ -202,7 +203,7 @@ class IERC20:
 
 
 ABI = typing.cast(
-    types.ABI,
+    eth_typing.ABI,
     [
         {
             "anonymous": False,

@@ -1,13 +1,16 @@
 VERSION := $(shell cat AUTONITY_VERSION)
 AUTONITY := build/autonity
 ABIDIR := $(AUTONITY)/params/generated
+SRCDIR := $(AUTONITY)/autonity/solidity/contracts
 OUTDIR := autonity/contracts
-ABIGEN = hatch run generate:pyabigen \
-			--srcdir $(AUTONITY)/autonity/solidity/contracts \
-			--version $(VERSION) \
-			--userdoc $(word 2,$(1)) \
-			--devdoc $(word 3,$(1)) \
-			$(word 1,$(1))
+
+abigen = hatch run generate:pyabigen \
+	--version $(VERSION) \
+	--src $(word 1,$(1)) \
+	--devdoc $(word 2,$(1)) \
+	--userdoc $(word 3,$(1)) \
+	$(word 4,$(1))
+gentargets = $(shell find $(SRCDIR) -name $(1).sol) $(addprefix $(ABIDIR)/$(1),.docdev .docuser .abi)
 
 all: $(OUTDIR)/accountability.py \
 	 $(OUTDIR)/acu.py \
@@ -21,38 +24,38 @@ all: $(OUTDIR)/accountability.py \
 	 $(OUTDIR)/supply_control.py \
 	 $(OUTDIR)/upgrade_manager.py
 
-$(OUTDIR)/accountability.py: $(addprefix $(ABIDIR)/Accountability,.abi .docuser .docdev)
-	$(call ABIGEN,$^) --exclude distributeRewards,finalize,setEpochPeriod >$@
+$(OUTDIR)/accountability.py: $(call gentargets,Accountability)
+	$(call abigen,$^) --exclude distributeRewards,finalize,setEpochPeriod >$@
 
-$(OUTDIR)/acu.py: $(addprefix $(ABIDIR)/ACU,.abi .docuser .docdev)
-	$(call ABIGEN,$^) --exclude setOperator,setOracle,update >$@
+$(OUTDIR)/acu.py: $(call gentargets,ACU)
+	$(call abigen,$^) --exclude setOperator,setOracle,update >$@
 
-$(OUTDIR)/autonity.py: $(addprefix $(ABIDIR)/Autonity,.abi .docuser .docdev)
-	$(call ABIGEN,$^) --exclude computeCommittee,finalize,finalizeInitialization >$@
+$(OUTDIR)/autonity.py: $(call gentargets,Autonity)
+	$(call abigen,$^) --exclude computeCommittee,finalize,finalizeInitialization,updateValidatorAndTransferSlashedFunds >$@
 
-$(OUTDIR)/ierc20.py: $(addprefix $(ABIDIR)/IERC20,.abi .docuser .docdev)
-	$(call ABIGEN,$^) >$@
+$(OUTDIR)/ierc20.py: $(call gentargets,IERC20)
+	$(call abigen,$^) >$@
 
-$(OUTDIR)/inflation_controller.py: $(addprefix $(ABIDIR)/InflationController,.abi .docuser .docdev)
-	$(call ABIGEN,$^) >$@
+$(OUTDIR)/inflation_controller.py: $(call gentargets,InflationController)
+	$(call abigen,$^) >$@
 
-$(OUTDIR)/liquid.py: $(addprefix $(ABIDIR)/Liquid,.abi .docuser .docdev)
-	$(call ABIGEN,$^) --exclude burn,lock,mint,redistribute,setCommissionRate,unlock >$@
+$(OUTDIR)/liquid.py: $(call gentargets,Liquid)
+	$(call abigen,$^) --exclude burn,lock,mint,redistribute,setCommissionRate,unlock >$@
 
-$(OUTDIR)/non_stakable_vesting.py: $(addprefix $(ABIDIR)/NonStakableVesting,.abi .docuser .docdev)
-	$(call ABIGEN,$^) --exclude unlockTokens >$@
+$(OUTDIR)/non_stakable_vesting.py: $(call gentargets,NonStakableVesting)
+	$(call abigen,$^) --exclude unlockTokens >$@
 
-$(OUTDIR)/oracle.py: $(addprefix $(ABIDIR)/Oracle,.abi .docuser .docdev)
-	$(call ABIGEN,$^) --exclude finalize,setOperator,setVoters >$@
+$(OUTDIR)/oracle.py: $(call gentargets,Oracle)
+	$(call abigen,$^) --exclude finalize,setOperator,setVoters >$@
 
-$(OUTDIR)/stabilization.py: $(addprefix $(ABIDIR)/Stabilization,.abi .docuser .docdev)
-	$(call ABIGEN,$^) --exclude setOperator,setOracle >$@
+$(OUTDIR)/stabilization.py: $(call gentargets,Stabilization)
+	$(call abigen,$^) --exclude setOperator,setOracle >$@
 
-$(OUTDIR)/supply_control.py: $(addprefix $(ABIDIR)/SupplyControl,.abi .docuser .docdev)
-	$(call ABIGEN,$^) --exclude setOperator >$@
+$(OUTDIR)/supply_control.py: $(call gentargets,SupplyControl)
+	$(call abigen,$^) --exclude setOperator >$@
 
-$(OUTDIR)/upgrade_manager.py: $(addprefix $(ABIDIR)/UpgradeManager,.abi .docuser .docdev)
-	$(call ABIGEN,$^) --exclude setOperator >$@
+$(OUTDIR)/upgrade_manager.py: $(call gentargets,UpgradeManager)
+	$(call abigen,$^) --exclude setOperator >$@
 
 $(ABIDIR)/%.abi: $(AUTONITY) AUTONITY_VERSION
 	cd $< && \

@@ -1,12 +1,11 @@
 """ACU contract binding and data structures."""
 
-# This module has been generated using pyabigen v0.2.6
+# This module has been generated using pyabigen v0.2.8
 
 import typing
 
 import eth_typing
 import web3
-from web3 import types
 from web3.contract import base_contract, contract
 
 __version__ = "v0.14.0"
@@ -14,6 +13,9 @@ __version__ = "v0.14.0"
 
 class ACU:
     """ACU contract binding.
+
+    Computes the value of the ACU, an optimal currency basket of 7 free-floating fiat
+    currencies. Intended to be deployed by the protocol at genesis.
 
     Parameters
     ----------
@@ -171,7 +173,7 @@ class ACU:
 
 
 ABI = typing.cast(
-    types.ABI,
+    eth_typing.ABI,
     [
         {
             "inputs": [
@@ -189,6 +191,9 @@ ABI = typing.cast(
             "stateMutability": "nonpayable",
             "type": "constructor",
         },
+        {"inputs": [], "name": "InvalidBasket", "type": "error"},
+        {"inputs": [], "name": "NoACUValue", "type": "error"},
+        {"inputs": [], "name": "Unauthorized", "type": "error"},
         {
             "anonymous": False,
             "inputs": [
@@ -214,9 +219,6 @@ ABI = typing.cast(
             "name": "BasketModified",
             "type": "event",
         },
-        {"inputs": [], "name": "InvalidBasket", "type": "error"},
-        {"inputs": [], "name": "NoACUValue", "type": "error"},
-        {"inputs": [], "name": "Unauthorized", "type": "error"},
         {
             "anonymous": False,
             "inputs": [

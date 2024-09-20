@@ -1,6 +1,6 @@
 """Autonity contract binding and data structures."""
 
-# This module has been generated using pyabigen v0.2.6
+# This module has been generated using pyabigen v0.2.8
 
 import enum
 import typing
@@ -8,7 +8,7 @@ import typing
 import eth_typing
 import hexbytes
 import web3
-from web3 import types
+from dataclasses import dataclass
 from web3.contract import base_contract, contract
 
 __version__ = "v0.14.0"
@@ -32,7 +32,8 @@ class UnbondingReleaseState(enum.IntEnum):
     REVERTED = 3
 
 
-class Validator(typing.NamedTuple):
+@dataclass
+class Validator:
     """Port of `struct Validator` on the Autonity contract."""
 
     treasury: eth_typing.ChecksumAddress
@@ -57,7 +58,8 @@ class Validator(typing.NamedTuple):
     state: ValidatorState
 
 
-class Policy(typing.NamedTuple):
+@dataclass
+class Policy:
     """Port of `struct Policy` on the Autonity contract."""
 
     treasury_fee: int
@@ -68,7 +70,8 @@ class Policy(typing.NamedTuple):
     treasury_account: eth_typing.ChecksumAddress
 
 
-class Contracts(typing.NamedTuple):
+@dataclass
+class Contracts:
     """Port of `struct Contracts` on the Autonity contract."""
 
     accountability_contract: eth_typing.ChecksumAddress
@@ -81,7 +84,8 @@ class Contracts(typing.NamedTuple):
     non_stakable_vesting_contract: eth_typing.ChecksumAddress
 
 
-class Protocol(typing.NamedTuple):
+@dataclass
+class Protocol:
     """Port of `struct Protocol` on the Autonity contract."""
 
     operator_account: eth_typing.ChecksumAddress
@@ -90,7 +94,8 @@ class Protocol(typing.NamedTuple):
     committee_size: int
 
 
-class Config(typing.NamedTuple):
+@dataclass
+class Config:
     """Port of `struct Config` on the Autonity contract."""
 
     policy: Policy
@@ -99,7 +104,8 @@ class Config(typing.NamedTuple):
     contract_version: int
 
 
-class CommitteeMember(typing.NamedTuple):
+@dataclass
+class CommitteeMember:
     """Port of `struct CommitteeMember` on the Autonity contract."""
 
     addr: eth_typing.ChecksumAddress
@@ -1690,25 +1696,6 @@ class Autonity:
             _enode,
         )
 
-    def update_validator_and_transfer_slashed_funds(
-        self,
-        _val: Validator,
-    ) -> contract.ContractFunction:
-        """Binding for `updateValidatorAndTransferSlashedFunds` on the Autonity contract.
-
-        Parameters
-        ----------
-        _val : Validator
-
-        Returns
-        -------
-        web3.contract.contract.ContractFunction
-            A contract function instance to be sent in a transaction.
-        """
-        return self._contract.functions.updateValidatorAndTransferSlashedFunds(
-            _val,
-        )
-
     def upgrade_contract(
         self,
         _bytecode: hexbytes.HexBytes,
@@ -1736,7 +1723,7 @@ class Autonity:
 
 
 ABI = typing.cast(
-    types.ABI,
+    eth_typing.ABI,
     [
         {
             "inputs": [
@@ -1970,8 +1957,6 @@ ABI = typing.cast(
             "stateMutability": "nonpayable",
             "type": "constructor",
         },
-        {"stateMutability": "payable", "type": "fallback"},
-        {"stateMutability": "payable", "type": "receive"},
         {
             "anonymous": False,
             "inputs": [
@@ -2127,13 +2112,6 @@ ABI = typing.cast(
             ],
             "name": "BurnedStake",
             "type": "event",
-        },
-        {
-            "inputs": [],
-            "name": "COMMISSION_RATE_PRECISION",
-            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-            "stateMutability": "view",
-            "type": "function",
         },
         {
             "anonymous": False,
@@ -2460,6 +2438,14 @@ ABI = typing.cast(
             ],
             "name": "UnlockingScheduleFailed",
             "type": "event",
+        },
+        {"stateMutability": "payable", "type": "fallback"},
+        {
+            "inputs": [],
+            "name": "COMMISSION_RATE_PRECISION",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function",
         },
         {
             "inputs": [
@@ -3512,5 +3498,6 @@ ABI = typing.cast(
             "stateMutability": "nonpayable",
             "type": "function",
         },
+        {"stateMutability": "payable", "type": "receive"},
     ],
 )

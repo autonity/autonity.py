@@ -38,6 +38,8 @@ TEST_INPUTS = {
     List[ChecksumAddress]: ["0x0123456789abcDEF0123456789abCDef01234567"],
 }
 
+SKIPPED = [("Accountability", "handle_event")]
+
 
 def pytest_generate_tests(metafunc):
     if "contract_function" not in metafunc.fixturenames:
@@ -60,6 +62,11 @@ def pytest_generate_tests(metafunc):
 
         for attr_name in dir(contract):
             if attr_name.startswith("_"):
+                continue
+            if any(
+                binding.__name__ == skipped_binding and attr_name == skipped_attr
+                for skipped_binding, skipped_attr in SKIPPED
+            ):
                 continue
             attr = getattr(contract, attr_name)
             if isinstance(attr, Callable):

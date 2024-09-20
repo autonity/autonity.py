@@ -1,6 +1,6 @@
 """Accountability contract binding and data structures."""
 
-# This module has been generated using pyabigen v0.2.6
+# This module has been generated using pyabigen v0.2.8
 
 import enum
 import typing
@@ -8,7 +8,7 @@ import typing
 import eth_typing
 import hexbytes
 import web3
-from web3 import types
+from dataclasses import dataclass
 from web3.contract import base_contract, contract
 
 __version__ = "v0.14.0"
@@ -37,7 +37,8 @@ class EventType(enum.IntEnum):
     INNOCENCE_PROOF = 2
 
 
-class Config(typing.NamedTuple):
+@dataclass
+class Config:
     """Port of `struct Config` on the Accountability contract."""
 
     innocence_proof_submission_window: int
@@ -49,7 +50,8 @@ class Config(typing.NamedTuple):
     slashing_rate_precision: int
 
 
-class Event(typing.NamedTuple):
+@dataclass
+class Event:
     """Port of `struct Event` on the Accountability contract."""
 
     chunks: int
@@ -163,7 +165,7 @@ class Accountability:
         """
         return_value = self._contract.functions.canAccuse(
             _offender,
-            _rule,
+            int(_rule),
             _block,
         ).call()
         return (
@@ -191,7 +193,7 @@ class Accountability:
         """
         return_value = self._contract.functions.canSlash(
             _offender,
-            _rule,
+            int(_rule),
             _block,
         ).call()
         return bool(return_value)
@@ -333,6 +335,11 @@ class Accountability:
     ) -> contract.ContractFunction:
         """Binding for `handleEvent` on the Accountability contract.
 
+        Handle an accountability event. Need to be called by a registered validator
+        account as the treasury-linked account will be used in case of a successful
+        slashing event. todo(youssef): rethink modifiers here, consider splitting this
+        into multiple functions.
+
         Parameters
         ----------
         _event : Event
@@ -343,7 +350,20 @@ class Accountability:
             A contract function instance to be sent in a transaction.
         """
         return self._contract.functions.handleEvent(
-            _event,
+            (
+                _event.chunks,
+                _event.chunk_id,
+                int(_event.event_type),
+                int(_event.rule),
+                _event.reporter,
+                _event.offender,
+                _event.raw_proof,
+                _event.id,
+                _event.block,
+                _event.epoch,
+                _event.reporting_block,
+                _event.message_hash,
+            ),
         )
 
     def slashing_history(
@@ -370,7 +390,7 @@ class Accountability:
 
 
 ABI = typing.cast(
-    types.ABI,
+    eth_typing.ABI,
     [
         {
             "inputs": [

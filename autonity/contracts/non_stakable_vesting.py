@@ -1,18 +1,19 @@
 """NonStakableVesting contract binding and data structures."""
 
-# This module has been generated using pyabigen v0.2.6
+# This module has been generated using pyabigen v0.2.8
 
 import typing
 
 import eth_typing
 import web3
-from web3 import types
+from dataclasses import dataclass
 from web3.contract import contract
 
 __version__ = "v0.14.0"
 
 
-class Contract(typing.NamedTuple):
+@dataclass
+class Contract:
     """Port of `struct Contract` on the ContractBase contract."""
 
     current_ntn_amount: int
@@ -23,7 +24,8 @@ class Contract(typing.NamedTuple):
     can_stake: bool
 
 
-class Schedule(typing.NamedTuple):
+@dataclass
+class Schedule:
     """Port of `struct Schedule` on the NonStakableVesting contract."""
 
     start: int
@@ -448,7 +450,7 @@ class NonStakableVesting:
 
 
 ABI = typing.cast(
-    types.ABI,
+    eth_typing.ABI,
     [
         {
             "inputs": [
