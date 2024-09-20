@@ -7,3 +7,7 @@ __pycache__/
 
 # Root files
 /.env
+
+# Devenv
+.devenv*
+.direnv/
