@@ -25,7 +25,7 @@ all: $(OUTDIR)/accountability.py \
 	 $(OUTDIR)/upgrade_manager.py
 
 $(OUTDIR)/accountability.py: $(call gentargets,Accountability)
-	$(call abigen,$^) --exclude distributeRewards,finalize,setEpochPeriod >$@
+	$(call abigen,$^) --exclude distributeRewards,finalize,handleEvent,setEpochPeriod >$@
 
 $(OUTDIR)/acu.py: $(call gentargets,ACU)
 	$(call abigen,$^) --exclude setOperator,setOracle,update >$@
@@ -46,13 +46,13 @@ $(OUTDIR)/non_stakable_vesting.py: $(call gentargets,NonStakableVesting)
 	$(call abigen,$^) --exclude unlockTokens >$@
 
 $(OUTDIR)/oracle.py: $(call gentargets,Oracle)
-	$(call abigen,$^) --exclude finalize,setOperator,setVoters >$@
+	$(call abigen,$^) --exclude finalize,setOperator,setVoters,vote >$@
 
 $(OUTDIR)/stabilization.py: $(call gentargets,Stabilization)
 	$(call abigen,$^) --exclude setOperator,setOracle >$@
 
 $(OUTDIR)/supply_control.py: $(call gentargets,SupplyControl)
-	$(call abigen,$^) --exclude setOperator >$@
+	$(call abigen,$^) --exclude burn,mint,setOperator >$@
 
 $(OUTDIR)/upgrade_manager.py: $(call gentargets,UpgradeManager)
 	$(call abigen,$^) --exclude setOperator >$@

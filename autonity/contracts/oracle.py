@@ -335,39 +335,6 @@ class Oracle:
         ).call()
         return str(return_value)
 
-    def vote(
-        self,
-        _commit: int,
-        _reports: typing.List[int],
-        _salt: int,
-    ) -> contract.ContractFunction:
-        """Binding for `vote` on the Oracle contract.
-
-        Vote for the current period. In order to save gas, if (reports[i] ==
-        INVALID_PRICE)g the symbols. if the validator leave consensus committee then his
-        vote is discarded. if a validator joins the consensus committee then his first
-        vote is not taken into account. Only allowed to vote once per round.
-
-        Parameters
-        ----------
-        _commit : int
-            hash of the new reports        _reports reveal of the reports for the
-            previous cycle.        _salt  slat value which was used to generate last
-            round commitment
-        _reports : typing.List[int]
-        _salt : int
-
-        Returns
-        -------
-        web3.contract.contract.ContractFunction
-            A contract function instance to be sent in a transaction.
-        """
-        return self._contract.functions.vote(
-            _commit,
-            _reports,
-            _salt,
-        )
-
     def vote_period(
         self,
     ) -> int:
