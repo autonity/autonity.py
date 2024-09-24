@@ -1,6 +1,6 @@
 """InflationController contract binding and data structures."""
 
-# This module has been generated using pyabigen v0.2.8
+# This module has been generated using pyabigen v0.2.9
 
 import typing
 

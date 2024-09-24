@@ -1,6 +1,6 @@
 """Oracle contract binding and data structures."""
 
-# This module has been generated using pyabigen v0.2.8
+# This module has been generated using pyabigen v0.2.9
 
 import typing
 
@@ -25,9 +25,6 @@ class RoundData:
 class Oracle:
     """Oracle contract binding.
 
-    This would likely be set behind an open zeppeling proxy contract OR we  should keep
-    our upgrade mechanism
-
     Parameters
     ----------
     w3 : web3.Web3
@@ -49,31 +46,17 @@ class Oracle:
 
     @property
     def NewRound(self) -> typing.Type[base_contract.BaseContractEvent]:
-        """Binding for `event NewRound` on the Oracle contract.
-
-        Emitted when a new voting round is started. round - the new round ID height -
-        the height of the current block being executed in the EVM context. timestamp -
-        the TS in time's seconds since Jan 1 1970 (Unix time) that the block been mined
-        by protocol votePeriod - the round period in blocks for the price voting and
-        aggregation.
-        """
+        """Binding for `event NewRound` on the Oracle contract."""
         return self._contract.events.NewRound
 
     @property
     def NewSymbols(self) -> typing.Type[base_contract.BaseContractEvent]:
-        """Binding for `event NewSymbols` on the Oracle contract.
-
-        Emitted when a vote has been succesfully accounted after a {vote} call. round -
-        the round at which new symbols are effective
-        """
+        """Binding for `event NewSymbols` on the Oracle contract."""
         return self._contract.events.NewSymbols
 
     @property
     def Voted(self) -> typing.Type[base_contract.BaseContractEvent]:
-        """Binding for `event Voted` on the Oracle contract.
-
-        Emitted when a vote has been succesfully accounted after a {vote} call.
-        """
+        """Binding for `event Voted` on the Oracle contract."""
         return self._contract.events.Voted
 
     def get_precision(
@@ -289,7 +272,7 @@ class Oracle:
         """Binding for `setSymbols` on the Oracle contract.
 
         Update the symbols to be requested. Only effective at the next round. Restricted
-        to the operator account. emit {NewSymbols} event.
+        to the operator account.
 
         Parameters
         ----------

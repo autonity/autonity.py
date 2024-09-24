@@ -1,6 +1,6 @@
 """IERC20 contract binding and data structures."""
 
-# This module has been generated using pyabigen v0.2.8
+# This module has been generated using pyabigen v0.2.9
 
 import typing
 
@@ -13,8 +13,6 @@ __version__ = "v0.14.0"
 
 class IERC20:
     """IERC20 contract binding.
-
-    Interface of the ERC20 standard as defined in the EIP.
 
     Parameters
     ----------
@@ -37,20 +35,12 @@ class IERC20:
 
     @property
     def Approval(self) -> typing.Type[base_contract.BaseContractEvent]:
-        """Binding for `event Approval` on the IERC20 contract.
-
-        Emitted when the allowance of a `spender` for an `owner` is set by a call to
-        {approve}. `value` is the new allowance.
-        """
+        """Binding for `event Approval` on the IERC20 contract."""
         return self._contract.events.Approval
 
     @property
     def Transfer(self) -> typing.Type[base_contract.BaseContractEvent]:
-        """Binding for `event Transfer` on the IERC20 contract.
-
-        Emitted when `value` tokens are moved from one account (`from`) to another
-        (`to`). Note that `value` may be zero.
-        """
+        """Binding for `event Transfer` on the IERC20 contract."""
         return self._contract.events.Transfer
 
     def allowance(
@@ -59,10 +49,6 @@ class IERC20:
         spender: eth_typing.ChecksumAddress,
     ) -> int:
         """Binding for `allowance` on the IERC20 contract.
-
-        Returns the remaining number of tokens that `spender` will be allowed to spend
-        on behalf of `owner` through {transferFrom}. This is zero by default. This value
-        changes when {approve} or {transferFrom} are called.
 
         Parameters
         ----------
@@ -86,15 +72,6 @@ class IERC20:
     ) -> contract.ContractFunction:
         """Binding for `approve` on the IERC20 contract.
 
-        Sets `amount` as the allowance of `spender` over the caller's tokens. Returns a
-        boolean value indicating whether the operation succeeded. IMPORTANT: Beware that
-        changing an allowance with this method brings the risk that someone may use both
-        the old and the new allowance by unfortunate transaction ordering. One possible
-        solution to mitigate this race condition is to first reduce the spender's
-        allowance to 0 and set the desired value afterwards:
-        https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729 Emits an
-        {Approval} event.
-
         Parameters
         ----------
         spender : eth_typing.ChecksumAddress
@@ -116,8 +93,6 @@ class IERC20:
     ) -> int:
         """Binding for `balanceOf` on the IERC20 contract.
 
-        Returns the amount of tokens owned by `account`.
-
         Parameters
         ----------
         account : eth_typing.ChecksumAddress
@@ -136,8 +111,6 @@ class IERC20:
     ) -> int:
         """Binding for `totalSupply` on the IERC20 contract.
 
-        Returns the amount of tokens in existence.
-
         Returns
         -------
         int
@@ -151,10 +124,6 @@ class IERC20:
         amount: int,
     ) -> contract.ContractFunction:
         """Binding for `transfer` on the IERC20 contract.
-
-        Moves `amount` tokens from the caller's account to `recipient`. Returns a
-        boolean value indicating whether the operation succeeded. Emits a {Transfer}
-        event.
 
         Parameters
         ----------
@@ -178,11 +147,6 @@ class IERC20:
         amount: int,
     ) -> contract.ContractFunction:
         """Binding for `transferFrom` on the IERC20 contract.
-
-        Moves `amount` tokens from `sender` to `recipient` using the allowance
-        mechanism. `amount` is then deducted from the caller's allowance. Returns a
-        boolean value indicating whether the operation succeeded. Emits a {Transfer}
-        event.
 
         Parameters
         ----------

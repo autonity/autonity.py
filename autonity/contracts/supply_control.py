@@ -1,6 +1,6 @@
 """SupplyControl contract binding and data structures."""
 
-# This module has been generated using pyabigen v0.2.8
+# This module has been generated using pyabigen v0.2.9
 
 import typing
 
@@ -14,8 +14,7 @@ __version__ = "v0.14.0"
 class SupplyControl:
     """SupplyControl contract binding.
 
-    Controls the supply of Auton on the network. Intended to be deployed by the protocol
-    at genesis. The stabilizer is expected to be the Stabilization Contract.
+    Controls the supply of Auton on the network.
 
     Parameters
     ----------
@@ -72,8 +71,7 @@ class SupplyControl:
     ) -> contract.ContractFunction:
         """Binding for `setStabilizer` on the SupplyControl contract.
 
-        Update the stabilizer that is authorized to mint and burn. Only the operator can
-        update the stabilizer address.
+        Update the stabilizer that is authorized to mint and burn.
 
         Parameters
         ----------

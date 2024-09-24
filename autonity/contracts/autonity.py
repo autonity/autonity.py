@@ -1,6 +1,6 @@
 """Autonity contract binding and data structures."""
 
-# This module has been generated using pyabigen v0.2.8
+# This module has been generated using pyabigen v0.2.9
 
 import enum
 import typing
@@ -147,11 +147,7 @@ class Autonity:
 
     @property
     def Approval(self) -> typing.Type[base_contract.BaseContractEvent]:
-        """Binding for `event Approval` on the Autonity contract.
-
-        Emitted when the allowance of a `spender` for an `owner` is set by a call to
-        {approve}. `value` is the new allowance.
-        """
+        """Binding for `event Approval` on the Autonity contract."""
         return self._contract.events.Approval
 
     @property
@@ -181,11 +177,7 @@ class Autonity:
 
     @property
     def MinimumBaseFeeUpdated(self) -> typing.Type[base_contract.BaseContractEvent]:
-        """Binding for `event MinimumBaseFeeUpdated` on the Autonity contract.
-
-        Emitted when the Minimum Gas Price was updated and set to `gasPrice`. Note that
-        `gasPrice` may be zero.
-        """
+        """Binding for `event MinimumBaseFeeUpdated` on the Autonity contract."""
         return self._contract.events.MinimumBaseFeeUpdated
 
     @property
@@ -243,11 +235,7 @@ class Autonity:
 
     @property
     def Transfer(self) -> typing.Type[base_contract.BaseContractEvent]:
-        """Binding for `event Transfer` on the Autonity contract.
-
-        Emitted when `value` tokens are moved from one account (`from`) to another
-        (`to`). Note that `value` may be zero.
-        """
+        """Binding for `event Transfer` on the Autonity contract."""
         return self._contract.events.Transfer
 
     @property
@@ -257,10 +245,7 @@ class Autonity:
 
     @property
     def UnlockingScheduleFailed(self) -> typing.Type[base_contract.BaseContractEvent]:
-        """Binding for `event UnlockingScheduleFailed` on the Autonity contract.
-
-        event to notify the failure in unlocking mechanism of the non-stakable schedules
-        """
+        """Binding for `event UnlockingScheduleFailed` on the Autonity contract."""
         return self._contract.events.UnlockingScheduleFailed
 
     def commission_rate_precision(
@@ -304,8 +289,6 @@ class Autonity:
     ) -> int:
         """Binding for `allowance` on the Autonity contract.
 
-        See {IERC20-allowance}.
-
         Parameters
         ----------
         owner : eth_typing.ChecksumAddress
@@ -327,8 +310,6 @@ class Autonity:
         amount: int,
     ) -> contract.ContractFunction:
         """Binding for `approve` on the Autonity contract.
-
-        See {IERC20-approve}. Requirements: - `spender` cannot be the zero address.
 
         Parameters
         ----------
@@ -517,8 +498,6 @@ class Autonity:
     ) -> int:
         """Binding for `decimals` on the Autonity contract.
 
-        ERC-20 Optional.
-
         Returns
         -------
         int
@@ -594,8 +573,7 @@ class Autonity:
     ) -> typing.List[CommitteeMember]:
         """Binding for `getCommittee` on the Autonity contract.
 
-        Returns the block committee. Current block committee if called before
-        finalize(), next block if called after.
+        Returns the block committee.
 
         Returns
         -------
@@ -691,9 +669,6 @@ class Autonity:
         self,
     ) -> int:
         """Binding for `getMinimumBaseFee` on the Autonity contract.
-
-        Autonity transaction's gas price must be greater or equal to the minimum gas
-        price.
 
         Returns
         -------
@@ -1048,8 +1023,6 @@ class Autonity:
     ) -> str:
         """Binding for `name` on the Autonity contract.
 
-        ERC-20 Optional.
-
         Returns
         -------
         str
@@ -1064,8 +1037,7 @@ class Autonity:
     ) -> contract.ContractFunction:
         """Binding for `pauseValidator` on the Autonity contract.
 
-        Pause the validator and stop it accepting delegations. emit a
-        {DisabledValidator} event.
+        Pause the validator and stop it accepting delegations.
 
         Parameters
         ----------
@@ -1107,7 +1079,6 @@ class Autonity:
         Register a new validator in the system.  The validator might be selected to be
         part of consensus. This validator will have assigned to its treasury account the
         caller of this function. A new token "Liquid Stake" is deployed at this phase.
-        Emit a {RegisteredValidator} event.
 
         Parameters
         ----------
@@ -1330,8 +1301,7 @@ class Autonity:
     ) -> contract.ContractFunction:
         """Binding for `setMinimumBaseFee` on the Autonity contract.
 
-        Set the minimum gas price. Restricted to the operator account. Emit a
-        {MinimumBaseFeeUpdated} event.
+        Set the minimum gas price. Restricted to the operator account.
 
         Parameters
         ----------
@@ -1561,8 +1531,6 @@ class Autonity:
     ) -> str:
         """Binding for `symbol` on the Autonity contract.
 
-        ERC-20 Optional.
-
         Returns
         -------
         str
@@ -1592,8 +1560,7 @@ class Autonity:
     ) -> contract.ContractFunction:
         """Binding for `transfer` on the Autonity contract.
 
-        Moves `amount` NTN stake tokens from the caller's account to `recipient`. Emits
-        a {Transfer} event. Implementation of {IERC20 transfer}
+        Moves `amount` NTN stake tokens from the caller's account to `recipient`.
 
         Parameters
         ----------
@@ -1617,11 +1584,6 @@ class Autonity:
         _amount: int,
     ) -> contract.ContractFunction:
         """Binding for `transferFrom` on the Autonity contract.
-
-        See {IERC20-transferFrom}. Emits an {Approval} event indicating the updated
-        allowance. Requirements: - `sender` and `recipient` must be allowed to hold
-        stake. - `sender` must have a balance of at least `amount`. - the caller must
-        have allowance for ``sender``'s tokens of at least `amount`.
 
         Parameters
         ----------
