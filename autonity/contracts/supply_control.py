@@ -66,48 +66,6 @@ class SupplyControl:
         return_value = self._contract.functions.availableSupply().call()
         return int(return_value)
 
-    def burn(
-        self,
-    ) -> contract.ContractFunction:
-        """Binding for `burn` on the SupplyControl contract.
-
-        Burn Auton by taking it out of circulation. Only the stabilizer is authorized to
-        burn Auton.
-
-        Returns
-        -------
-        web3.contract.contract.ContractFunction
-            A contract function instance to be sent in a transaction.
-        """
-        return self._contract.functions.burn()
-
-    def mint(
-        self,
-        recipient: eth_typing.ChecksumAddress,
-        amount: int,
-    ) -> contract.ContractFunction:
-        """Binding for `mint` on the SupplyControl contract.
-
-        Mint Auton and send it to the recipient. Only the stabilizer is authorized to
-        mint Auton. The recipient cannot be the stabilizer or the zero address.
-
-        Parameters
-        ----------
-        recipient : eth_typing.ChecksumAddress
-            Recipient of the Auton
-        amount : int
-            Amount of Auton to mint (non-zero)
-
-        Returns
-        -------
-        web3.contract.contract.ContractFunction
-            A contract function instance to be sent in a transaction.
-        """
-        return self._contract.functions.mint(
-            recipient,
-            amount,
-        )
-
     def set_stabilizer(
         self,
         stabilizer_: eth_typing.ChecksumAddress,

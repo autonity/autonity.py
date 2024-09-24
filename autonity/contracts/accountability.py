@@ -329,43 +329,6 @@ class Accountability:
             for elem in return_value
         ]
 
-    def handle_event(
-        self,
-        _event: Event,
-    ) -> contract.ContractFunction:
-        """Binding for `handleEvent` on the Accountability contract.
-
-        Handle an accountability event. Need to be called by a registered validator
-        account as the treasury-linked account will be used in case of a successful
-        slashing event. todo(youssef): rethink modifiers here, consider splitting this
-        into multiple functions.
-
-        Parameters
-        ----------
-        _event : Event
-
-        Returns
-        -------
-        web3.contract.contract.ContractFunction
-            A contract function instance to be sent in a transaction.
-        """
-        return self._contract.functions.handleEvent(
-            (
-                _event.chunks,
-                _event.chunk_id,
-                int(_event.event_type),
-                int(_event.rule),
-                _event.reporter,
-                _event.offender,
-                _event.raw_proof,
-                _event.id,
-                _event.block,
-                _event.epoch,
-                _event.reporting_block,
-                _event.message_hash,
-            ),
-        )
-
     def slashing_history(
         self,
         key0: eth_typing.ChecksumAddress,
