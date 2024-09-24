@@ -1,6 +1,6 @@
 """Accountability contract binding and data structures."""
 
-# This module has been generated using pyabigen v0.2.8
+# This module has been generated using pyabigen v0.2.9
 
 import enum
 import typing
@@ -92,37 +92,22 @@ class Accountability:
 
     @property
     def InnocenceProven(self) -> typing.Type[base_contract.BaseContractEvent]:
-        """Binding for `event InnocenceProven` on the Accountability contract.
-
-        Event emitted after receiving a proof-of-innocence cancelling an accusation.
-        """
+        """Binding for `event InnocenceProven` on the Accountability contract."""
         return self._contract.events.InnocenceProven
 
     @property
     def NewAccusation(self) -> typing.Type[base_contract.BaseContractEvent]:
-        """Binding for `event NewAccusation` on the Accountability contract.
-
-        Event emitted after receiving an accusation, the reported validator has a
-        certain amount of time to submit a proof-of-innocence, otherwise, he gets
-        slashed.
-        """
+        """Binding for `event NewAccusation` on the Accountability contract."""
         return self._contract.events.NewAccusation
 
     @property
     def NewFaultProof(self) -> typing.Type[base_contract.BaseContractEvent]:
-        """Binding for `event NewFaultProof` on the Accountability contract.
-
-        Event emitted when a fault proof has been submitted. The reported validator will
-        be silencied and slashed at the end of the current epoch.
-        """
+        """Binding for `event NewFaultProof` on the Accountability contract."""
         return self._contract.events.NewFaultProof
 
     @property
     def SlashingEvent(self) -> typing.Type[base_contract.BaseContractEvent]:
-        """Binding for `event SlashingEvent` on the Accountability contract.
-
-        Event emitted after a successful slashing.
-        """
+        """Binding for `event SlashingEvent` on the Accountability contract."""
         return self._contract.events.SlashingEvent
 
     def beneficiaries(
