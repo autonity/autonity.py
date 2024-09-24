@@ -1,6 +1,6 @@
 """ACU contract binding and data structures."""
 
-# This module has been generated using pyabigen v0.2.8
+# This module has been generated using pyabigen v0.2.9
 
 import typing
 
@@ -15,7 +15,7 @@ class ACU:
     """ACU contract binding.
 
     Computes the value of the ACU, an optimal currency basket of 7 free-floating fiat
-    currencies. Intended to be deployed by the protocol at genesis.
+    currencies.
 
     Parameters
     ----------
@@ -60,8 +60,7 @@ class ACU:
     ) -> contract.ContractFunction:
         """Binding for `modifyBasket` on the ACU contract.
 
-        Modify the ACU symbols, quantites, or scale. Only the operator is authorized to
-        modify the basket.
+        Modify the ACU symbols, quantites, or scale.
 
         Parameters
         ----------

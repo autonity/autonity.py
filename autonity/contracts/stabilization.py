@@ -1,6 +1,6 @@
 """Stabilization contract binding and data structures."""
 
-# This module has been generated using pyabigen v0.2.8
+# This module has been generated using pyabigen v0.2.9
 
 import typing
 
@@ -27,9 +27,7 @@ class Config:
 class Stabilization:
     """Stabilization contract binding.
 
-    A CDP-based stabilization mechanism for the Auton. Intended to be deployed by the
-    protocol at genesis. Note that all rates, ratios, prices, and amounts are
-    represented as fixed-point integers with `SCALE` decimal places.
+    A CDP-based stabilization mechanism for the Auton.
 
     Parameters
     ----------
@@ -241,8 +239,7 @@ class Stabilization:
         """Binding for `collateralPrice` on the Stabilization contract.
 
         Price the Collateral Token in Auton. Retrieves the Collateral Token price from
-        the Oracle Contract and converts it to Auton. The function reverts in case the
-        price is invalid or unavailable.
+        the Oracle Contract and converts it to Auton.
 
         Returns
         -------
@@ -486,7 +483,7 @@ class Stabilization:
         """Binding for `setLiquidationRatio` on the Stabilization contract.
 
         Set the liquidation ratio. Must be less than the minimum collateralization
-        ratio. Restricted to the operator.
+        ratio.
 
         Parameters
         ----------
@@ -509,7 +506,7 @@ class Stabilization:
         """Binding for `setMinCollateralizationRatio` on the Stabilization contract.
 
         Set the minimum collateralization ratio. Must be positive and greater than the
-        liquidation ratio. Restricted to the operator.
+        liquidation ratio.
 
         Parameters
         ----------
@@ -531,7 +528,7 @@ class Stabilization:
     ) -> contract.ContractFunction:
         """Binding for `setMinDebtRequirement` on the Stabilization contract.
 
-        Set the minimum debt requirement. Restricted to the operator.
+        Set the minimum debt requirement.
 
         Parameters
         ----------
@@ -553,7 +550,7 @@ class Stabilization:
     ) -> contract.ContractFunction:
         """Binding for `setSupplyControl` on the Stabilization contract.
 
-        Set the SupplyControl Contract address. Restricted to the operator.
+        Set the SupplyControl Contract address.
 
         Parameters
         ----------

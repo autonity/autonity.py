@@ -1,6 +1,6 @@
 """UpgradeManager contract binding and data structures."""
 
-# This module has been generated using pyabigen v0.2.8
+# This module has been generated using pyabigen v0.2.9
 
 import typing
 
@@ -63,9 +63,6 @@ class UpgradeManager:
         _data: str,
     ) -> contract.ContractFunction:
         """Binding for `upgrade` on the UpgradeManager contract.
-
-        Call the in-protocol EVM replace mechanism. Requires specific tool to interact.
-        Restricted to the operator account.
 
         Parameters
         ----------

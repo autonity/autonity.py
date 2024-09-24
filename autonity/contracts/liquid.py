@@ -1,6 +1,6 @@
 """Liquid contract binding and data structures."""
 
-# This module has been generated using pyabigen v0.2.8
+# This module has been generated using pyabigen v0.2.9
 
 import typing
 
@@ -35,20 +35,12 @@ class Liquid:
 
     @property
     def Approval(self) -> typing.Type[base_contract.BaseContractEvent]:
-        """Binding for `event Approval` on the Liquid contract.
-
-        Emitted when the allowance of a `spender` for an `owner` is set by a call to
-        {approve}. `value` is the new allowance.
-        """
+        """Binding for `event Approval` on the Liquid contract."""
         return self._contract.events.Approval
 
     @property
     def Transfer(self) -> typing.Type[base_contract.BaseContractEvent]:
-        """Binding for `event Transfer` on the Liquid contract.
-
-        Emitted when `value` tokens are moved from one account (`from`) to another
-        (`to`). Note that `value` may be zero.
-        """
+        """Binding for `event Transfer` on the Liquid contract."""
         return self._contract.events.Transfer
 
     def commission_rate_precision(
@@ -82,8 +74,6 @@ class Liquid:
     ) -> int:
         """Binding for `allowance` on the Liquid contract.
 
-        See {IERC20-allowance}.
-
         Parameters
         ----------
         _owner : eth_typing.ChecksumAddress
@@ -105,8 +95,6 @@ class Liquid:
         _amount: int,
     ) -> contract.ContractFunction:
         """Binding for `approve` on the Liquid contract.
-
-        See {IERC20-approve}. Requirements: - `spender` cannot be the zero address.
 
         Parameters
         ----------
@@ -174,8 +162,6 @@ class Liquid:
         self,
     ) -> int:
         """Binding for `decimals` on the Liquid contract.
-
-        ERC-20 Optional.
 
         Returns
         -------
@@ -256,7 +242,6 @@ class Liquid:
         """Binding for `transfer` on the Liquid contract.
 
         Moves `_amount` LNEW tokens from the caller's account to the recipient `_to`.
-        Emits a {Transfer} event. Implementation of {IERC20 transfer}
 
         Parameters
         ----------
@@ -280,11 +265,6 @@ class Liquid:
         _amount: int,
     ) -> contract.ContractFunction:
         """Binding for `transferFrom` on the Liquid contract.
-
-        See {IERC20-transferFrom}. Emits an {Approval} event indicating the updated
-        allowance. Requirements: - `sender` and `recipient` must be allowed to hold
-        stake. - `sender` must have a balance of at least `amount`. - the caller must
-        have allowance for ``sender``'s tokens of at least `amount`.
 
         Parameters
         ----------
