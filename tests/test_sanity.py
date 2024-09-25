@@ -1,3 +1,5 @@
+# type: ignore
+
 from enum import IntEnum
 from inspect import isclass, signature
 from typing import Callable, List
@@ -8,23 +10,14 @@ from web3 import Web3
 from web3.exceptions import ContractLogicError, ContractPanicError
 from web3.contract.contract import ContractFunction
 
-from autonity import factories, networks
+import autonity
 from autonity.constants import AUTONITY_CONTRACT_ADDRESS
 from autonity.contracts import ierc20
 
 
-BINDINGS = [
-    factories.Accountability,
-    factories.ACU,
-    factories.Autonity,
-    factories.InflationController,
-    factories.Liquid,
-    factories.NonStakableVesting,
-    factories.Oracle,
-    factories.Stabilization,
-    factories.SupplyControl,
-    factories.UpgradeManager,
-    ierc20.IERC20,
+FACTORIES = [attr for attr in autonity.__dict__.values() if isinstance(attr, Callable)]
+BINDINGS = FACTORIES + [
+    ierc20.IERC20,  # IERC20 is used internally by aut-cli, not part of the public API
 ]
 
 TEST_INPUTS = {
@@ -47,16 +40,16 @@ def pytest_generate_tests(metafunc):
     ids = []
 
     for binding in BINDINGS:
-        w3 = Web3(networks.piccadilly.http_provider)
+        w3 = Web3(autonity.networks.piccadilly.http_provider)
 
         if binding.__name__ == "Liquid":
-            autonity = factories.Autonity(w3)
-            validator = autonity.get_validator(autonity.get_validators()[0])
-            contract = binding(w3, validator.liquid_contract)  # type: ignore
+            aut = autonity.Autonity(w3)
+            validator = aut.get_validator(aut.get_validators()[0])
+            contract = binding(w3, validator.liquid_contract)
         elif binding.__name__ == "IERC20":
-            contract = binding(w3, AUTONITY_CONTRACT_ADDRESS)  # type: ignore
+            contract = binding(w3, AUTONITY_CONTRACT_ADDRESS)
         else:
-            contract = binding(w3)  # type: ignore
+            contract = binding(w3)
 
         for attr_name in dir(contract):
             if attr_name.startswith("_"):

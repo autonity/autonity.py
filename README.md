@@ -22,8 +22,7 @@ Example usage:
 
 ```python
 from web3 import Web3
-from autonity import networks
-from autonity.factories import Autonity, Liquid
+from autonity import Autonity, Liquid, networks
 
 # Connect to the default RPC provider on the Autonity Piccadilly Testnet
 w3 = Web3(networks.piccadilly.http_provider)
@@ -82,7 +81,7 @@ can be reviewed to determine which methods have been modified, removed or
 added. The generated Python bindings include the contract ABIs as Python dictionaries.
 
 If there is a new contract to include, add a new target to `Makefile` and a new
-factory function to `autonity/factories.py`.
+factory function to `autonity/factory.py` and `autonity/__init__.py`.
 
 ## Reporting a Vulnerability
 
