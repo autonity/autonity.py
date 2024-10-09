@@ -33,10 +33,10 @@ TEST_INPUTS = {
 
 
 def pytest_generate_tests(metafunc):
-    if "contract_function" not in metafunc.fixturenames:
+    if "test_input" not in metafunc.fixturenames:
         return
 
-    functions = []
+    test_inputs = []
     ids = []
 
     for binding in BINDINGS:
@@ -56,34 +56,45 @@ def pytest_generate_tests(metafunc):
                 continue
             attr = getattr(contract, attr_name)
             if isinstance(attr, Callable):
-                functions.append(attr)
-                ids.append(f"{binding.__name__}.{attr_name}")
+                if isclass(attr):  # ContractEvent
+                    test_inputs.append((attr, tuple()))
+                    ids.append(f"{binding.__name__}.{attr_name}")
+                elif hasattr(attr, "_f"):  # multimethod
+                    for i, method in enumerate(attr._f.methods, 1):
+                        test_inputs.append((attr, get_test_args(method.implementation)))
+                        ids.append(f"{binding.__name__}.{attr_name}/{i}")
+                else:
+                    test_inputs.append((attr, get_test_args(attr)))
+                    ids.append(f"{binding.__name__}.{attr_name}")
 
-    metafunc.parametrize("contract_function", functions, ids=ids)
+    metafunc.parametrize("test_input", test_inputs, ids=ids)
 
 
-def get_input_value(type_):
+def get_test_args(function):
+    return tuple(
+        _get_arg_value(param.annotation)
+        for param in signature(function).parameters.values()
+        if param.name != "self"
+    )
+
+
+def _get_arg_value(type_):
     if isclass(type_):
         if issubclass(type_, IntEnum):
             return TEST_INPUTS[int]
         if issubclass(type_, tuple):
             inputs = [
-                get_input_value(param.annotation)
+                _get_arg_value(param.annotation)
                 for param in signature(type_).parameters.values()
             ]
             return type_(*inputs)
     return TEST_INPUTS[type_]
 
 
-def test_bindings_with_arbitrary_inputs(contract_function):
-    inputs = {}
-    if not isclass(contract_function):  # Not a ContractEvent
-        inputs = [
-            get_input_value(param.annotation)
-            for param in signature(contract_function).parameters.values()
-        ]
+def test_bindings_with_arbitrary_inputs(test_input):
+    binding, args = test_input
     try:
-        return_value = contract_function(*inputs)
+        return_value = binding(*args)
         assert return_value is not None
         if isinstance(return_value, ContractFunction):
             assert return_value.build_transaction()
