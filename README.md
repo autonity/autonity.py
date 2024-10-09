@@ -9,6 +9,8 @@ This package provides typed wrappers around the Autonity-specific extensions of
 Ethereum, using the [Web3.py](https://github.com/ethereum/web3.py) framework,
 for convenient and statically checked interactions with the Autonity network.
 
+This package follows [Semantic Versioning](https://semver.org/).
+
 ## Installation
 
 ```console
@@ -51,28 +53,7 @@ networks.
 
 ## Development
 
-The project uses [hatch](https://hatch.pypa.io/latest/install/#pipx) as the
-build tool. To launch the tests, run:
-
-```console
-hatch run test:all
-```
-
-For linting use the command:
-
-```console
-hatch run lint:check
-```
-
-### Updating the Contract ABIs
-
-The script `script/update_abi.sh [AUTONITY_COMMIT]` builds the contract ABIs
-using AGC at the specified Git commit ID or tag. Keys are ordered via the `jq`
-tool, in order to produce deterministic output, and the results written to the
-`autonity/abi` directory. Further, it normalizes the commit ID that was used.
-
-After executing the script against a new version of the code, the diffs can be
-reviewed to determine which methods have been modified, removed or added.
+Review the [Development Guide](DEVELOPMENT.md).
 
 ## Reporting a Vulnerability
 
