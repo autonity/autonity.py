@@ -64,7 +64,7 @@ For linting use the command:
 hatch run lint:check
 ```
 
-### Updating the Contract Bindings
+### Updating the contract bindings
 
 To update contract bindings for a new version of the Autonity protocol, add the
 new [AGC](https://github.com/autonity/autonity) version (Git tag or commit ID)
@@ -83,7 +83,7 @@ added. The generated Python bindings include the contract ABIs as Python diction
 If there is a new contract to include, add a new target to `Makefile` and a new
 factory function to `autonity/factory.py` and `autonity/__init__.py`.
 
-## Reporting a Vulnerability
+## Reporting a vulnerability
 
 **Please do not file a public ticket** mentioning the vulnerability.
 
