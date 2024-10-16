@@ -127,8 +127,11 @@ factory function to `autonity/factory.py` and `autonity/__init__.py`.
 
 ## Contributing
 
-To contribute a bug fix, please open a pull request as per
-[Github Flow](https://docs.github.com/en/get-started/quickstart/github-flow).
+To contribute a non-critical bug fix, please open a pull request against the
+`master` branch as per
+[Github Flow](https://docs.github.com/en/get-started/quickstart/github-flow). If
+the bug is critical, then it may qualify as a _hotfix_, see the next section for
+details.
 
 To work on a new feature described in an open issue, check the corresponding
 issue isn't already assigned to someone. If it's available, post a comment in
@@ -136,6 +139,21 @@ the issue to request a maintainer assign it to you.
 
 To contribute a feature that isn't tracked in an existing issue, please first
 open a new issue describing the feature before commencing development.
+
+### Contributing a hotfix
+
+To qualify as a _hotfix_:
+
+- _relevance_: the bug affects the most recent release of the software
+- _severity_: the bug has an adverse impact on users of the software
+- _compatibility_: the fix for the bug is fully backwards-compatible
+
+Contributing a _hotfix_:
+
+- _Develop the fix on top of `stable`_. Create a new branch starting from the
+  `stable` branch to develop and test the fix.
+- _Open a pull request against `stable`_. Create a new pull request with the
+  changes and set `stable` as the target branch.
 
 ## Reporting a vulnerability
 
