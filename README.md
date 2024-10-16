@@ -49,18 +49,60 @@ print(f"Unclaimed rewards: {unclaimed_atn} ATN, {unclaimed_ntn} NTN")
 
 ## Development
 
-The project uses [hatch](https://hatch.pypa.io/latest/install/#pipx) as the
-build tool.
+The package uses the [Hatch](https://hatch.pypa.io) Python project manager. It
+is recommended to [install Hatch](https://hatch.pypa.io/latest/install/#pipx)
+using [pipx](https://pipx.pypa.io/):
 
-To launch the tests, run:
+```sh
+pipx install hatch
+```
+
+### Installing Python interpreters (optional)
+
+This project aims to be compatible with all the officially-supported versions of
+Python. Check python.org
+[Status of Python versions](https://devguide.python.org/versions/) for more
+info.
+
+To run the tests against all supported Python versions, it is necessary to
+install the relevant distributions of Python. Hatch is able to download these
+Python binaries into the user home directory:
 
 ```console
+$ hatch python install all
+Installed 3.7 @ /home/develop/.local/share/hatch/pythons/3.7
+Installed 3.8 @ /home/develop/.local/share/hatch/pythons/3.8
+Installed 3.9 @ /home/develop/.local/share/hatch/pythons/3.9
+Installed 3.10 @ /home/develop/.local/share/hatch/pythons/3.10
+Installed 3.11 @ /home/develop/.local/share/hatch/pythons/3.11
+Installed 3.12 @ /home/develop/.local/share/hatch/pythons/3.12
+Installed pypy2.7 @ /home/develop/.local/share/hatch/pythons/pypy2.7
+Installed pypy3.9 @ /home/develop/.local/share/hatch/pythons/pypy3.9
+Installed pypy3.10 @ /home/develop/.local/share/hatch/pythons/pypy3.10
+```
+
+⚠️ Hatch will modify your shell configuration to add these directories to your
+`$PATH`.
+
+### Building and testing
+
+To launch the tests across all supported Python versions, run:
+
+```sh
 hatch run test:all
 ```
 
-For linting use the command:
+To limit the tests to a specific Python version, add a
+[`hatch run`](https://hatch.pypa.io/latest/cli/reference/#hatch-run) `+`
+argument:
 
-```console
+```sh
+hatch run +py=3.12 test:all
+```
+
+To lint the code base, use the command:
+
+```sh
 hatch run lint:check
 ```
 
