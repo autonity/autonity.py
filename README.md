@@ -125,6 +125,18 @@ added. The generated Python bindings include the contract ABIs as Python diction
 If there is a new contract to include, add a new target to `Makefile` and a new
 factory function to `autonity/factory.py` and `autonity/__init__.py`.
 
+## Contributing
+
+To contribute a bug fix, please open a pull request as per
+[Github Flow](https://docs.github.com/en/get-started/quickstart/github-flow).
+
+To work on a new feature described in an open issue, check the corresponding
+issue isn't already assigned to someone. If it's available, post a comment in
+the issue to request a maintainer assign it to you.
+
+To contribute a feature that isn't tracked in an existing issue, please first
+open a new issue describing the feature before commencing development.
+
 ## Reporting a vulnerability
 
 **Please do not file a public ticket** mentioning the vulnerability.
