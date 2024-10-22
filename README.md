@@ -1,14 +1,13 @@
 # autonity.py
 
-[Autonity](https://autonity.org) is a protocol that provides smart contract and
-settlement infrastructure specialized for developing new risk markets. It is a
-fork of the [Ethereum protocol](https://ethereum.org/). See the
-[Autonity documentation](https://docs.autonity.org) for further information.
+[Autonity](https://autonity.org) is a public, EVM based, proof-of-stake
+blockchain for decentralized clearing of smart derivatives contracts. See the
+[Autonity Documentation](https://docs.autonity.org) site to learn more.
 
-This package provides typed bindings (a.k.a. wrappers) around the
-Autonity-specific extensions of Ethereum, using the
-[Web3.py](https://github.com/ethereum/web3.py) framework, for convenient and
-statically checked interactions with the Autonity network.
+This package provides typed Python bindings (a.k.a. wrappers) for Autonity
+protocol contracts using the [Web3.py](https://github.com/ethereum/web3.py)
+framework to provide users with convenient and statically-checked Python
+interactions with Autonity.
 
 ## Installation
 
