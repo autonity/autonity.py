@@ -32,10 +32,10 @@ The release process is based on [release branching](http://releaseflow.org)
 "[branch for release](https://trunkbaseddevelopment.com/branch-for-release/)")
 with the main differences being:
 
-- all releases are made from `stable`, both planned and unplanned hotfix
-  releases
-- all hotfixes are always merged to `stable` first, and only later are ported
-  back to `master`
+- all releases are made from `stable`, both planned (feature) releases and
+  unplanned (hotfix) releases
+- all hotfixes are always merged to `stable` first, and only afterwards are
+  ported back to `master`
 
 Before proceeding, copy and paste the following checklist into a new Github
 issue, and then self-assign the issue. Set the issue title to the
@@ -57,9 +57,9 @@ issue, and then self-assign the issue. Set the issue title to the
 
 **Feature Release Preparation**:
 
-- [ ] _Reset `stable` to match the state of `master`_. Reset the state of your
-      local copy of `stable` to point to `master` branch, and then force-push
-      the new reference:
+- [ ] _Reset `stable` to match the state of `master`_. Do not perform this for a
+      _hotfix_ release. Reset your local copy of `stable` to point to `master`
+      branch, and then _force-push_ the new reference to the remote:
       `git checkout stable && git reset --hard origin/master && git push --force origin stable:stable`.
 
 **Release Checklist**:
