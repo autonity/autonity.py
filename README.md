@@ -122,8 +122,8 @@ make
 
 Contract functions are ordered alphabetically in order to produce deterministic
 output. After executing the script against a new version of the code, the diffs
-can be reviewed to determine which methods have been modified, removed or
-added. The generated Python bindings include the contract ABIs as Python dictionaries.
+can be reviewed to determine which methods have been modified, removed or added.
+The generated Python bindings include the contract ABIs as Python dictionaries.
 
 If there is a new contract to include, add a new target to `Makefile` and a new
 factory function to `autonity/factory.py` and `autonity/__init__.py`.
