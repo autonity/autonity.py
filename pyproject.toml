@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "autonity"
-description = "Python library for interacting with Autonity"
+description = "Python SDK for Autonity"
 readme = "README.md"
 license = "MIT"
 keywords = ["autonity", "web3", "rpc", "client", "library"]
