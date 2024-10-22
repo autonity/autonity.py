@@ -11,6 +11,10 @@ interactions with Autonity.
 
 ## Installation
 
+This package is published on PyPI as the
+[`autonity`](https://pypi.org/project/autonity/) package. It can be installed in
+a virtualenv using pip or a compatible package manager:
+
 ```console
 pip install autonity
 ```
