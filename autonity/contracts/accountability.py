@@ -11,7 +11,7 @@ import web3
 from dataclasses import dataclass
 from web3.contract import base_contract, contract
 
-__version__ = "v0.14.0"
+__version__ = "f6bcaae767bebf7271a94b2239b67314f8deac38"
 
 
 class Rule(enum.IntEnum):
@@ -54,8 +54,6 @@ class Config:
 class Event:
     """Port of `struct Event` on the Accountability contract."""
 
-    chunks: int
-    chunk_id: int
     event_type: EventType
     rule: Rule
     reporter: eth_typing.ChecksumAddress
@@ -233,18 +231,16 @@ class Accountability:
             key0,
         ).call()
         return Event(
-            int(return_value[0]),
-            int(return_value[1]),
-            EventType(return_value[2]),
-            Rule(return_value[3]),
-            eth_typing.ChecksumAddress(return_value[4]),
-            eth_typing.ChecksumAddress(return_value[5]),
-            hexbytes.HexBytes(return_value[6]),
+            EventType(return_value[0]),
+            Rule(return_value[1]),
+            eth_typing.ChecksumAddress(return_value[2]),
+            eth_typing.ChecksumAddress(return_value[3]),
+            hexbytes.HexBytes(return_value[4]),
+            int(return_value[5]),
+            int(return_value[6]),
             int(return_value[7]),
             int(return_value[8]),
             int(return_value[9]),
-            int(return_value[10]),
-            int(return_value[11]),
         )
 
     def get_validator_accusation(
@@ -265,18 +261,16 @@ class Accountability:
             _val,
         ).call()
         return Event(
-            int(return_value[0]),
-            int(return_value[1]),
-            EventType(return_value[2]),
-            Rule(return_value[3]),
-            eth_typing.ChecksumAddress(return_value[4]),
-            eth_typing.ChecksumAddress(return_value[5]),
-            hexbytes.HexBytes(return_value[6]),
+            EventType(return_value[0]),
+            Rule(return_value[1]),
+            eth_typing.ChecksumAddress(return_value[2]),
+            eth_typing.ChecksumAddress(return_value[3]),
+            hexbytes.HexBytes(return_value[4]),
+            int(return_value[5]),
+            int(return_value[6]),
             int(return_value[7]),
             int(return_value[8]),
             int(return_value[9]),
-            int(return_value[10]),
-            int(return_value[11]),
         )
 
     def get_validator_faults(
@@ -298,21 +292,144 @@ class Accountability:
         ).call()
         return [
             Event(
-                int(elem[0]),
-                int(elem[1]),
-                EventType(elem[2]),
-                Rule(elem[3]),
-                eth_typing.ChecksumAddress(elem[4]),
-                eth_typing.ChecksumAddress(elem[5]),
-                hexbytes.HexBytes(elem[6]),
+                EventType(elem[0]),
+                Rule(elem[1]),
+                eth_typing.ChecksumAddress(elem[2]),
+                eth_typing.ChecksumAddress(elem[3]),
+                hexbytes.HexBytes(elem[4]),
+                int(elem[5]),
+                int(elem[6]),
                 int(elem[7]),
                 int(elem[8]),
                 int(elem[9]),
-                int(elem[10]),
-                int(elem[11]),
             )
             for elem in return_value
         ]
+
+    def handle_accusation(
+        self,
+        _event: Event,
+    ) -> contract.ContractFunction:
+        """Binding for `handleAccusation` on the Accountability contract.
+
+        Handle an accusation event. Need to be called by a registered validator account
+        as the treasury-linked account will be used in case of a successful slashing
+        event.
+
+        Parameters
+        ----------
+        _event : Event
+
+        Returns
+        -------
+        web3.contract.contract.ContractFunction
+            A contract function instance to be sent in a transaction.
+        """
+        return self._contract.functions.handleAccusation(
+            (
+                int(_event.event_type),
+                int(_event.rule),
+                _event.reporter,
+                _event.offender,
+                _event.raw_proof,
+                _event.id,
+                _event.block,
+                _event.epoch,
+                _event.reporting_block,
+                _event.message_hash,
+            ),
+        )
+
+    def handle_innocence_proof(
+        self,
+        _event: Event,
+    ) -> contract.ContractFunction:
+        """Binding for `handleInnocenceProof` on the Accountability contract.
+
+        Handle an innocence proof. Need to be called by a registered validator account
+        as the treasury-linked account will be used in case of a successful slashing
+        event.
+
+        Parameters
+        ----------
+        _event : Event
+
+        Returns
+        -------
+        web3.contract.contract.ContractFunction
+            A contract function instance to be sent in a transaction.
+        """
+        return self._contract.functions.handleInnocenceProof(
+            (
+                int(_event.event_type),
+                int(_event.rule),
+                _event.reporter,
+                _event.offender,
+                _event.raw_proof,
+                _event.id,
+                _event.block,
+                _event.epoch,
+                _event.reporting_block,
+                _event.message_hash,
+            ),
+        )
+
+    def handle_misbehaviour(
+        self,
+        _event: Event,
+    ) -> contract.ContractFunction:
+        """Binding for `handleMisbehaviour` on the Accountability contract.
+
+        Handle a misbehaviour event. Need to be called by a registered validator account
+        as the treasury-linked account will be used in case of a successful slashing
+        event.
+
+        Parameters
+        ----------
+        _event : Event
+
+        Returns
+        -------
+        web3.contract.contract.ContractFunction
+            A contract function instance to be sent in a transaction.
+        """
+        return self._contract.functions.handleMisbehaviour(
+            (
+                int(_event.event_type),
+                int(_event.rule),
+                _event.reporter,
+                _event.offender,
+                _event.raw_proof,
+                _event.id,
+                _event.block,
+                _event.epoch,
+                _event.reporting_block,
+                _event.message_hash,
+            ),
+        )
+
+    def set_committee(
+        self,
+        _new_committee: typing.List[eth_typing.ChecksumAddress],
+    ) -> contract.ContractFunction:
+        """Binding for `setCommittee` on the Accountability contract.
+
+        setCommittee is called by autonity only on new epoch, it remove stale committee
+        from the reporter set, then replace the last committee with current committee,
+        and set the current committee with the input new committee.
+
+        Parameters
+        ----------
+        _new_committee : typing.List[eth_typing.ChecksumAddress]
+
+        Returns
+        -------
+        web3.contract.contract.ContractFunction
+            A contract function instance to be sent in a transaction.
+        """
+        return self._contract.functions.setCommittee(
+            _new_committee,
+        )
 
     def slashing_history(
         self,
@@ -595,8 +712,6 @@ ABI = typing.cast(
             "inputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
             "name": "events",
             "outputs": [
-                {"internalType": "uint8", "name": "chunks", "type": "uint8"},
-                {"internalType": "uint8", "name": "chunkId", "type": "uint8"},
                 {
                     "internalType": "enum Accountability.EventType",
                     "name": "eventType",
@@ -636,8 +751,6 @@ ABI = typing.cast(
             "outputs": [
                 {
                     "components": [
-                        {"internalType": "uint8", "name": "chunks", "type": "uint8"},
-                        {"internalType": "uint8", "name": "chunkId", "type": "uint8"},
                         {
                             "internalType": "enum Accountability.EventType",
                             "name": "eventType",
@@ -687,8 +800,6 @@ ABI = typing.cast(
             "outputs": [
                 {
                     "components": [
-                        {"internalType": "uint8", "name": "chunks", "type": "uint8"},
-                        {"internalType": "uint8", "name": "chunkId", "type": "uint8"},
                         {
                             "internalType": "enum Accountability.EventType",
                             "name": "eventType",
@@ -736,8 +847,6 @@ ABI = typing.cast(
             "inputs": [
                 {
                     "components": [
-                        {"internalType": "uint8", "name": "chunks", "type": "uint8"},
-                        {"internalType": "uint8", "name": "chunkId", "type": "uint8"},
                         {
                             "internalType": "enum Accountability.EventType",
                             "name": "eventType",
@@ -778,7 +887,118 @@ ABI = typing.cast(
                     "type": "tuple",
                 }
             ],
-            "name": "handleEvent",
+            "name": "handleAccusation",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {
+                    "components": [
+                        {
+                            "internalType": "enum Accountability.EventType",
+                            "name": "eventType",
+                            "type": "uint8",
+                        },
+                        {
+                            "internalType": "enum Accountability.Rule",
+                            "name": "rule",
+                            "type": "uint8",
+                        },
+                        {
+                            "internalType": "address",
+                            "name": "reporter",
+                            "type": "address",
+                        },
+                        {
+                            "internalType": "address",
+                            "name": "offender",
+                            "type": "address",
+                        },
+                        {"internalType": "bytes", "name": "rawProof", "type": "bytes"},
+                        {"internalType": "uint256", "name": "id", "type": "uint256"},
+                        {"internalType": "uint256", "name": "block", "type": "uint256"},
+                        {"internalType": "uint256", "name": "epoch", "type": "uint256"},
+                        {
+                            "internalType": "uint256",
+                            "name": "reportingBlock",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "messageHash",
+                            "type": "uint256",
+                        },
+                    ],
+                    "internalType": "struct Accountability.Event",
+                    "name": "_event",
+                    "type": "tuple",
+                }
+            ],
+            "name": "handleInnocenceProof",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {
+                    "components": [
+                        {
+                            "internalType": "enum Accountability.EventType",
+                            "name": "eventType",
+                            "type": "uint8",
+                        },
+                        {
+                            "internalType": "enum Accountability.Rule",
+                            "name": "rule",
+                            "type": "uint8",
+                        },
+                        {
+                            "internalType": "address",
+                            "name": "reporter",
+                            "type": "address",
+                        },
+                        {
+                            "internalType": "address",
+                            "name": "offender",
+                            "type": "address",
+                        },
+                        {"internalType": "bytes", "name": "rawProof", "type": "bytes"},
+                        {"internalType": "uint256", "name": "id", "type": "uint256"},
+                        {"internalType": "uint256", "name": "block", "type": "uint256"},
+                        {"internalType": "uint256", "name": "epoch", "type": "uint256"},
+                        {
+                            "internalType": "uint256",
+                            "name": "reportingBlock",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "messageHash",
+                            "type": "uint256",
+                        },
+                    ],
+                    "internalType": "struct Accountability.Event",
+                    "name": "_event",
+                    "type": "tuple",
+                }
+            ],
+            "name": "handleMisbehaviour",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address[]",
+                    "name": "_newCommittee",
+                    "type": "address[]",
+                }
+            ],
+            "name": "setCommittee",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function",

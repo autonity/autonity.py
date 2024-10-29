@@ -8,7 +8,7 @@ import eth_typing
 import web3
 from web3.contract import base_contract, contract
 
-__version__ = "v0.14.0"
+__version__ = "f6bcaae767bebf7271a94b2239b67314f8deac38"
 
 
 class SupplyControl:

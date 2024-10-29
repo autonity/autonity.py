@@ -11,7 +11,7 @@ import web3
 from dataclasses import dataclass
 from web3.contract import base_contract, contract
 
-__version__ = "v0.14.0"
+__version__ = "f6bcaae767bebf7271a94b2239b67314f8deac38"
 
 
 class ValidatorState(enum.IntEnum):
@@ -48,7 +48,7 @@ class Validator:
     self_unbonding_stake: int
     self_unbonding_shares: int
     self_unbonding_stake_locked: int
-    liquid_contract: eth_typing.ChecksumAddress
+    liquid_state_contract: eth_typing.ChecksumAddress
     liquid_supply: int
     registration_block: int
     total_slashed: int
@@ -113,6 +113,16 @@ class CommitteeMember:
     consensus_key: hexbytes.HexBytes
 
 
+@dataclass
+class EpochInfo:
+    """Port of `struct EpochInfo` on the Autonity contract."""
+
+    committee: typing.List[CommitteeMember]
+    previous_epoch_block: int
+    epoch_block: int
+    next_epoch_block: int
+
+
 class Autonity:
     """Autonity contract binding.
 
@@ -164,6 +174,15 @@ class Autonity:
     def BurnedStake(self) -> typing.Type[base_contract.BaseContractEvent]:
         """Binding for `event BurnedStake` on the Autonity contract."""
         return self._contract.events.BurnedStake
+
+    @property
+    def CallFailed(self) -> typing.Type[base_contract.BaseContractEvent]:
+        """Binding for `event CallFailed` on the Autonity contract.
+
+        This event is emitted when a call to an address fails in a protocol function
+        (like finalize()).
+        """
+        return self._contract.events.CallFailed
 
     @property
     def CommissionRateChange(self) -> typing.Type[base_contract.BaseContractEvent]:
@@ -259,6 +278,27 @@ class Autonity:
         """
         return_value = self._contract.functions.COMMISSION_RATE_PRECISION().call()
         return int(return_value)
+
+    def set_liquid_logic_contract(
+        self,
+        _contract: eth_typing.ChecksumAddress,
+    ) -> contract.ContractFunction:
+        """Binding for `SetLiquidLogicContract` on the Autonity contract.
+
+        Set address of the liquid logic contact.
+
+        Parameters
+        ----------
+        _contract : eth_typing.ChecksumAddress
+
+        Returns
+        -------
+        web3.contract.contract.ContractFunction
+            A contract function instance to be sent in a transaction.
+        """
+        return self._contract.functions.SetLiquidLogicContract(
+            _contract,
+        )
 
     def activate_validator(
         self,
@@ -530,6 +570,18 @@ class Autonity:
         return_value = self._contract.functions.epochID().call()
         return int(return_value)
 
+    def epoch_period_to_be_applied(
+        self,
+    ) -> int:
+        """Binding for `epochPeriodToBeApplied` on the Autonity contract.
+
+        Returns
+        -------
+        int
+        """
+        return_value = self._contract.functions.epochPeriodToBeApplied().call()
+        return int(return_value)
+
     def epoch_reward(
         self,
     ) -> int:
@@ -578,6 +630,8 @@ class Autonity:
         Returns
         -------
         typing.List[CommitteeMember]
+            Current block committee if called before finalize(), next block if called
+            after.
         """
         return_value = self._contract.functions.getCommittee().call()
         return [
@@ -602,6 +656,36 @@ class Autonity:
         return_value = self._contract.functions.getCommitteeEnodes().call()
         return [str(elem) for elem in return_value]
 
+    def get_epoch_by_height(
+        self,
+        _height: int,
+    ) -> EpochInfo:
+        """Binding for `getEpochByHeight` on the Autonity contract.
+
+        Returns the epoch info of the height.
+
+        Parameters
+        ----------
+        _height : int
+
+        Returns
+        -------
+        EpochInfo
+        """
+        return_value = self._contract.functions.getEpochByHeight(
+            _height,
+        ).call()
+        return EpochInfo(
+            CommitteeMember(
+                eth_typing.ChecksumAddress(return_value[0][0]),
+                int(return_value[0][1]),
+                hexbytes.HexBytes(return_value[0][2]),
+            ),
+            int(return_value[1]),
+            int(return_value[2]),
+            int(return_value[3]),
+        )
+
     def get_epoch_from_block(
         self,
         _block: int,
@@ -623,6 +707,29 @@ class Autonity:
             _block,
         ).call()
         return int(return_value)
+
+    def get_epoch_info(
+        self,
+    ) -> EpochInfo:
+        """Binding for `getEpochInfo` on the Autonity contract.
+
+        Returns the current epoch info of the chain.
+
+        Returns
+        -------
+        EpochInfo
+        """
+        return_value = self._contract.functions.getEpochInfo().call()
+        return EpochInfo(
+            CommitteeMember(
+                eth_typing.ChecksumAddress(return_value[0][0]),
+                int(return_value[0][1]),
+                hexbytes.HexBytes(return_value[0][2]),
+            ),
+            int(return_value[1]),
+            int(return_value[2]),
+            int(return_value[3]),
+        )
 
     def get_epoch_period(
         self,
@@ -699,6 +806,20 @@ class Autonity:
             str(return_value[1]),
         )
 
+    def get_next_epoch_block(
+        self,
+    ) -> int:
+        """Binding for `getNextEpochBlock` on the Autonity contract.
+
+        Returns the next epoch block.
+
+        Returns
+        -------
+        int
+        """
+        return_value = self._contract.functions.getNextEpochBlock().call()
+        return int(return_value)
+
     def get_operator(
         self,
     ) -> eth_typing.ChecksumAddress:
@@ -725,34 +846,6 @@ class Autonity:
         eth_typing.ChecksumAddress
         """
         return_value = self._contract.functions.getOracle().call()
-        return eth_typing.ChecksumAddress(return_value)
-
-    def get_proposer(
-        self,
-        height: int,
-        round: int,
-    ) -> eth_typing.ChecksumAddress:
-        """Binding for `getProposer` on the Autonity contract.
-
-        getProposer returns the address of the proposer for the given height and round.
-        The proposer is selected from the committee via weighted random sampling, with
-        selection probability determined by the voting power of each committee member.
-        The selection mechanism is deterministic and will always select the same
-        address, given the same height, round and contract state.
-
-        Parameters
-        ----------
-        height : int
-        round : int
-
-        Returns
-        -------
-        eth_typing.ChecksumAddress
-        """
-        return_value = self._contract.functions.getProposer(
-            height,
-            round,
-        ).call()
         return eth_typing.ChecksumAddress(return_value)
 
     def get_reverting_amount(
@@ -922,18 +1015,6 @@ class Autonity:
         return_value = self._contract.functions.inflationReserve().call()
         return int(return_value)
 
-    def last_epoch_block(
-        self,
-    ) -> int:
-        """Binding for `lastEpochBlock` on the Autonity contract.
-
-        Returns
-        -------
-        int
-        """
-        return_value = self._contract.functions.lastEpochBlock().call()
-        return int(return_value)
-
     def last_epoch_time(
         self,
     ) -> int:
@@ -945,6 +1026,37 @@ class Autonity:
         """
         return_value = self._contract.functions.lastEpochTime().call()
         return int(return_value)
+
+    def last_finalized_block(
+        self,
+    ) -> int:
+        """Binding for `lastFinalizedBlock` on the Autonity contract.
+
+        Returns
+        -------
+        int
+        """
+        return_value = self._contract.functions.lastFinalizedBlock().call()
+        return int(return_value)
+
+    def liquid_logic_contract(
+        self,
+    ) -> eth_typing.ChecksumAddress:
+        """Binding for `liquidLogicContract` on the Autonity contract.
+
+        Address of the `LiquidLogic` contract. This contract contains all the logic for
+        liquid newton related operations. The state variables are stored in
+        `LiquidState` contract which is different for every validator and is deployed
+        when registering a new validator. To do any operation related to liquid newton,
+        we call `LiquidState` contract of the related validator and that contract does a
+        delegate call to `LiquidLogic` contract.
+
+        Returns
+        -------
+        eth_typing.ChecksumAddress
+        """
+        return_value = self._contract.functions.liquidLogicContract().call()
+        return eth_typing.ChecksumAddress(return_value)
 
     def max_bond_applied_gas(
         self,
@@ -1748,8 +1860,8 @@ ABI = typing.cast(
                             "type": "uint256",
                         },
                         {
-                            "internalType": "contract Liquid",
-                            "name": "liquidContract",
+                            "internalType": "address payable",
+                            "name": "liquidStateContract",
                             "type": "address",
                         },
                         {
@@ -2079,6 +2191,31 @@ ABI = typing.cast(
             "anonymous": False,
             "inputs": [
                 {
+                    "indexed": False,
+                    "internalType": "address",
+                    "name": "to",
+                    "type": "address",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "string",
+                    "name": "methodSignature",
+                    "type": "string",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "bytes",
+                    "name": "returnData",
+                    "type": "bytes",
+                },
+            ],
+            "name": "CallFailed",
+            "type": "event",
+        },
+        {
+            "anonymous": False,
+            "inputs": [
+                {
                     "indexed": True,
                     "internalType": "address",
                     "name": "validator",
@@ -2102,7 +2239,13 @@ ABI = typing.cast(
                     "internalType": "uint256",
                     "name": "period",
                     "type": "uint256",
-                }
+                },
+                {
+                    "indexed": False,
+                    "internalType": "uint256",
+                    "name": "toBeAppliedAtBlock",
+                    "type": "uint256",
+                },
             ],
             "name": "EpochPeriodUpdated",
             "type": "event",
@@ -2269,7 +2412,7 @@ ABI = typing.cast(
                 {
                     "indexed": False,
                     "internalType": "address",
-                    "name": "liquidContract",
+                    "name": "liquidStateContract",
                     "type": "address",
                 },
             ],
@@ -2411,6 +2554,15 @@ ABI = typing.cast(
         },
         {
             "inputs": [
+                {"internalType": "address", "name": "_contract", "type": "address"}
+            ],
+            "name": "SetLiquidLogicContract",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
                 {"internalType": "address", "name": "_address", "type": "address"}
             ],
             "name": "activateValidator",
@@ -2492,7 +2644,10 @@ ABI = typing.cast(
         {
             "inputs": [],
             "name": "computeCommittee",
-            "outputs": [{"internalType": "address[]", "name": "", "type": "address[]"}],
+            "outputs": [
+                {"internalType": "address[]", "name": "", "type": "address[]"},
+                {"internalType": "address[]", "name": "", "type": "address[]"},
+            ],
             "stateMutability": "nonpayable",
             "type": "function",
         },
@@ -2643,6 +2798,13 @@ ABI = typing.cast(
         },
         {
             "inputs": [],
+            "name": "epochPeriodToBeApplied",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [],
             "name": "epochReward",
             "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
             "stateMutability": "view",
@@ -2659,6 +2821,7 @@ ABI = typing.cast(
             "inputs": [],
             "name": "finalize",
             "outputs": [
+                {"internalType": "bool", "name": "", "type": "bool"},
                 {"internalType": "bool", "name": "", "type": "bool"},
                 {
                     "components": [
@@ -2678,6 +2841,8 @@ ABI = typing.cast(
                     "name": "",
                     "type": "tuple[]",
                 },
+                {"internalType": "uint256", "name": "", "type": "uint256"},
+                {"internalType": "uint256", "name": "", "type": "uint256"},
             ],
             "stateMutability": "nonpayable",
             "type": "function",
@@ -2731,10 +2896,116 @@ ABI = typing.cast(
         },
         {
             "inputs": [
+                {"internalType": "uint256", "name": "_height", "type": "uint256"}
+            ],
+            "name": "getEpochByHeight",
+            "outputs": [
+                {
+                    "components": [
+                        {
+                            "components": [
+                                {
+                                    "internalType": "address",
+                                    "name": "addr",
+                                    "type": "address",
+                                },
+                                {
+                                    "internalType": "uint256",
+                                    "name": "votingPower",
+                                    "type": "uint256",
+                                },
+                                {
+                                    "internalType": "bytes",
+                                    "name": "consensusKey",
+                                    "type": "bytes",
+                                },
+                            ],
+                            "internalType": "struct Autonity.CommitteeMember[]",
+                            "name": "committee",
+                            "type": "tuple[]",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "previousEpochBlock",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "epochBlock",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "nextEpochBlock",
+                            "type": "uint256",
+                        },
+                    ],
+                    "internalType": "struct Autonity.EpochInfo",
+                    "name": "",
+                    "type": "tuple",
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [
                 {"internalType": "uint256", "name": "_block", "type": "uint256"}
             ],
             "name": "getEpochFromBlock",
             "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "getEpochInfo",
+            "outputs": [
+                {
+                    "components": [
+                        {
+                            "components": [
+                                {
+                                    "internalType": "address",
+                                    "name": "addr",
+                                    "type": "address",
+                                },
+                                {
+                                    "internalType": "uint256",
+                                    "name": "votingPower",
+                                    "type": "uint256",
+                                },
+                                {
+                                    "internalType": "bytes",
+                                    "name": "consensusKey",
+                                    "type": "bytes",
+                                },
+                            ],
+                            "internalType": "struct Autonity.CommitteeMember[]",
+                            "name": "committee",
+                            "type": "tuple[]",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "previousEpochBlock",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "epochBlock",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "nextEpochBlock",
+                            "type": "uint256",
+                        },
+                    ],
+                    "internalType": "struct Autonity.EpochInfo",
+                    "name": "",
+                    "type": "tuple",
+                }
+            ],
             "stateMutability": "view",
             "type": "function",
         },
@@ -2778,6 +3049,13 @@ ABI = typing.cast(
         },
         {
             "inputs": [],
+            "name": "getNextEpochBlock",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [],
             "name": "getOperator",
             "outputs": [{"internalType": "address", "name": "", "type": "address"}],
             "stateMutability": "view",
@@ -2786,16 +3064,6 @@ ABI = typing.cast(
         {
             "inputs": [],
             "name": "getOracle",
-            "outputs": [{"internalType": "address", "name": "", "type": "address"}],
-            "stateMutability": "view",
-            "type": "function",
-        },
-        {
-            "inputs": [
-                {"internalType": "uint256", "name": "height", "type": "uint256"},
-                {"internalType": "uint256", "name": "round", "type": "uint256"},
-            ],
-            "name": "getProposer",
             "outputs": [{"internalType": "address", "name": "", "type": "address"}],
             "stateMutability": "view",
             "type": "function",
@@ -2908,8 +3176,8 @@ ABI = typing.cast(
                             "type": "uint256",
                         },
                         {
-                            "internalType": "contract Liquid",
-                            "name": "liquidContract",
+                            "internalType": "address payable",
+                            "name": "liquidStateContract",
                             "type": "address",
                         },
                         {
@@ -2979,15 +3247,22 @@ ABI = typing.cast(
         },
         {
             "inputs": [],
-            "name": "lastEpochBlock",
+            "name": "lastEpochTime",
             "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
             "stateMutability": "view",
             "type": "function",
         },
         {
             "inputs": [],
-            "name": "lastEpochTime",
+            "name": "lastFinalizedBlock",
             "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "liquidLogicContract",
+            "outputs": [{"internalType": "address", "name": "", "type": "address"}],
             "stateMutability": "view",
             "type": "function",
         },
@@ -3400,8 +3675,8 @@ ABI = typing.cast(
                             "type": "uint256",
                         },
                         {
-                            "internalType": "contract Liquid",
-                            "name": "liquidContract",
+                            "internalType": "address payable",
+                            "name": "liquidStateContract",
                             "type": "address",
                         },
                         {
