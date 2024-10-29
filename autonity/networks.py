@@ -24,16 +24,9 @@ class Network:
     http_provider: HTTPProvider
 
 
-bakerloo = Network(
-    chain_id=65010003,
-    network_name="Autonity Bakerloo (Yamuna) Testnet",
-    http_provider=HTTPProvider("https://rpc1.bakerloo.autonity.org/"),
-)
-"""Network : Autonity Bakerloo (Yamuna) Testnet parameters."""
-
 piccadilly = Network(
-    chain_id=65100003,
-    network_name="Autonity Piccadilly (Yamuna) Testnet",
+    chain_id=65010004,
+    network_name="Autonity Piccadilly (Tiber) Testnet",
     http_provider=HTTPProvider("https://rpc1.piccadilly.autonity.org/"),
 )
-"""Network : Autonity Piccadilly (Yamuna) Testnet parameters."""
+"""Network : Autonity Piccadilly (Tiber) Testnet parameters."""
