@@ -24,7 +24,7 @@ all: $(OUTDIR)/accountability.py \
 	 $(OUTDIR)/upgrade_manager.py
 
 $(OUTDIR)/accountability.py: $(call gentargets,Accountability)
-	$(call abigen,$^) --exclude distributeRewards,finalize,handleEvent,setEpochPeriod >$@
+	$(call abigen,$^) --exclude distributeRewards,finalize,handleAccusation,handleEvent,handleInnocenceProof,handleMisbehaviour,setEpochPeriod >$@
 
 $(OUTDIR)/acu.py: $(call gentargets,ACU)
 	$(call abigen,$^) --exclude setOperator,setOracle,update >$@
