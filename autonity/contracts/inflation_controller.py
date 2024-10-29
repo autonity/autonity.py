@@ -9,7 +9,7 @@ import web3
 from dataclasses import dataclass
 from web3.contract import contract
 
-__version__ = "v0.14.0"
+__version__ = "f6bcaae767bebf7271a94b2239b67314f8deac38"
 
 
 @dataclass

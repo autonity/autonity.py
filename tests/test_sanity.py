@@ -42,10 +42,10 @@ def pytest_generate_tests(metafunc):
     for binding in BINDINGS:
         w3 = Web3(autonity.networks.piccadilly.http_provider)
 
-        if binding.__name__ == "Liquid":
+        if binding.__name__ == "LiquidLogic":
             aut = autonity.Autonity(w3)
             validator = aut.get_validator(aut.get_validators()[0])
-            contract = binding(w3, validator.liquid_contract)
+            contract = binding(w3, validator.liquid_state_contract)
         elif binding.__name__ == "IERC20":
             contract = binding(w3, AUTONITY_CONTRACT_ADDRESS)
         else:

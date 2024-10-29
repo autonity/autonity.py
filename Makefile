@@ -17,7 +17,7 @@ all: $(OUTDIR)/accountability.py \
 	 $(OUTDIR)/autonity.py \
 	 $(OUTDIR)/ierc20.py \
 	 $(OUTDIR)/inflation_controller.py \
-	 $(OUTDIR)/liquid.py \
+	 $(OUTDIR)/liquid_logic.py \
 	 $(OUTDIR)/non_stakable_vesting.py \
 	 $(OUTDIR)/oracle.py \
 	 $(OUTDIR)/stabilization.py \
@@ -39,7 +39,7 @@ $(OUTDIR)/ierc20.py: $(call gentargets,IERC20)
 $(OUTDIR)/inflation_controller.py: $(call gentargets,InflationController)
 	$(call abigen,$^) >$@
 
-$(OUTDIR)/liquid.py: $(call gentargets,Liquid)
+$(OUTDIR)/liquid_logic.py: $(call gentargets,LiquidLogic)
 	$(call abigen,$^) --exclude burn,lock,mint,redistribute,setCommissionRate,unlock >$@
 
 $(OUTDIR)/non_stakable_vesting.py: $(call gentargets,NonStakableVesting)
@@ -57,17 +57,11 @@ $(OUTDIR)/supply_control.py: $(call gentargets,SupplyControl)
 $(OUTDIR)/upgrade_manager.py: $(call gentargets,UpgradeManager)
 	$(call abigen,$^) --exclude setOperator >$@
 
-$(ABIDIR)/%.abi: $(AUTONITY) AUTONITY_VERSION
+$(ABIDIR)/%.abi $(ABIDIR)/%.docdev $(ABIDIR)/%.docuser: $(AUTONITY) AUTONITY_VERSION
 	cd $< && \
 	git fetch origin && \
 	git checkout $(VERSION) && \
 	make contracts
-
-# This recipe can be removed after https://github.com/autonity/autonity/pull/1035 is released
-$(ABIDIR)/%.docuser $(ABIDIR)/%.docdev: $(ABIDIR)/%.abi
-	$(AUTONITY)/build/bin/solc_static_linux_v0.8.21 \
-		--overwrite --userdoc --devdoc -o $(ABIDIR) \
-		$$(find $(AUTONITY)/autonity/solidity/contracts -name $(basename $(notdir $<)).sol)
 
 $(AUTONITY):
 	git clone git@github.com:autonity/autonity.git $@
