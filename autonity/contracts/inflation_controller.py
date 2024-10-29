@@ -1,12 +1,12 @@
 """InflationController contract binding and data structures."""
 
-# This module has been generated using pyabigen v0.2.9
+# This module has been generated using pyabigen v0.2.10
 
 import typing
+from dataclasses import dataclass
 
 import eth_typing
 import web3
-from dataclasses import dataclass
 from web3.contract import contract
 
 __version__ = "f6bcaae767bebf7271a94b2239b67314f8deac38"

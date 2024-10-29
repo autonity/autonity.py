@@ -1,6 +1,6 @@
 """ACU contract binding and data structures."""
 
-# This module has been generated using pyabigen v0.2.9
+# This module has been generated using pyabigen v0.2.10
 
 import typing
 
@@ -95,7 +95,7 @@ class ACU:
             Array of quantities
         """
         return_value = self._contract.functions.quantities().call()
-        return [int(elem) for elem in return_value]
+        return [int(return_value_elem) for return_value_elem in return_value]
 
     def round(
         self,
@@ -153,7 +153,7 @@ class ACU:
             Array of symbols
         """
         return_value = self._contract.functions.symbols().call()
-        return [str(elem) for elem in return_value]
+        return [str(return_value_elem) for return_value_elem in return_value]
 
     def value(
         self,
