@@ -1,12 +1,12 @@
 """NonStakableVesting contract binding and data structures."""
 
-# This module has been generated using pyabigen v0.2.9
+# This module has been generated using pyabigen v0.2.10
 
 import typing
+from dataclasses import dataclass
 
 import eth_typing
 import web3
-from dataclasses import dataclass
 from web3.contract import contract
 
 __version__ = "f6bcaae767bebf7271a94b2239b67314f8deac38"
@@ -208,14 +208,14 @@ class NonStakableVesting:
         ).call()
         return [
             Contract(
-                int(elem[0]),
-                int(elem[1]),
-                int(elem[2]),
-                int(elem[3]),
-                int(elem[4]),
-                bool(elem[5]),
+                int(return_value_elem[0]),
+                int(return_value_elem[1]),
+                int(return_value_elem[2]),
+                int(return_value_elem[3]),
+                int(return_value_elem[4]),
+                bool(return_value_elem[5]),
             )
-            for elem in return_value
+            for return_value_elem in return_value
         ]
 
     def get_schedule(

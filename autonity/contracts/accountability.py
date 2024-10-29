@@ -1,14 +1,14 @@
 """Accountability contract binding and data structures."""
 
-# This module has been generated using pyabigen v0.2.9
+# This module has been generated using pyabigen v0.2.10
 
 import enum
 import typing
+from dataclasses import dataclass
 
 import eth_typing
 import hexbytes
 import web3
-from dataclasses import dataclass
 from web3.contract import base_contract, contract
 
 __version__ = "f6bcaae767bebf7271a94b2239b67314f8deac38"
@@ -292,18 +292,18 @@ class Accountability:
         ).call()
         return [
             Event(
-                EventType(elem[0]),
-                Rule(elem[1]),
-                eth_typing.ChecksumAddress(elem[2]),
-                eth_typing.ChecksumAddress(elem[3]),
-                hexbytes.HexBytes(elem[4]),
-                int(elem[5]),
-                int(elem[6]),
-                int(elem[7]),
-                int(elem[8]),
-                int(elem[9]),
+                EventType(return_value_elem[0]),
+                Rule(return_value_elem[1]),
+                eth_typing.ChecksumAddress(return_value_elem[2]),
+                eth_typing.ChecksumAddress(return_value_elem[3]),
+                hexbytes.HexBytes(return_value_elem[4]),
+                int(return_value_elem[5]),
+                int(return_value_elem[6]),
+                int(return_value_elem[7]),
+                int(return_value_elem[8]),
+                int(return_value_elem[9]),
             )
-            for elem in return_value
+            for return_value_elem in return_value
         ]
 
     def handle_accusation(

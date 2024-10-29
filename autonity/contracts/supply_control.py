@@ -1,6 +1,6 @@
 """SupplyControl contract binding and data structures."""
 
-# This module has been generated using pyabigen v0.2.9
+# This module has been generated using pyabigen v0.2.10
 
 import typing
 

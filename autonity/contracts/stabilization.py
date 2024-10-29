@@ -1,12 +1,12 @@
 """Stabilization contract binding and data structures."""
 
-# This module has been generated using pyabigen v0.2.9
+# This module has been generated using pyabigen v0.2.10
 
 import typing
+from dataclasses import dataclass
 
 import eth_typing
 import web3
-from dataclasses import dataclass
 from plum import dispatch
 from web3.contract import base_contract, contract
 
@@ -143,7 +143,10 @@ class Stabilization:
             Array of CDP account addresses
         """
         return_value = self._contract.functions.accounts().call()
-        return [eth_typing.ChecksumAddress(elem) for elem in return_value]
+        return [
+            eth_typing.ChecksumAddress(return_value_elem)
+            for return_value_elem in return_value
+        ]
 
     def borrow(
         self,

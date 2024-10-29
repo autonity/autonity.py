@@ -1,14 +1,14 @@
 """Autonity contract binding and data structures."""
 
-# This module has been generated using pyabigen v0.2.9
+# This module has been generated using pyabigen v0.2.10
 
 import enum
 import typing
+from dataclasses import dataclass
 
 import eth_typing
 import hexbytes
 import web3
-from dataclasses import dataclass
 from web3.contract import base_contract, contract
 
 __version__ = "f6bcaae767bebf7271a94b2239b67314f8deac38"
@@ -636,11 +636,11 @@ class Autonity:
         return_value = self._contract.functions.getCommittee().call()
         return [
             CommitteeMember(
-                eth_typing.ChecksumAddress(elem[0]),
-                int(elem[1]),
-                hexbytes.HexBytes(elem[2]),
+                eth_typing.ChecksumAddress(return_value_elem[0]),
+                int(return_value_elem[1]),
+                hexbytes.HexBytes(return_value_elem[2]),
             )
-            for elem in return_value
+            for return_value_elem in return_value
         ]
 
     def get_committee_enodes(
@@ -654,7 +654,7 @@ class Autonity:
             Returns the consensus committee enodes.
         """
         return_value = self._contract.functions.getCommitteeEnodes().call()
-        return [str(elem) for elem in return_value]
+        return [str(return_value_elem) for return_value_elem in return_value]
 
     def get_epoch_by_height(
         self,
@@ -676,11 +676,14 @@ class Autonity:
             _height,
         ).call()
         return EpochInfo(
-            CommitteeMember(
-                eth_typing.ChecksumAddress(return_value[0][0]),
-                int(return_value[0][1]),
-                hexbytes.HexBytes(return_value[0][2]),
-            ),
+            [
+                CommitteeMember(
+                    eth_typing.ChecksumAddress(return_value0_elem[0]),
+                    int(return_value0_elem[1]),
+                    hexbytes.HexBytes(return_value0_elem[2]),
+                )
+                for return_value0_elem in return_value[0]
+            ],
             int(return_value[1]),
             int(return_value[2]),
             int(return_value[3]),
@@ -721,11 +724,14 @@ class Autonity:
         """
         return_value = self._contract.functions.getEpochInfo().call()
         return EpochInfo(
-            CommitteeMember(
-                eth_typing.ChecksumAddress(return_value[0][0]),
-                int(return_value[0][1]),
-                hexbytes.HexBytes(return_value[0][2]),
-            ),
+            [
+                CommitteeMember(
+                    eth_typing.ChecksumAddress(return_value0_elem[0]),
+                    int(return_value0_elem[1]),
+                    hexbytes.HexBytes(return_value0_elem[2]),
+                )
+                for return_value0_elem in return_value[0]
+            ],
             int(return_value[1]),
             int(return_value[2]),
             int(return_value[3]),
@@ -987,7 +993,10 @@ class Autonity:
         typing.List[eth_typing.ChecksumAddress]
         """
         return_value = self._contract.functions.getValidators().call()
-        return [eth_typing.ChecksumAddress(elem) for elem in return_value]
+        return [
+            eth_typing.ChecksumAddress(return_value_elem)
+            for return_value_elem in return_value
+        ]
 
     def get_version(
         self,
