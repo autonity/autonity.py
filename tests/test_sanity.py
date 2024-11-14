@@ -12,12 +12,12 @@ from web3.contract.contract import ContractFunction
 
 import autonity
 from autonity.constants import AUTONITY_CONTRACT_ADDRESS
-from autonity.contracts import ierc20
+from autonity.contracts import erc20
 
 
 FACTORIES = [attr for attr in autonity.__dict__.values() if isinstance(attr, Callable)]
 BINDINGS = FACTORIES + [
-    ierc20.IERC20,  # IERC20 is used internally by aut-cli, not part of the public API
+    erc20.ERC20,  # ERC20 is used internally by autonity-cli, not part of the public API
 ]
 
 TEST_INPUTS = {
@@ -46,7 +46,7 @@ def pytest_generate_tests(metafunc):
             aut = autonity.Autonity(w3)
             validator = aut.get_validator(aut.get_validators()[0])
             contract = binding(w3, validator.liquid_contract)
-        elif binding.__name__ == "IERC20":
+        elif binding.__name__ == "ERC20":
             contract = binding(w3, AUTONITY_CONTRACT_ADDRESS)
         else:
             contract = binding(w3)
