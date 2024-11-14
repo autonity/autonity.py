@@ -12,13 +12,9 @@ from web3.contract.contract import ContractFunction
 
 import autonity
 from autonity.constants import AUTONITY_CONTRACT_ADDRESS
-from autonity.contracts import erc20
 
 
-FACTORIES = [attr for attr in autonity.__dict__.values() if isinstance(attr, Callable)]
-BINDINGS = FACTORIES + [
-    erc20.ERC20,  # ERC20 is used internally by autonity-cli, not part of the public API
-]
+BINDINGS = [attr for attr in autonity.__dict__.values() if isinstance(attr, Callable)]
 
 TEST_INPUTS = {
     bool: True,
