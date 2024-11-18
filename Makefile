@@ -16,7 +16,7 @@ all: $(OUTDIR)/accountability.py \
 	 $(OUTDIR)/acu.py \
 	 $(OUTDIR)/autonity.py \
 	 $(OUTDIR)/inflation_controller.py \
-	 $(OUTDIR)/liquid_logic.py \
+	 $(OUTDIR)/liquid.py \
 	 $(OUTDIR)/non_stakable_vesting.py \
 	 $(OUTDIR)/oracle.py \
 	 $(OUTDIR)/stabilization.py \
@@ -35,8 +35,8 @@ $(OUTDIR)/autonity.py: $(call gentargets,Autonity)
 $(OUTDIR)/inflation_controller.py: $(call gentargets,InflationController)
 	$(call abigen,$^) >$@
 
-$(OUTDIR)/liquid_logic.py: $(call gentargets,LiquidLogic)
-	$(call abigen,$^) --exclude burn,lock,mint,redistribute,setCommissionRate,unlock >$@
+$(OUTDIR)/liquid.py: $(call gentargets,LiquidLogic)
+	$(call abigen,$^) --name Liquid --exclude burn,lock,mint,redistribute,setCommissionRate,unlock >$@
 
 $(OUTDIR)/non_stakable_vesting.py: $(call gentargets,NonStakableVesting)
 	$(call abigen,$^) --exclude unlockTokens >$@

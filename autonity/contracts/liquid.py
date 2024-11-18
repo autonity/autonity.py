@@ -1,4 +1,4 @@
-"""LiquidLogic contract binding and data structures."""
+"""Liquid contract binding and data structures."""
 
 # This module has been generated using pyabigen v0.2.10
 
@@ -11,14 +11,14 @@ from web3.contract import base_contract, contract
 __version__ = "f6bcaae767bebf7271a94b2239b67314f8deac38"
 
 
-class LiquidLogic:
-    """LiquidLogic contract binding.
+class Liquid:
+    """Liquid contract binding.
 
     Parameters
     ----------
     w3 : web3.Web3
     address : eth_typing.ChecksumAddress
-        The address of a deployed LiquidLogic contract.
+        The address of a deployed Liquid contract.
     """
 
     _contract: contract.Contract
@@ -35,18 +35,18 @@ class LiquidLogic:
 
     @property
     def Approval(self) -> typing.Type[base_contract.BaseContractEvent]:
-        """Binding for `event Approval` on the LiquidLogic contract."""
+        """Binding for `event Approval` on the Liquid contract."""
         return self._contract.events.Approval
 
     @property
     def Transfer(self) -> typing.Type[base_contract.BaseContractEvent]:
-        """Binding for `event Transfer` on the LiquidLogic contract."""
+        """Binding for `event Transfer` on the Liquid contract."""
         return self._contract.events.Transfer
 
     def commission_rate_precision(
         self,
     ) -> int:
-        """Binding for `COMMISSION_RATE_PRECISION` on the LiquidLogic contract.
+        """Binding for `COMMISSION_RATE_PRECISION` on the Liquid contract.
 
         Returns
         -------
@@ -58,7 +58,7 @@ class LiquidLogic:
     def fee_factor_unit_recip(
         self,
     ) -> int:
-        """Binding for `FEE_FACTOR_UNIT_RECIP` on the LiquidLogic contract.
+        """Binding for `FEE_FACTOR_UNIT_RECIP` on the Liquid contract.
 
         Returns
         -------
@@ -72,7 +72,7 @@ class LiquidLogic:
         _owner: eth_typing.ChecksumAddress,
         _spender: eth_typing.ChecksumAddress,
     ) -> int:
-        """Binding for `allowance` on the LiquidLogic contract.
+        """Binding for `allowance` on the Liquid contract.
 
         See {IERC20-allowance}.
 
@@ -96,7 +96,7 @@ class LiquidLogic:
         _spender: eth_typing.ChecksumAddress,
         _amount: int,
     ) -> contract.ContractFunction:
-        """Binding for `approve` on the LiquidLogic contract.
+        """Binding for `approve` on the Liquid contract.
 
         Parameters
         ----------
@@ -117,7 +117,7 @@ class LiquidLogic:
         self,
         _delegator: eth_typing.ChecksumAddress,
     ) -> int:
-        """Binding for `balanceOf` on the LiquidLogic contract.
+        """Binding for `balanceOf` on the Liquid contract.
 
         Returns the amount of liquid newtons held by the account (ERC-20).
 
@@ -137,7 +137,7 @@ class LiquidLogic:
     def claim_rewards(
         self,
     ) -> contract.ContractFunction:
-        """Binding for `claimRewards` on the LiquidLogic contract.
+        """Binding for `claimRewards` on the Liquid contract.
 
         Withdraws all fees earned so far by the caller.
 
@@ -151,7 +151,7 @@ class LiquidLogic:
     def claim_treasury_atn(
         self,
     ) -> contract.ContractFunction:
-        """Binding for `claimTreasuryATN` on the LiquidLogic contract.
+        """Binding for `claimTreasuryATN` on the Liquid contract.
 
         Send the unclaimed ATN entitled to treasury to treasury account
 
@@ -165,7 +165,7 @@ class LiquidLogic:
     def decimals(
         self,
     ) -> int:
-        """Binding for `decimals` on the LiquidLogic contract.
+        """Binding for `decimals` on the Liquid contract.
 
         Returns
         -------
@@ -178,7 +178,7 @@ class LiquidLogic:
     def get_commission_rate(
         self,
     ) -> int:
-        """Binding for `getCommissionRate` on the LiquidLogic contract.
+        """Binding for `getCommissionRate` on the Liquid contract.
 
         Returns
         -------
@@ -190,7 +190,7 @@ class LiquidLogic:
     def get_treasury(
         self,
     ) -> eth_typing.ChecksumAddress:
-        """Binding for `getTreasury` on the LiquidLogic contract.
+        """Binding for `getTreasury` on the Liquid contract.
 
         Returns
         -------
@@ -202,7 +202,7 @@ class LiquidLogic:
     def get_treasury_unclaimed_atn(
         self,
     ) -> int:
-        """Binding for `getTreasuryUnclaimedATN` on the LiquidLogic contract.
+        """Binding for `getTreasuryUnclaimedATN` on the Liquid contract.
 
         Returns the ATN amount that is yet to claim by treasury. Call function
         `claimTreasuryATN()` to claim.
@@ -217,7 +217,7 @@ class LiquidLogic:
     def get_validator(
         self,
     ) -> eth_typing.ChecksumAddress:
-        """Binding for `getValidator` on the LiquidLogic contract.
+        """Binding for `getValidator` on the Liquid contract.
 
         Returns
         -------
@@ -230,7 +230,7 @@ class LiquidLogic:
         self,
         _delegator: eth_typing.ChecksumAddress,
     ) -> int:
-        """Binding for `lockedBalanceOf` on the LiquidLogic contract.
+        """Binding for `lockedBalanceOf` on the Liquid contract.
 
         Returns the amount of locked liquid newtons held by the account.
 
@@ -250,7 +250,7 @@ class LiquidLogic:
     def name(
         self,
     ) -> str:
-        """Binding for `name` on the LiquidLogic contract.
+        """Binding for `name` on the Liquid contract.
 
         Returns
         -------
@@ -262,7 +262,7 @@ class LiquidLogic:
     def symbol(
         self,
     ) -> str:
-        """Binding for `symbol` on the LiquidLogic contract.
+        """Binding for `symbol` on the Liquid contract.
 
         Returns
         -------
@@ -274,7 +274,7 @@ class LiquidLogic:
     def total_supply(
         self,
     ) -> int:
-        """Binding for `totalSupply` on the LiquidLogic contract.
+        """Binding for `totalSupply` on the Liquid contract.
 
         Returns the total amount of stake token issued.
 
@@ -290,7 +290,7 @@ class LiquidLogic:
         _to: eth_typing.ChecksumAddress,
         _amount: int,
     ) -> contract.ContractFunction:
-        """Binding for `transfer` on the LiquidLogic contract.
+        """Binding for `transfer` on the Liquid contract.
 
         Moves `_amount` LNEW tokens from the caller's account to the recipient `_to`.
 
@@ -315,7 +315,7 @@ class LiquidLogic:
         _recipient: eth_typing.ChecksumAddress,
         _amount: int,
     ) -> contract.ContractFunction:
-        """Binding for `transferFrom` on the LiquidLogic contract.
+        """Binding for `transferFrom` on the Liquid contract.
 
         Parameters
         ----------
@@ -338,7 +338,7 @@ class LiquidLogic:
         self,
         _account: eth_typing.ChecksumAddress,
     ) -> typing.Tuple[int, int]:
-        """Binding for `unclaimedRewards` on the LiquidLogic contract.
+        """Binding for `unclaimedRewards` on the Liquid contract.
 
         Calculates the total claimable fees (ATN and NTN) earned by the delegator to-
         date.
@@ -365,7 +365,7 @@ class LiquidLogic:
         self,
         _delegator: eth_typing.ChecksumAddress,
     ) -> int:
-        """Binding for `unlockedBalanceOf` on the LiquidLogic contract.
+        """Binding for `unlockedBalanceOf` on the Liquid contract.
 
         Returns the amount of unlocked liquid newtons held by the account.
 

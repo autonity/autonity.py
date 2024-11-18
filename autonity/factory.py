@@ -15,7 +15,7 @@ from .contracts import (
     acu,
     autonity,
     inflation_controller,
-    liquid_logic,
+    liquid,
     non_stakable_vesting,
     oracle,
     stabilization,
@@ -113,7 +113,7 @@ def InflationController(w3: Web3) -> inflation_controller.InflationController:
     )
 
 
-def LiquidLogic(w3: Web3, address: ChecksumAddress) -> liquid_logic.LiquidLogic:
+def Liquid(w3: Web3, address: ChecksumAddress) -> liquid.Liquid:
     """Liquid contract binding factory.
 
     Parameters
@@ -129,7 +129,7 @@ def LiquidLogic(w3: Web3, address: ChecksumAddress) -> liquid_logic.LiquidLogic:
         A contract binding instance.
     """
     assert _config(w3)
-    return liquid_logic.LiquidLogic(w3, address)
+    return liquid.Liquid(w3, address)
 
 
 def NonStakableVesting(w3: Web3) -> non_stakable_vesting.NonStakableVesting:
