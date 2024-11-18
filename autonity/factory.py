@@ -15,7 +15,7 @@ from .contracts import (
     acu,
     autonity,
     inflation_controller,
-    liquid_logic,
+    liquid_newton,
     non_stakable_vesting,
     oracle,
     stabilization,
@@ -113,23 +113,23 @@ def InflationController(w3: Web3) -> inflation_controller.InflationController:
     )
 
 
-def LiquidLogic(w3: Web3, address: ChecksumAddress) -> liquid_logic.LiquidLogic:
-    """Liquid contract binding factory.
+def LiquidNewton(w3: Web3, address: ChecksumAddress) -> liquid_newton.LiquidNewton:
+    """Liquid Newton contract binding factory.
 
     Parameters
     ----------
     w3 : web3.Web3
         A `web3.Web3` instance with a provider connected to an Autonity network.
     address : eth_typing.ChecksumAddress
-        The address of a deployed Liquid contract.
+        The address of a deployed LiquidState contract.
 
     Returns
     -------
-    autonity.contracts.liquid.Liquid
+    autonity.contracts.liquid_newton.LiquidNewton
         A contract binding instance.
     """
     assert _config(w3)
-    return liquid_logic.LiquidLogic(w3, address)
+    return liquid_newton.LiquidNewton(w3, address)
 
 
 def NonStakableVesting(w3: Web3) -> non_stakable_vesting.NonStakableVesting:

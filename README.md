@@ -25,7 +25,7 @@ Example usage:
 
 ```python
 from web3 import Web3
-from autonity import Autonity, LiquidLogic, networks
+from autonity import Autonity, LiquidNewton, networks
 
 # Connect to the default RPC provider on the Autonity Piccadilly Testnet
 w3 = Web3(networks.piccadilly.http_provider)
@@ -45,8 +45,8 @@ validator = autonity.get_validator(validator_addresses[0])
 print(f"LNTN contract address: {validator.liquid_state_contract}")
 
 # Query unclaimed fees for <ADDRESS> from the validator's Liquid Newton contract
-liquid = LiquidLogic(w3, validator.liquid_state_contract)
-unclaimed_atn, unclaimed_ntn = liquid.unclaimed_rewards("<ADDRESS>")
+liquid_newton = LiquidNewton(w3, validator.liquid_state_contract)
+unclaimed_atn, unclaimed_ntn = liquid_newton.unclaimed_rewards("<ADDRESS>")
 print(f"Unclaimed rewards: {unclaimed_atn} ATN, {unclaimed_ntn} NTN")
 ```
 
