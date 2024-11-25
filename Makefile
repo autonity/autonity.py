@@ -15,7 +15,6 @@ gentargets = $(shell find $(SRCDIR) -name $(1).sol) $(addprefix $(ABIDIR)/$(1),.
 all: $(OUTDIR)/accountability.py \
 	 $(OUTDIR)/acu.py \
 	 $(OUTDIR)/autonity.py \
-	 $(OUTDIR)/ierc20.py \
 	 $(OUTDIR)/inflation_controller.py \
 	 $(OUTDIR)/liquid.py \
 	 $(OUTDIR)/non_stakable_vesting.py \
@@ -32,9 +31,6 @@ $(OUTDIR)/acu.py: $(call gentargets,ACU)
 
 $(OUTDIR)/autonity.py: $(call gentargets,Autonity)
 	$(call abigen,$^) --exclude computeCommittee,finalize,finalizeInitialization,updateValidatorAndTransferSlashedFunds >$@
-
-$(OUTDIR)/ierc20.py: $(call gentargets,IERC20)
-	$(call abigen,$^) >$@
 
 $(OUTDIR)/inflation_controller.py: $(call gentargets,InflationController)
 	$(call abigen,$^) >$@
