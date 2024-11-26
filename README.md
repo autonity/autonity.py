@@ -73,12 +73,11 @@ Python binaries into the user home directory:
 
 ```console
 $ hatch python install all
-Installed 3.7 @ /home/develop/.local/share/hatch/pythons/3.7
-Installed 3.8 @ /home/develop/.local/share/hatch/pythons/3.8
 Installed 3.9 @ /home/develop/.local/share/hatch/pythons/3.9
 Installed 3.10 @ /home/develop/.local/share/hatch/pythons/3.10
 Installed 3.11 @ /home/develop/.local/share/hatch/pythons/3.11
 Installed 3.12 @ /home/develop/.local/share/hatch/pythons/3.12
+Installed 3.13 @ /home/develop/.local/share/hatch/pythons/3.12
 Installed pypy2.7 @ /home/develop/.local/share/hatch/pythons/pypy2.7
 Installed pypy3.9 @ /home/develop/.local/share/hatch/pythons/pypy3.9
 Installed pypy3.10 @ /home/develop/.local/share/hatch/pythons/pypy3.10
