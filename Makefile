@@ -53,17 +53,11 @@ $(OUTDIR)/supply_control.py: $(call gentargets,SupplyControl)
 $(OUTDIR)/upgrade_manager.py: $(call gentargets,UpgradeManager)
 	$(call abigen,$^) --exclude setOperator >$@
 
-$(ABIDIR)/%.abi: $(AUTONITY) AUTONITY_VERSION
+$(ABIDIR)/%.abi $(ABIDIR)/%.docdev $(ABIDIR)/%.docuser: $(AUTONITY) AUTONITY_VERSION
 	cd $< && \
 	git fetch origin && \
 	git checkout $(VERSION) && \
 	make contracts
-
-# This recipe can be removed after https://github.com/autonity/autonity/pull/1035 is released
-$(ABIDIR)/%.docuser $(ABIDIR)/%.docdev: $(ABIDIR)/%.abi
-	$(AUTONITY)/build/bin/solc_static_linux_v0.8.21 \
-		--overwrite --userdoc --devdoc -o $(ABIDIR) \
-		$$(find $(AUTONITY)/autonity/solidity/contracts -name $(basename $(notdir $<)).sol)
 
 $(AUTONITY):
 	git clone git@github.com:autonity/autonity.git $@
