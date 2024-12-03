@@ -1,5 +1,18 @@
 # Changelog
 
+## TBD
+
+### Changed
+
+- Support the Autonity Tiber protocol
+- Add bindings for the Accountability, ACU, Inflation Controller, Omission Accountability, Oracle, Stabilization, Supply Control and Upgrade Manager protocol contracts
+- Replace bindings for the Autonity and Liquid Newton protocol contracts, which involves breaking changes in the API
+- Remove the binding for ERC20 tokens
+- Add constants for parameters of the Autonity Piccadilly (Tiber) Testnet
+- Initialize bindings via factory functions that fetch the actual protocol contract addresses on the given Autonity network
+- Update web3.py to `7.6.0`
+- Support Python 3.13 & drop Python 3.8 support
+
 ## [v4.0.0] - 2024-07-02
 
 ### Changed
