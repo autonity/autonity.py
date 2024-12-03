@@ -1,17 +1,17 @@
 """Autonity contract binding and data structures."""
 
-# This module has been generated using pyabigen v0.2.9
+# This module has been generated using pyabigen v0.2.10
 
 import enum
 import typing
+from dataclasses import dataclass
 
 import eth_typing
 import hexbytes
 import web3
-from dataclasses import dataclass
 from web3.contract import base_contract, contract
 
-__version__ = "v0.14.0"
+__version__ = "v1.0.1-alpha"
 
 
 class ValidatorState(enum.IntEnum):
@@ -21,15 +21,8 @@ class ValidatorState(enum.IntEnum):
     PAUSED = 1
     JAILED = 2
     JAILBOUND = 3
-
-
-class UnbondingReleaseState(enum.IntEnum):
-    """Port of `enum UnbondingReleaseState` on the Autonity contract."""
-
-    NOT_RELEASED = 0
-    RELEASED = 1
-    REJECTED = 2
-    REVERTED = 3
+    JAILED_FOR_INACTIVITY = 4
+    JAILBOUND_FOR_INACTIVITY = 5
 
 
 @dataclass
@@ -48,12 +41,11 @@ class Validator:
     self_unbonding_stake: int
     self_unbonding_shares: int
     self_unbonding_stake_locked: int
-    liquid_contract: eth_typing.ChecksumAddress
+    liquid_state_contract: eth_typing.ChecksumAddress
     liquid_supply: int
     registration_block: int
     total_slashed: int
     jail_release_block: int
-    provable_fault_count: int
     consensus_key: hexbytes.HexBytes
     state: ValidatorState
 
@@ -67,6 +59,10 @@ class Policy:
     delegation_rate: int
     unbonding_period: int
     initial_inflation_reserve: int
+    withholding_threshold: int
+    proposer_reward_rate: int
+    oracle_reward_rate: int
+    withheld_rewards_pool: eth_typing.ChecksumAddress
     treasury_account: eth_typing.ChecksumAddress
 
 
@@ -81,7 +77,7 @@ class Contracts:
     stabilization_contract: eth_typing.ChecksumAddress
     upgrade_manager_contract: eth_typing.ChecksumAddress
     inflation_controller_contract: eth_typing.ChecksumAddress
-    non_stakable_vesting_contract: eth_typing.ChecksumAddress
+    omission_accountability_contract: eth_typing.ChecksumAddress
 
 
 @dataclass
@@ -92,6 +88,7 @@ class Protocol:
     epoch_period: int
     block_period: int
     committee_size: int
+    max_schedule_duration: int
 
 
 @dataclass
@@ -111,6 +108,28 @@ class CommitteeMember:
     addr: eth_typing.ChecksumAddress
     voting_power: int
     consensus_key: hexbytes.HexBytes
+
+
+@dataclass
+class EpochInfo:
+    """Port of `struct EpochInfo` on the Autonity contract."""
+
+    committee: typing.List[CommitteeMember]
+    previous_epoch_block: int
+    epoch_block: int
+    next_epoch_block: int
+    delta: int
+
+
+@dataclass
+class Schedule:
+    """Port of `struct Schedule` on the ScheduleController contract."""
+
+    total_amount: int
+    unlocked_amount: int
+    start: int
+    total_duration: int
+    last_unlock_time: int
 
 
 class Autonity:
@@ -141,11 +160,6 @@ class Autonity:
         return self._contract.events.ActivatedValidator
 
     @property
-    def AppliedUnbondingReverted(self) -> typing.Type[base_contract.BaseContractEvent]:
-        """Binding for `event AppliedUnbondingReverted` on the Autonity contract."""
-        return self._contract.events.AppliedUnbondingReverted
-
-    @property
     def Approval(self) -> typing.Type[base_contract.BaseContractEvent]:
         """Binding for `event Approval` on the Autonity contract."""
         return self._contract.events.Approval
@@ -156,14 +170,18 @@ class Autonity:
         return self._contract.events.BondingRejected
 
     @property
-    def BondingReverted(self) -> typing.Type[base_contract.BaseContractEvent]:
-        """Binding for `event BondingReverted` on the Autonity contract."""
-        return self._contract.events.BondingReverted
-
-    @property
     def BurnedStake(self) -> typing.Type[base_contract.BaseContractEvent]:
         """Binding for `event BurnedStake` on the Autonity contract."""
         return self._contract.events.BurnedStake
+
+    @property
+    def CallFailed(self) -> typing.Type[base_contract.BaseContractEvent]:
+        """Binding for `event CallFailed` on the Autonity contract.
+
+        This event is emitted when a call to an address fails in a protocol function
+        (like finalize()).
+        """
+        return self._contract.events.CallFailed
 
     @property
     def CommissionRateChange(self) -> typing.Type[base_contract.BaseContractEvent]:
@@ -202,6 +220,11 @@ class Autonity:
         return self._contract.events.NewEpoch
 
     @property
+    def NewSchedule(self) -> typing.Type[base_contract.BaseContractEvent]:
+        """Binding for `event NewSchedule` on the Autonity contract."""
+        return self._contract.events.NewSchedule
+
+    @property
     def NewUnbondingRequest(self) -> typing.Type[base_contract.BaseContractEvent]:
         """Binding for `event NewUnbondingRequest` on the Autonity contract.
 
@@ -224,11 +247,6 @@ class Autonity:
         return self._contract.events.RegisteredValidator
 
     @property
-    def ReleasedUnbondingReverted(self) -> typing.Type[base_contract.BaseContractEvent]:
-        """Binding for `event ReleasedUnbondingReverted` on the Autonity contract."""
-        return self._contract.events.ReleasedUnbondingReverted
-
-    @property
     def Rewarded(self) -> typing.Type[base_contract.BaseContractEvent]:
         """Binding for `event Rewarded` on the Autonity contract."""
         return self._contract.events.Rewarded
@@ -238,27 +256,50 @@ class Autonity:
         """Binding for `event Transfer` on the Autonity contract."""
         return self._contract.events.Transfer
 
-    @property
-    def UnbondingRejected(self) -> typing.Type[base_contract.BaseContractEvent]:
-        """Binding for `event UnbondingRejected` on the Autonity contract."""
-        return self._contract.events.UnbondingRejected
-
-    @property
-    def UnlockingScheduleFailed(self) -> typing.Type[base_contract.BaseContractEvent]:
-        """Binding for `event UnlockingScheduleFailed` on the Autonity contract."""
-        return self._contract.events.UnlockingScheduleFailed
-
-    def commission_rate_precision(
+    def standard_decimals(
         self,
     ) -> int:
-        """Binding for `COMMISSION_RATE_PRECISION` on the Autonity contract.
+        """Binding for `STANDARD_DECIMALS` on the Autonity contract.
 
         Returns
         -------
         int
         """
-        return_value = self._contract.functions.COMMISSION_RATE_PRECISION().call()
+        return_value = self._contract.functions.STANDARD_DECIMALS().call()
         return int(return_value)
+
+    def standard_scale_factor(
+        self,
+    ) -> int:
+        """Binding for `STANDARD_SCALE_FACTOR` on the Autonity contract.
+
+        Returns
+        -------
+        int
+        """
+        return_value = self._contract.functions.STANDARD_SCALE_FACTOR().call()
+        return int(return_value)
+
+    def set_liquid_logic_contract(
+        self,
+        _contract: eth_typing.ChecksumAddress,
+    ) -> contract.ContractFunction:
+        """Binding for `SetLiquidLogicContract` on the Autonity contract.
+
+        Set address of the liquid logic contact.
+
+        Parameters
+        ----------
+        _contract : eth_typing.ChecksumAddress
+
+        Returns
+        -------
+        web3.contract.contract.ContractFunction
+            A contract function instance to be sent in a transaction.
+        """
+        return self._contract.functions.SetLiquidLogicContract(
+            _contract,
+        )
 
     def activate_validator(
         self,
@@ -325,18 +366,6 @@ class Autonity:
             spender,
             amount,
         )
-
-    def atn_total_redistributed(
-        self,
-    ) -> int:
-        """Binding for `atnTotalRedistributed` on the Autonity contract.
-
-        Returns
-        -------
-        int
-        """
-        return_value = self._contract.functions.atnTotalRedistributed().call()
-        return int(return_value)
 
     def balance_of(
         self,
@@ -439,6 +468,20 @@ class Autonity:
             _rate,
         )
 
+    def circulating_supply(
+        self,
+    ) -> int:
+        """Binding for `circulatingSupply` on the Autonity contract.
+
+        Returns the amount of tokens circulating in the network.
+
+        Returns
+        -------
+        int
+        """
+        return_value = self._contract.functions.circulatingSupply().call()
+        return int(return_value)
+
     def complete_contract_upgrade(
         self,
     ) -> contract.ContractFunction:
@@ -472,7 +515,11 @@ class Autonity:
                 int(return_value[0][2]),
                 int(return_value[0][3]),
                 int(return_value[0][4]),
-                eth_typing.ChecksumAddress(return_value[0][5]),
+                int(return_value[0][5]),
+                int(return_value[0][6]),
+                int(return_value[0][7]),
+                eth_typing.ChecksumAddress(return_value[0][8]),
+                eth_typing.ChecksumAddress(return_value[0][9]),
             ),
             Contracts(
                 eth_typing.ChecksumAddress(return_value[1][0]),
@@ -489,8 +536,40 @@ class Autonity:
                 int(return_value[2][1]),
                 int(return_value[2][2]),
                 int(return_value[2][3]),
+                int(return_value[2][4]),
             ),
             int(return_value[3]),
+        )
+
+    def create_schedule(
+        self,
+        _schedule_vault: eth_typing.ChecksumAddress,
+        _amount: int,
+        _start_time: int,
+        _total_duration: int,
+    ) -> contract.ContractFunction:
+        """Binding for `createSchedule` on the Autonity contract.
+
+        Creates a new schedule.
+
+        Parameters
+        ----------
+        _schedule_vault : eth_typing.ChecksumAddress
+        _amount : int
+            total amount of the schedule
+        _start_time : int
+        _total_duration : int
+
+        Returns
+        -------
+        web3.contract.contract.ContractFunction
+            A contract function instance to be sent in a transaction.
+        """
+        return self._contract.functions.createSchedule(
+            _schedule_vault,
+            _amount,
+            _start_time,
+            _total_duration,
         )
 
     def decimals(
@@ -530,18 +609,6 @@ class Autonity:
         return_value = self._contract.functions.epochID().call()
         return int(return_value)
 
-    def epoch_reward(
-        self,
-    ) -> int:
-        """Binding for `epochReward` on the Autonity contract.
-
-        Returns
-        -------
-        int
-        """
-        return_value = self._contract.functions.epochReward().call()
-        return int(return_value)
-
     def epoch_total_bonded_stake(
         self,
     ) -> int:
@@ -578,15 +645,17 @@ class Autonity:
         Returns
         -------
         typing.List[CommitteeMember]
+            Current block committee if called before finalize(), next block committee if
+            called after.
         """
         return_value = self._contract.functions.getCommittee().call()
         return [
             CommitteeMember(
-                eth_typing.ChecksumAddress(elem[0]),
-                int(elem[1]),
-                hexbytes.HexBytes(elem[2]),
+                eth_typing.ChecksumAddress(return_value_elem[0]),
+                int(return_value_elem[1]),
+                hexbytes.HexBytes(return_value_elem[2]),
             )
-            for elem in return_value
+            for return_value_elem in return_value
         ]
 
     def get_committee_enodes(
@@ -600,7 +669,55 @@ class Autonity:
             Returns the consensus committee enodes.
         """
         return_value = self._contract.functions.getCommitteeEnodes().call()
-        return [str(elem) for elem in return_value]
+        return [str(return_value_elem) for return_value_elem in return_value]
+
+    def get_current_epoch_period(
+        self,
+    ) -> int:
+        """Binding for `getCurrentEpochPeriod` on the Autonity contract.
+
+        Returns the epoch period of the current epoch
+
+        Returns
+        -------
+        int
+        """
+        return_value = self._contract.functions.getCurrentEpochPeriod().call()
+        return int(return_value)
+
+    def get_epoch_by_height(
+        self,
+        _height: int,
+    ) -> EpochInfo:
+        """Binding for `getEpochByHeight` on the Autonity contract.
+
+        Returns the epoch info of the height.
+
+        Parameters
+        ----------
+        _height : int
+
+        Returns
+        -------
+        EpochInfo
+        """
+        return_value = self._contract.functions.getEpochByHeight(
+            _height,
+        ).call()
+        return EpochInfo(
+            [
+                CommitteeMember(
+                    eth_typing.ChecksumAddress(return_value0_elem[0]),
+                    int(return_value0_elem[1]),
+                    hexbytes.HexBytes(return_value0_elem[2]),
+                )
+                for return_value0_elem in return_value[0]
+            ],
+            int(return_value[1]),
+            int(return_value[2]),
+            int(return_value[3]),
+            int(return_value[4]),
+        )
 
     def get_epoch_from_block(
         self,
@@ -624,12 +741,40 @@ class Autonity:
         ).call()
         return int(return_value)
 
+    def get_epoch_info(
+        self,
+    ) -> EpochInfo:
+        """Binding for `getEpochInfo` on the Autonity contract.
+
+        Returns the current epoch info of the chain.
+
+        Returns
+        -------
+        EpochInfo
+        """
+        return_value = self._contract.functions.getEpochInfo().call()
+        return EpochInfo(
+            [
+                CommitteeMember(
+                    eth_typing.ChecksumAddress(return_value0_elem[0]),
+                    int(return_value0_elem[1]),
+                    hexbytes.HexBytes(return_value0_elem[2]),
+                )
+                for return_value0_elem in return_value[0]
+            ],
+            int(return_value[1]),
+            int(return_value[2]),
+            int(return_value[3]),
+            int(return_value[4]),
+        )
+
     def get_epoch_period(
         self,
     ) -> int:
         """Binding for `getEpochPeriod` on the Autonity contract.
 
-        Returns the epoch period.
+        /**Returns the epoch period. If there will be an update at epoch end, the new
+        epoch period is returned
 
         Returns
         -------
@@ -663,6 +808,20 @@ class Autonity:
             Returns the maximum size of the consensus committee.
         """
         return_value = self._contract.functions.getMaxCommitteeSize().call()
+        return int(return_value)
+
+    def get_max_schedule_duration(
+        self,
+    ) -> int:
+        """Binding for `getMaxScheduleDuration` on the Autonity contract.
+
+        Returns the max allowed duration of any schedule or contract.
+
+        Returns
+        -------
+        int
+        """
+        return_value = self._contract.functions.getMaxScheduleDuration().call()
         return int(return_value)
 
     def get_minimum_base_fee(
@@ -699,6 +858,20 @@ class Autonity:
             str(return_value[1]),
         )
 
+    def get_next_epoch_block(
+        self,
+    ) -> int:
+        """Binding for `getNextEpochBlock` on the Autonity contract.
+
+        Returns the next epoch block.
+
+        Returns
+        -------
+        int
+        """
+        return_value = self._contract.functions.getNextEpochBlock().call()
+        return int(return_value)
+
     def get_operator(
         self,
     ) -> eth_typing.ChecksumAddress:
@@ -727,53 +900,57 @@ class Autonity:
         return_value = self._contract.functions.getOracle().call()
         return eth_typing.ChecksumAddress(return_value)
 
-    def get_proposer(
+    def get_schedule(
         self,
-        height: int,
-        round: int,
-    ) -> eth_typing.ChecksumAddress:
-        """Binding for `getProposer` on the Autonity contract.
+        _vault: eth_typing.ChecksumAddress,
+        _id: int,
+    ) -> Schedule:
+        """Binding for `getSchedule` on the Autonity contract.
 
-        getProposer returns the address of the proposer for the given height and round.
-        The proposer is selected from the committee via weighted random sampling, with
-        selection probability determined by the voting power of each committee member.
-        The selection mechanism is deterministic and will always select the same
-        address, given the same height, round and contract state.
+        Returns the schedule at index = `_id` in the `vaultSchedules[_vault]` array.
 
         Parameters
         ----------
-        height : int
-        round : int
+        _vault : eth_typing.ChecksumAddress
+            address of the vault for the schedule
+        _id : int
+            index of the schedule
 
         Returns
         -------
-        eth_typing.ChecksumAddress
+        Schedule
         """
-        return_value = self._contract.functions.getProposer(
-            height,
-            round,
+        return_value = self._contract.functions.getSchedule(
+            _vault,
+            _id,
         ).call()
-        return eth_typing.ChecksumAddress(return_value)
+        return Schedule(
+            int(return_value[0]),
+            int(return_value[1]),
+            int(return_value[2]),
+            int(return_value[3]),
+            int(return_value[4]),
+        )
 
-    def get_reverting_amount(
+    def get_total_schedules(
         self,
-        _unbonding_id: int,
+        _vault: eth_typing.ChecksumAddress,
     ) -> int:
-        """Binding for `getRevertingAmount` on the Autonity contract.
+        """Binding for `getTotalSchedules` on the Autonity contract.
 
-        Returns the amount of LNTN or NTN bonded when the released unbonding was
-        reverted
+        Returns total number of schedules for the vault at address `_vault`.
 
         Parameters
         ----------
-        _unbonding_id : int
+        _vault : eth_typing.ChecksumAddress
+            address of the vault for the schedules
 
         Returns
         -------
         int
         """
-        return_value = self._contract.functions.getRevertingAmount(
-            _unbonding_id,
+        return_value = self._contract.functions.getTotalSchedules(
+            _vault,
         ).call()
         return int(return_value)
 
@@ -819,13 +996,11 @@ class Autonity:
         return_value = self._contract.functions.getUnbondingPeriod().call()
         return int(return_value)
 
-    def get_unbonding_release_state(
+    def get_unbonding_share(
         self,
         _unbonding_id: int,
-    ) -> UnbondingReleaseState:
-        """Binding for `getUnbondingReleaseState` on the Autonity contract.
-
-        Returns the release state of the unbonding request
+    ) -> int:
+        """Binding for `getUnbondingShare` on the Autonity contract.
 
         Parameters
         ----------
@@ -833,12 +1008,12 @@ class Autonity:
 
         Returns
         -------
-        UnbondingReleaseState
+        int
         """
-        return_value = self._contract.functions.getUnbondingReleaseState(
+        return_value = self._contract.functions.getUnbondingShare(
             _unbonding_id,
         ).call()
-        return UnbondingReleaseState(return_value)
+        return int(return_value)
 
     def get_validator(
         self,
@@ -853,8 +1028,7 @@ class Autonity:
         Returns
         -------
         Validator
-            Returns a user object with the `_account` parameter. The returned data
-            object might be empty if there is no user associated.
+            Returns the validator object associated with `_addr`.
         """
         return_value = self._contract.functions.getValidator(
             _addr,
@@ -877,10 +1051,29 @@ class Autonity:
             int(return_value[14]),
             int(return_value[15]),
             int(return_value[16]),
-            int(return_value[17]),
-            hexbytes.HexBytes(return_value[18]),
-            ValidatorState(return_value[19]),
+            hexbytes.HexBytes(return_value[17]),
+            ValidatorState(return_value[18]),
         )
+
+    def get_validator_state(
+        self,
+        _addr: eth_typing.ChecksumAddress,
+    ) -> ValidatorState:
+        """Binding for `getValidatorState` on the Autonity contract.
+
+        Parameters
+        ----------
+        _addr : eth_typing.ChecksumAddress
+
+        Returns
+        -------
+        ValidatorState
+            Returns the state of the validator associated with `_addr`.
+        """
+        return_value = self._contract.functions.getValidatorState(
+            _addr,
+        ).call()
+        return ValidatorState(return_value)
 
     def get_validators(
         self,
@@ -894,7 +1087,10 @@ class Autonity:
         typing.List[eth_typing.ChecksumAddress]
         """
         return_value = self._contract.functions.getValidators().call()
-        return [eth_typing.ChecksumAddress(elem) for elem in return_value]
+        return [
+            eth_typing.ChecksumAddress(return_value_elem)
+            for return_value_elem in return_value
+        ]
 
     def get_version(
         self,
@@ -922,17 +1118,26 @@ class Autonity:
         return_value = self._contract.functions.inflationReserve().call()
         return int(return_value)
 
-    def last_epoch_block(
+    def is_unbonding_released(
         self,
-    ) -> int:
-        """Binding for `lastEpochBlock` on the Autonity contract.
+        _unbonding_id: int,
+    ) -> bool:
+        """Binding for `isUnbondingReleased` on the Autonity contract.
+
+        Returns `true` if unbonding is released and `false` otherwise.
+
+        Parameters
+        ----------
+        _unbonding_id : int
 
         Returns
         -------
-        int
+        bool
         """
-        return_value = self._contract.functions.lastEpochBlock().call()
-        return int(return_value)
+        return_value = self._contract.functions.isUnbondingReleased(
+            _unbonding_id,
+        ).call()
+        return bool(return_value)
 
     def last_epoch_time(
         self,
@@ -946,55 +1151,36 @@ class Autonity:
         return_value = self._contract.functions.lastEpochTime().call()
         return int(return_value)
 
-    def max_bond_applied_gas(
+    def last_finalized_block(
         self,
     ) -> int:
-        """Binding for `maxBondAppliedGas` on the Autonity contract.
-
-        max allowed gas for notifying delegator (contract) about staking operations
+        """Binding for `lastFinalizedBlock` on the Autonity contract.
 
         Returns
         -------
         int
         """
-        return_value = self._contract.functions.maxBondAppliedGas().call()
+        return_value = self._contract.functions.lastFinalizedBlock().call()
         return int(return_value)
 
-    def max_rewards_distribution_gas(
+    def liquid_logic_contract(
         self,
-    ) -> int:
-        """Binding for `maxRewardsDistributionGas` on the Autonity contract.
+    ) -> eth_typing.ChecksumAddress:
+        """Binding for `liquidLogicContract` on the Autonity contract.
+
+        Address of the `LiquidLogic` contract. This contract contains all the logic for
+        liquid newton related operations. The state variables are stored in
+        `LiquidState` contract which is different for every validator and is deployed
+        when registering a new validator. To do any operation related to liquid newton,
+        we call `LiquidState` contract of the related validator and that contract does a
+        delegate call to `LiquidLogic` contract.
 
         Returns
         -------
-        int
+        eth_typing.ChecksumAddress
         """
-        return_value = self._contract.functions.maxRewardsDistributionGas().call()
-        return int(return_value)
-
-    def max_unbond_applied_gas(
-        self,
-    ) -> int:
-        """Binding for `maxUnbondAppliedGas` on the Autonity contract.
-
-        Returns
-        -------
-        int
-        """
-        return_value = self._contract.functions.maxUnbondAppliedGas().call()
-        return int(return_value)
-
-    def max_unbond_released_gas(
-        self,
-    ) -> int:
-        """Binding for `maxUnbondReleasedGas` on the Autonity contract.
-
-        Returns
-        -------
-        int
-        """
-        return_value = self._contract.functions.maxUnbondReleasedGas().call()
-        return int(return_value)
+        return_value = self._contract.functions.liquidLogicContract().call()
+        return eth_typing.ChecksumAddress(return_value)
 
     def mint(
         self,
@@ -1031,6 +1217,18 @@ class Autonity:
         return_value = self._contract.functions.name().call()
         return str(return_value)
 
+    def new_epoch_period(
+        self,
+    ) -> int:
+        """Binding for `newEpochPeriod` on the Autonity contract.
+
+        Returns
+        -------
+        int
+        """
+        return_value = self._contract.functions.newEpochPeriod().call()
+        return int(return_value)
+
     def pause_validator(
         self,
         _address: eth_typing.ChecksumAddress,
@@ -1052,20 +1250,6 @@ class Autonity:
         return self._contract.functions.pauseValidator(
             _address,
         )
-
-    def receive_atn(
-        self,
-    ) -> contract.ContractFunction:
-        """Binding for `receiveATN` on the Autonity contract.
-
-        can be used to send AUT to the contract
-
-        Returns
-        -------
-        web3.contract.contract.ContractFunction
-            A contract function instance to be sent in a transaction.
-        """
-        return self._contract.functions.receiveATN()
 
     def register_validator(
         self,
@@ -1214,85 +1398,25 @@ class Autonity:
             _address,
         )
 
-    def set_max_bond_applied_gas(
+    def set_max_schedule_duration(
         self,
-        _gas: int,
+        _new_max_duration: int,
     ) -> contract.ContractFunction:
-        """Binding for `setMaxBondAppliedGas` on the Autonity contract.
+        """Binding for `setMaxScheduleDuration` on the Autonity contract.
 
-        sets the value of max allowed gas for notifying delegator about staking
-        operations NOTE: before updating, please check if the updated value works. It
-        can be checked by updatting the hardcoded value of requiredGasBond and then
-        compiling the contracts and running the tests in stakable_vesting_test.go
+        Sets the max allowed duration of any schedule or contract.
 
         Parameters
         ----------
-        _gas : int
+        _new_max_duration : int
 
         Returns
         -------
         web3.contract.contract.ContractFunction
             A contract function instance to be sent in a transaction.
         """
-        return self._contract.functions.setMaxBondAppliedGas(
-            _gas,
-        )
-
-    def set_max_rewards_distribution_gas(
-        self,
-        _gas: int,
-    ) -> contract.ContractFunction:
-        """Binding for `setMaxRewardsDistributionGas` on the Autonity contract.
-
-        Parameters
-        ----------
-        _gas : int
-
-        Returns
-        -------
-        web3.contract.contract.ContractFunction
-            A contract function instance to be sent in a transaction.
-        """
-        return self._contract.functions.setMaxRewardsDistributionGas(
-            _gas,
-        )
-
-    def set_max_unbond_applied_gas(
-        self,
-        _gas: int,
-    ) -> contract.ContractFunction:
-        """Binding for `setMaxUnbondAppliedGas` on the Autonity contract.
-
-        Parameters
-        ----------
-        _gas : int
-
-        Returns
-        -------
-        web3.contract.contract.ContractFunction
-            A contract function instance to be sent in a transaction.
-        """
-        return self._contract.functions.setMaxUnbondAppliedGas(
-            _gas,
-        )
-
-    def set_max_unbond_released_gas(
-        self,
-        _gas: int,
-    ) -> contract.ContractFunction:
-        """Binding for `setMaxUnbondReleasedGas` on the Autonity contract.
-
-        Parameters
-        ----------
-        _gas : int
-
-        Returns
-        -------
-        web3.contract.contract.ContractFunction
-            A contract function instance to be sent in a transaction.
-        """
-        return self._contract.functions.setMaxUnbondReleasedGas(
-            _gas,
+        return self._contract.functions.setMaxScheduleDuration(
+            _new_max_duration,
         )
 
     def set_minimum_base_fee(
@@ -1317,13 +1441,11 @@ class Autonity:
             _price,
         )
 
-    def set_non_stakable_vesting_contract(
+    def set_omission_accountability_contract(
         self,
         _address: eth_typing.ChecksumAddress,
     ) -> contract.ContractFunction:
-        """Binding for `setNonStakableVestingContract` on the Autonity contract.
-
-        Set the Non-stakable Vesting contract address.
+        """Binding for `setOmissionAccountabilityContract` on the Autonity contract.
 
         Parameters
         ----------
@@ -1334,7 +1456,7 @@ class Autonity:
         web3.contract.contract.ContractFunction
             A contract function instance to be sent in a transaction.
         """
-        return self._contract.functions.setNonStakableVestingContract(
+        return self._contract.functions.setOmissionAccountabilityContract(
             _address,
         )
 
@@ -1376,6 +1498,67 @@ class Autonity:
             _address,
         )
 
+    def set_oracle_reward_rate(
+        self,
+        _oracle_reward_rate: int,
+    ) -> contract.ContractFunction:
+        """Binding for `setOracleRewardRate` on the Autonity contract.
+
+        Sets the oracle reward rate for the policy configuration.
+
+        Parameters
+        ----------
+        _oracle_reward_rate : int
+
+        Returns
+        -------
+        web3.contract.contract.ContractFunction
+            A contract function instance to be sent in a transaction.
+        """
+        return self._contract.functions.setOracleRewardRate(
+            _oracle_reward_rate,
+        )
+
+    def set_proposer_reward_rate(
+        self,
+        _proposer_reward_rate: int,
+    ) -> contract.ContractFunction:
+        """Binding for `setProposerRewardRate` on the Autonity contract.
+
+        Sets the proposer reward rate for the policy configuration.
+
+        Parameters
+        ----------
+        _proposer_reward_rate : int
+
+        Returns
+        -------
+        web3.contract.contract.ContractFunction
+            A contract function instance to be sent in a transaction.
+        """
+        return self._contract.functions.setProposerRewardRate(
+            _proposer_reward_rate,
+        )
+
+    def set_slasher(
+        self,
+        _slasher: eth_typing.ChecksumAddress,
+    ) -> contract.ContractFunction:
+        """Binding for `setSlasher` on the Autonity contract.
+
+        Parameters
+        ----------
+        _slasher : eth_typing.ChecksumAddress
+
+        Returns
+        -------
+        web3.contract.contract.ContractFunction
+            A contract function instance to be sent in a transaction.
+        """
+        return self._contract.functions.setSlasher(
+            _slasher,
+        )
+
     def set_stabilization_contract(
         self,
         _address: eth_typing.ChecksumAddress,
@@ -1393,27 +1576,6 @@ class Autonity:
         """
         return self._contract.functions.setStabilizationContract(
             _address,
-        )
-
-    def set_staking_gas_price(
-        self,
-        _price: int,
-    ) -> contract.ContractFunction:
-        """Binding for `setStakingGasPrice` on the Autonity contract.
-
-        Set gas price for notification on staking operation
-
-        Parameters
-        ----------
-        _price : int
-
-        Returns
-        -------
-        web3.contract.contract.ContractFunction
-            A contract function instance to be sent in a transaction.
-        """
-        return self._contract.functions.setStakingGasPrice(
-            _price,
         )
 
     def set_supply_control_contract(
@@ -1479,9 +1641,12 @@ class Autonity:
     ) -> contract.ContractFunction:
         """Binding for `setUnbondingPeriod` on the Autonity contract.
 
+        Sets the unbonding period for the policy configuration.
+
         Parameters
         ----------
         _period : int
+            The new unbonding period, in blocks.
 
         Returns
         -------
@@ -1511,20 +1676,60 @@ class Autonity:
             _address,
         )
 
-    def staking_gas_price(
+    def set_withheld_rewards_pool(
         self,
-    ) -> int:
-        """Binding for `stakingGasPrice` on the Autonity contract.
+        _pool: eth_typing.ChecksumAddress,
+    ) -> contract.ContractFunction:
+        """Binding for `setWithheldRewardsPool` on the Autonity contract.
 
-        the gas price to notify the delegator (only if contract) about the staking
-        operation at epoch end
+        Sets the address of the pool to which withheld rewards will be sent.
+
+        Parameters
+        ----------
+        _pool : eth_typing.ChecksumAddress
+            The address of the withheld rewards pool.
 
         Returns
         -------
-        int
+        web3.contract.contract.ContractFunction
+            A contract function instance to be sent in a transaction.
         """
-        return_value = self._contract.functions.stakingGasPrice().call()
-        return int(return_value)
+        return self._contract.functions.setWithheldRewardsPool(
+            _pool,
+        )
+
+    def set_withholding_threshold(
+        self,
+        _withholding_threshold: int,
+    ) -> contract.ContractFunction:
+        """Binding for `setWithholdingThreshold` on the Autonity contract.
+
+        Sets the withholding threshold for the policy configuration.
+
+        Parameters
+        ----------
+        _withholding_threshold : int
+
+        Returns
+        -------
+        web3.contract.contract.ContractFunction
+            A contract function instance to be sent in a transaction.
+        """
+        return self._contract.functions.setWithholdingThreshold(
+            _withholding_threshold,
+        )
+
+    def slasher(
+        self,
+    ) -> eth_typing.ChecksumAddress:
+        """Binding for `slasher` on the Autonity contract.
+
+        Returns
+        -------
+        eth_typing.ChecksumAddress
+        """
+        return_value = self._contract.functions.slasher().call()
+        return eth_typing.ChecksumAddress(return_value)
 
     def symbol(
         self,
@@ -1748,8 +1953,8 @@ ABI = typing.cast(
                             "type": "uint256",
                         },
                         {
-                            "internalType": "contract Liquid",
-                            "name": "liquidContract",
+                            "internalType": "contract ILiquid",
+                            "name": "liquidStateContract",
                             "type": "address",
                         },
                         {
@@ -1770,11 +1975,6 @@ ABI = typing.cast(
                         {
                             "internalType": "uint256",
                             "name": "jailReleaseBlock",
-                            "type": "uint256",
-                        },
-                        {
-                            "internalType": "uint256",
-                            "name": "provableFaultCount",
                             "type": "uint256",
                         },
                         {
@@ -1820,6 +2020,26 @@ ABI = typing.cast(
                                     "internalType": "uint256",
                                     "name": "initialInflationReserve",
                                     "type": "uint256",
+                                },
+                                {
+                                    "internalType": "uint256",
+                                    "name": "withholdingThreshold",
+                                    "type": "uint256",
+                                },
+                                {
+                                    "internalType": "uint256",
+                                    "name": "proposerRewardRate",
+                                    "type": "uint256",
+                                },
+                                {
+                                    "internalType": "uint256",
+                                    "name": "oracleRewardRate",
+                                    "type": "uint256",
+                                },
+                                {
+                                    "internalType": "address payable",
+                                    "name": "withheldRewardsPool",
+                                    "type": "address",
                                 },
                                 {
                                     "internalType": "address payable",
@@ -1869,8 +2089,8 @@ ABI = typing.cast(
                                     "type": "address",
                                 },
                                 {
-                                    "internalType": "contract INonStakableVestingVault",
-                                    "name": "nonStakableVestingContract",
+                                    "internalType": "contract IOmissionAccountability",
+                                    "name": "omissionAccountabilityContract",
                                     "type": "address",
                                 },
                             ],
@@ -1898,6 +2118,11 @@ ABI = typing.cast(
                                 {
                                     "internalType": "uint256",
                                     "name": "committeeSize",
+                                    "type": "uint256",
+                                },
+                                {
+                                    "internalType": "uint256",
+                                    "name": "maxScheduleDuration",
                                     "type": "uint256",
                                 },
                             ],
@@ -1942,37 +2167,6 @@ ABI = typing.cast(
                 },
             ],
             "name": "ActivatedValidator",
-            "type": "event",
-        },
-        {
-            "anonymous": False,
-            "inputs": [
-                {
-                    "indexed": True,
-                    "internalType": "address",
-                    "name": "validator",
-                    "type": "address",
-                },
-                {
-                    "indexed": True,
-                    "internalType": "address",
-                    "name": "delegator",
-                    "type": "address",
-                },
-                {
-                    "indexed": False,
-                    "internalType": "bool",
-                    "name": "selfBonded",
-                    "type": "bool",
-                },
-                {
-                    "indexed": False,
-                    "internalType": "uint256",
-                    "name": "amount",
-                    "type": "uint256",
-                },
-            ],
-            "name": "AppliedUnbondingReverted",
             "type": "event",
         },
         {
@@ -2037,31 +2231,6 @@ ABI = typing.cast(
                 {
                     "indexed": True,
                     "internalType": "address",
-                    "name": "validator",
-                    "type": "address",
-                },
-                {
-                    "indexed": True,
-                    "internalType": "address",
-                    "name": "delegator",
-                    "type": "address",
-                },
-                {
-                    "indexed": False,
-                    "internalType": "uint256",
-                    "name": "amount",
-                    "type": "uint256",
-                },
-            ],
-            "name": "BondingReverted",
-            "type": "event",
-        },
-        {
-            "anonymous": False,
-            "inputs": [
-                {
-                    "indexed": True,
-                    "internalType": "address",
                     "name": "addr",
                     "type": "address",
                 },
@@ -2073,6 +2242,31 @@ ABI = typing.cast(
                 },
             ],
             "name": "BurnedStake",
+            "type": "event",
+        },
+        {
+            "anonymous": False,
+            "inputs": [
+                {
+                    "indexed": False,
+                    "internalType": "address",
+                    "name": "to",
+                    "type": "address",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "string",
+                    "name": "methodSignature",
+                    "type": "string",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "bytes",
+                    "name": "returnData",
+                    "type": "bytes",
+                },
+            ],
+            "name": "CallFailed",
             "type": "event",
         },
         {
@@ -2102,7 +2296,13 @@ ABI = typing.cast(
                     "internalType": "uint256",
                     "name": "period",
                     "type": "uint256",
-                }
+                },
+                {
+                    "indexed": False,
+                    "internalType": "uint256",
+                    "name": "appliedAtBlock",
+                    "type": "uint256",
+                },
             ],
             "name": "EpochPeriodUpdated",
             "type": "event",
@@ -2181,6 +2381,37 @@ ABI = typing.cast(
                 }
             ],
             "name": "NewEpoch",
+            "type": "event",
+        },
+        {
+            "anonymous": False,
+            "inputs": [
+                {
+                    "indexed": True,
+                    "internalType": "address",
+                    "name": "scheduleVault",
+                    "type": "address",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "uint256",
+                    "name": "amount",
+                    "type": "uint256",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "uint256",
+                    "name": "start",
+                    "type": "uint256",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "uint256",
+                    "name": "totalDuration",
+                    "type": "uint256",
+                },
+            ],
+            "name": "NewSchedule",
             "type": "event",
         },
         {
@@ -2269,42 +2500,11 @@ ABI = typing.cast(
                 {
                     "indexed": False,
                     "internalType": "address",
-                    "name": "liquidContract",
+                    "name": "liquidStateContract",
                     "type": "address",
                 },
             ],
             "name": "RegisteredValidator",
-            "type": "event",
-        },
-        {
-            "anonymous": False,
-            "inputs": [
-                {
-                    "indexed": True,
-                    "internalType": "address",
-                    "name": "validator",
-                    "type": "address",
-                },
-                {
-                    "indexed": True,
-                    "internalType": "address",
-                    "name": "delegator",
-                    "type": "address",
-                },
-                {
-                    "indexed": False,
-                    "internalType": "bool",
-                    "name": "selfBonded",
-                    "type": "bool",
-                },
-                {
-                    "indexed": False,
-                    "internalType": "uint256",
-                    "name": "amount",
-                    "type": "uint256",
-                },
-            ],
-            "name": "ReleasedUnbondingReverted",
             "type": "event",
         },
         {
@@ -2357,56 +2557,28 @@ ABI = typing.cast(
             "name": "Transfer",
             "type": "event",
         },
-        {
-            "anonymous": False,
-            "inputs": [
-                {
-                    "indexed": True,
-                    "internalType": "address",
-                    "name": "validator",
-                    "type": "address",
-                },
-                {
-                    "indexed": True,
-                    "internalType": "address",
-                    "name": "delegator",
-                    "type": "address",
-                },
-                {
-                    "indexed": False,
-                    "internalType": "bool",
-                    "name": "selfBonded",
-                    "type": "bool",
-                },
-                {
-                    "indexed": False,
-                    "internalType": "uint256",
-                    "name": "amount",
-                    "type": "uint256",
-                },
-            ],
-            "name": "UnbondingRejected",
-            "type": "event",
-        },
-        {
-            "anonymous": False,
-            "inputs": [
-                {
-                    "indexed": False,
-                    "internalType": "uint256",
-                    "name": "epochTime",
-                    "type": "uint256",
-                }
-            ],
-            "name": "UnlockingScheduleFailed",
-            "type": "event",
-        },
         {"stateMutability": "payable", "type": "fallback"},
         {
             "inputs": [],
-            "name": "COMMISSION_RATE_PRECISION",
+            "name": "STANDARD_DECIMALS",
             "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
             "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "STANDARD_SCALE_FACTOR",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "address", "name": "_contract", "type": "address"}
+            ],
+            "name": "SetLiquidLogicContract",
+            "outputs": [],
+            "stateMutability": "nonpayable",
             "type": "function",
         },
         {
@@ -2439,10 +2611,14 @@ ABI = typing.cast(
             "type": "function",
         },
         {
-            "inputs": [],
-            "name": "atnTotalRedistributed",
-            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-            "stateMutability": "view",
+            "inputs": [
+                {"internalType": "address", "name": "_validator", "type": "address"},
+                {"internalType": "uint256", "name": "_selfBond", "type": "uint256"},
+                {"internalType": "uint256", "name": "_delegated", "type": "uint256"},
+            ],
+            "name": "autobond",
+            "outputs": [],
+            "stateMutability": "nonpayable",
             "type": "function",
         },
         {
@@ -2459,7 +2635,7 @@ ABI = typing.cast(
             ],
             "name": "bond",
             "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-            "stateMutability": "payable",
+            "stateMutability": "nonpayable",
             "type": "function",
         },
         {
@@ -2484,6 +2660,13 @@ ABI = typing.cast(
         },
         {
             "inputs": [],
+            "name": "circulatingSupply",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [],
             "name": "completeContractUpgrade",
             "outputs": [],
             "stateMutability": "nonpayable",
@@ -2492,7 +2675,11 @@ ABI = typing.cast(
         {
             "inputs": [],
             "name": "computeCommittee",
-            "outputs": [{"internalType": "address[]", "name": "", "type": "address[]"}],
+            "outputs": [
+                {"internalType": "address[]", "name": "", "type": "address[]"},
+                {"internalType": "address[]", "name": "", "type": "address[]"},
+                {"internalType": "address[]", "name": "", "type": "address[]"},
+            ],
             "stateMutability": "nonpayable",
             "type": "function",
         },
@@ -2526,6 +2713,26 @@ ABI = typing.cast(
                             "internalType": "uint256",
                             "name": "initialInflationReserve",
                             "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "withholdingThreshold",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "proposerRewardRate",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "oracleRewardRate",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "address payable",
+                            "name": "withheldRewardsPool",
+                            "type": "address",
                         },
                         {
                             "internalType": "address payable",
@@ -2575,8 +2782,8 @@ ABI = typing.cast(
                             "type": "address",
                         },
                         {
-                            "internalType": "contract INonStakableVestingVault",
-                            "name": "nonStakableVestingContract",
+                            "internalType": "contract IOmissionAccountability",
+                            "name": "omissionAccountabilityContract",
                             "type": "address",
                         },
                     ],
@@ -2606,6 +2813,11 @@ ABI = typing.cast(
                             "name": "committeeSize",
                             "type": "uint256",
                         },
+                        {
+                            "internalType": "uint256",
+                            "name": "maxScheduleDuration",
+                            "type": "uint256",
+                        },
                     ],
                     "internalType": "struct Autonity.Protocol",
                     "name": "protocol",
@@ -2618,6 +2830,26 @@ ABI = typing.cast(
                 },
             ],
             "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "_scheduleVault",
+                    "type": "address",
+                },
+                {"internalType": "uint256", "name": "_amount", "type": "uint256"},
+                {"internalType": "uint256", "name": "_startTime", "type": "uint256"},
+                {
+                    "internalType": "uint256",
+                    "name": "_totalDuration",
+                    "type": "uint256",
+                },
+            ],
+            "name": "createSchedule",
+            "outputs": [],
+            "stateMutability": "nonpayable",
             "type": "function",
         },
         {
@@ -2643,13 +2875,6 @@ ABI = typing.cast(
         },
         {
             "inputs": [],
-            "name": "epochReward",
-            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-            "stateMutability": "view",
-            "type": "function",
-        },
-        {
-            "inputs": [],
             "name": "epochTotalBondedStake",
             "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
             "stateMutability": "view",
@@ -2659,6 +2884,7 @@ ABI = typing.cast(
             "inputs": [],
             "name": "finalize",
             "outputs": [
+                {"internalType": "bool", "name": "", "type": "bool"},
                 {"internalType": "bool", "name": "", "type": "bool"},
                 {
                     "components": [
@@ -2678,12 +2904,15 @@ ABI = typing.cast(
                     "name": "",
                     "type": "tuple[]",
                 },
+                {"internalType": "uint256", "name": "", "type": "uint256"},
+                {"internalType": "uint256", "name": "", "type": "uint256"},
+                {"internalType": "uint256", "name": "", "type": "uint256"},
             ],
             "stateMutability": "nonpayable",
             "type": "function",
         },
         {
-            "inputs": [],
+            "inputs": [{"internalType": "uint256", "name": "delta", "type": "uint256"}],
             "name": "finalizeInitialization",
             "outputs": [],
             "stateMutability": "nonpayable",
@@ -2730,11 +2959,126 @@ ABI = typing.cast(
             "type": "function",
         },
         {
+            "inputs": [],
+            "name": "getCurrentEpochPeriod",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "uint256", "name": "_height", "type": "uint256"}
+            ],
+            "name": "getEpochByHeight",
+            "outputs": [
+                {
+                    "components": [
+                        {
+                            "components": [
+                                {
+                                    "internalType": "address",
+                                    "name": "addr",
+                                    "type": "address",
+                                },
+                                {
+                                    "internalType": "uint256",
+                                    "name": "votingPower",
+                                    "type": "uint256",
+                                },
+                                {
+                                    "internalType": "bytes",
+                                    "name": "consensusKey",
+                                    "type": "bytes",
+                                },
+                            ],
+                            "internalType": "struct Autonity.CommitteeMember[]",
+                            "name": "committee",
+                            "type": "tuple[]",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "previousEpochBlock",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "epochBlock",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "nextEpochBlock",
+                            "type": "uint256",
+                        },
+                        {"internalType": "uint256", "name": "delta", "type": "uint256"},
+                    ],
+                    "internalType": "struct Autonity.EpochInfo",
+                    "name": "",
+                    "type": "tuple",
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
             "inputs": [
                 {"internalType": "uint256", "name": "_block", "type": "uint256"}
             ],
             "name": "getEpochFromBlock",
             "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "getEpochInfo",
+            "outputs": [
+                {
+                    "components": [
+                        {
+                            "components": [
+                                {
+                                    "internalType": "address",
+                                    "name": "addr",
+                                    "type": "address",
+                                },
+                                {
+                                    "internalType": "uint256",
+                                    "name": "votingPower",
+                                    "type": "uint256",
+                                },
+                                {
+                                    "internalType": "bytes",
+                                    "name": "consensusKey",
+                                    "type": "bytes",
+                                },
+                            ],
+                            "internalType": "struct Autonity.CommitteeMember[]",
+                            "name": "committee",
+                            "type": "tuple[]",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "previousEpochBlock",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "epochBlock",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "nextEpochBlock",
+                            "type": "uint256",
+                        },
+                        {"internalType": "uint256", "name": "delta", "type": "uint256"},
+                    ],
+                    "internalType": "struct Autonity.EpochInfo",
+                    "name": "",
+                    "type": "tuple",
+                }
+            ],
             "stateMutability": "view",
             "type": "function",
         },
@@ -2761,6 +3105,13 @@ ABI = typing.cast(
         },
         {
             "inputs": [],
+            "name": "getMaxScheduleDuration",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [],
             "name": "getMinimumBaseFee",
             "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
             "stateMutability": "view",
@@ -2773,6 +3124,13 @@ ABI = typing.cast(
                 {"internalType": "bytes", "name": "", "type": "bytes"},
                 {"internalType": "string", "name": "", "type": "string"},
             ],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "getNextEpochBlock",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
             "stateMutability": "view",
             "type": "function",
         },
@@ -2792,19 +3150,48 @@ ABI = typing.cast(
         },
         {
             "inputs": [
-                {"internalType": "uint256", "name": "height", "type": "uint256"},
-                {"internalType": "uint256", "name": "round", "type": "uint256"},
+                {"internalType": "address", "name": "_vault", "type": "address"},
+                {"internalType": "uint256", "name": "_id", "type": "uint256"},
             ],
-            "name": "getProposer",
-            "outputs": [{"internalType": "address", "name": "", "type": "address"}],
+            "name": "getSchedule",
+            "outputs": [
+                {
+                    "components": [
+                        {
+                            "internalType": "uint256",
+                            "name": "totalAmount",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "unlockedAmount",
+                            "type": "uint256",
+                        },
+                        {"internalType": "uint256", "name": "start", "type": "uint256"},
+                        {
+                            "internalType": "uint256",
+                            "name": "totalDuration",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "lastUnlockTime",
+                            "type": "uint256",
+                        },
+                    ],
+                    "internalType": "struct ScheduleController.Schedule",
+                    "name": "",
+                    "type": "tuple",
+                }
+            ],
             "stateMutability": "view",
             "type": "function",
         },
         {
             "inputs": [
-                {"internalType": "uint256", "name": "_unbondingID", "type": "uint256"}
+                {"internalType": "address", "name": "_vault", "type": "address"}
             ],
-            "name": "getRevertingAmount",
+            "name": "getTotalSchedules",
             "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
             "stateMutability": "view",
             "type": "function",
@@ -2834,14 +3221,8 @@ ABI = typing.cast(
             "inputs": [
                 {"internalType": "uint256", "name": "_unbondingID", "type": "uint256"}
             ],
-            "name": "getUnbondingReleaseState",
-            "outputs": [
-                {
-                    "internalType": "enum Autonity.UnbondingReleaseState",
-                    "name": "",
-                    "type": "uint8",
-                }
-            ],
+            "name": "getUnbondingShare",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
             "stateMutability": "view",
             "type": "function",
         },
@@ -2908,8 +3289,8 @@ ABI = typing.cast(
                             "type": "uint256",
                         },
                         {
-                            "internalType": "contract Liquid",
-                            "name": "liquidContract",
+                            "internalType": "contract ILiquid",
+                            "name": "liquidStateContract",
                             "type": "address",
                         },
                         {
@@ -2933,11 +3314,6 @@ ABI = typing.cast(
                             "type": "uint256",
                         },
                         {
-                            "internalType": "uint256",
-                            "name": "provableFaultCount",
-                            "type": "uint256",
-                        },
-                        {
                             "internalType": "bytes",
                             "name": "consensusKey",
                             "type": "bytes",
@@ -2952,6 +3328,15 @@ ABI = typing.cast(
                     "name": "",
                     "type": "tuple",
                 }
+            ],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [{"internalType": "address", "name": "_addr", "type": "address"}],
+            "name": "getValidatorState",
+            "outputs": [
+                {"internalType": "enum ValidatorState", "name": "", "type": "uint8"}
             ],
             "stateMutability": "view",
             "type": "function",
@@ -2978,10 +3363,41 @@ ABI = typing.cast(
             "type": "function",
         },
         {
-            "inputs": [],
-            "name": "lastEpochBlock",
-            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "inputs": [
+                {"internalType": "uint256", "name": "_unbondingID", "type": "uint256"}
+            ],
+            "name": "isUnbondingReleased",
+            "outputs": [{"internalType": "bool", "name": "", "type": "bool"}],
             "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "address", "name": "_nodeAddress", "type": "address"},
+                {"internalType": "uint256", "name": "_jailtime", "type": "uint256"},
+                {
+                    "internalType": "enum ValidatorState",
+                    "name": "_newJailedState",
+                    "type": "uint8",
+                },
+            ],
+            "name": "jail",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "address", "name": "_nodeAddress", "type": "address"},
+                {
+                    "internalType": "enum ValidatorState",
+                    "name": "_newJailboundState",
+                    "type": "uint8",
+                },
+            ],
+            "name": "jailbound",
+            "outputs": [],
+            "stateMutability": "nonpayable",
             "type": "function",
         },
         {
@@ -2993,29 +3409,15 @@ ABI = typing.cast(
         },
         {
             "inputs": [],
-            "name": "maxBondAppliedGas",
+            "name": "lastFinalizedBlock",
             "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
             "stateMutability": "view",
             "type": "function",
         },
         {
             "inputs": [],
-            "name": "maxRewardsDistributionGas",
-            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-            "stateMutability": "view",
-            "type": "function",
-        },
-        {
-            "inputs": [],
-            "name": "maxUnbondAppliedGas",
-            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-            "stateMutability": "view",
-            "type": "function",
-        },
-        {
-            "inputs": [],
-            "name": "maxUnbondReleasedGas",
-            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "name": "liquidLogicContract",
+            "outputs": [{"internalType": "address", "name": "", "type": "address"}],
             "stateMutability": "view",
             "type": "function",
         },
@@ -3037,19 +3439,19 @@ ABI = typing.cast(
             "type": "function",
         },
         {
+            "inputs": [],
+            "name": "newEpochPeriod",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
             "inputs": [
                 {"internalType": "address", "name": "_address", "type": "address"}
             ],
             "name": "pauseValidator",
             "outputs": [],
             "stateMutability": "nonpayable",
-            "type": "function",
-        },
-        {
-            "inputs": [],
-            "name": "receiveATN",
-            "outputs": [],
-            "stateMutability": "payable",
             "type": "function",
         },
         {
@@ -3127,29 +3529,14 @@ ABI = typing.cast(
             "type": "function",
         },
         {
-            "inputs": [{"internalType": "uint256", "name": "_gas", "type": "uint256"}],
-            "name": "setMaxBondAppliedGas",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function",
-        },
-        {
-            "inputs": [{"internalType": "uint256", "name": "_gas", "type": "uint256"}],
-            "name": "setMaxRewardsDistributionGas",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function",
-        },
-        {
-            "inputs": [{"internalType": "uint256", "name": "_gas", "type": "uint256"}],
-            "name": "setMaxUnbondAppliedGas",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function",
-        },
-        {
-            "inputs": [{"internalType": "uint256", "name": "_gas", "type": "uint256"}],
-            "name": "setMaxUnbondReleasedGas",
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "_newMaxDuration",
+                    "type": "uint256",
+                }
+            ],
+            "name": "setMaxScheduleDuration",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function",
@@ -3166,12 +3553,12 @@ ABI = typing.cast(
         {
             "inputs": [
                 {
-                    "internalType": "contract INonStakableVestingVault",
+                    "internalType": "contract IOmissionAccountability",
                     "name": "_address",
                     "type": "address",
                 }
             ],
-            "name": "setNonStakableVestingContract",
+            "name": "setOmissionAccountabilityContract",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function",
@@ -3201,21 +3588,47 @@ ABI = typing.cast(
         {
             "inputs": [
                 {
-                    "internalType": "contract IStabilization",
-                    "name": "_address",
-                    "type": "address",
+                    "internalType": "uint256",
+                    "name": "_oracleRewardRate",
+                    "type": "uint256",
                 }
             ],
-            "name": "setStabilizationContract",
+            "name": "setOracleRewardRate",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function",
         },
         {
             "inputs": [
-                {"internalType": "uint256", "name": "_price", "type": "uint256"}
+                {
+                    "internalType": "uint256",
+                    "name": "_proposerRewardRate",
+                    "type": "uint256",
+                }
             ],
-            "name": "setStakingGasPrice",
+            "name": "setProposerRewardRate",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "address", "name": "_slasher", "type": "address"}
+            ],
+            "name": "setSlasher",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "contract IStabilization",
+                    "name": "_address",
+                    "type": "address",
+                }
+            ],
+            "name": "setStabilizationContract",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function",
@@ -3278,9 +3691,78 @@ ABI = typing.cast(
             "type": "function",
         },
         {
+            "inputs": [
+                {"internalType": "address payable", "name": "_pool", "type": "address"}
+            ],
+            "name": "setWithheldRewardsPool",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "_withholdingThreshold",
+                    "type": "uint256",
+                }
+            ],
+            "name": "setWithholdingThreshold",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "address", "name": "_nodeAddress", "type": "address"},
+                {"internalType": "uint256", "name": "_slashingRate", "type": "uint256"},
+            ],
+            "name": "slash",
+            "outputs": [
+                {"internalType": "uint256", "name": "slashingAmount", "type": "uint256"}
+            ],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "address", "name": "_nodeAddress", "type": "address"},
+                {"internalType": "uint256", "name": "_slashingRate", "type": "uint256"},
+                {"internalType": "uint256", "name": "_jailtime", "type": "uint256"},
+                {
+                    "internalType": "enum ValidatorState",
+                    "name": "_newJailedState",
+                    "type": "uint8",
+                },
+                {
+                    "internalType": "enum ValidatorState",
+                    "name": "_newJailboundState",
+                    "type": "uint8",
+                },
+            ],
+            "name": "slashAndJail",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "slashingAmount",
+                    "type": "uint256",
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "jailReleaseBlock",
+                    "type": "uint256",
+                },
+                {"internalType": "bool", "name": "isJailbound", "type": "bool"},
+            ],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
             "inputs": [],
-            "name": "stakingGasPrice",
-            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "name": "slasher",
+            "outputs": [
+                {"internalType": "contract ISlasher", "name": "", "type": "address"}
+            ],
             "stateMutability": "view",
             "type": "function",
         },
@@ -3326,7 +3808,7 @@ ABI = typing.cast(
             ],
             "name": "unbond",
             "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-            "stateMutability": "payable",
+            "stateMutability": "nonpayable",
             "type": "function",
         },
         {
@@ -3335,117 +3817,6 @@ ABI = typing.cast(
                 {"internalType": "string", "name": "_enode", "type": "string"},
             ],
             "name": "updateEnode",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function",
-        },
-        {
-            "inputs": [
-                {
-                    "components": [
-                        {
-                            "internalType": "address payable",
-                            "name": "treasury",
-                            "type": "address",
-                        },
-                        {
-                            "internalType": "address",
-                            "name": "nodeAddress",
-                            "type": "address",
-                        },
-                        {
-                            "internalType": "address",
-                            "name": "oracleAddress",
-                            "type": "address",
-                        },
-                        {"internalType": "string", "name": "enode", "type": "string"},
-                        {
-                            "internalType": "uint256",
-                            "name": "commissionRate",
-                            "type": "uint256",
-                        },
-                        {
-                            "internalType": "uint256",
-                            "name": "bondedStake",
-                            "type": "uint256",
-                        },
-                        {
-                            "internalType": "uint256",
-                            "name": "unbondingStake",
-                            "type": "uint256",
-                        },
-                        {
-                            "internalType": "uint256",
-                            "name": "unbondingShares",
-                            "type": "uint256",
-                        },
-                        {
-                            "internalType": "uint256",
-                            "name": "selfBondedStake",
-                            "type": "uint256",
-                        },
-                        {
-                            "internalType": "uint256",
-                            "name": "selfUnbondingStake",
-                            "type": "uint256",
-                        },
-                        {
-                            "internalType": "uint256",
-                            "name": "selfUnbondingShares",
-                            "type": "uint256",
-                        },
-                        {
-                            "internalType": "uint256",
-                            "name": "selfUnbondingStakeLocked",
-                            "type": "uint256",
-                        },
-                        {
-                            "internalType": "contract Liquid",
-                            "name": "liquidContract",
-                            "type": "address",
-                        },
-                        {
-                            "internalType": "uint256",
-                            "name": "liquidSupply",
-                            "type": "uint256",
-                        },
-                        {
-                            "internalType": "uint256",
-                            "name": "registrationBlock",
-                            "type": "uint256",
-                        },
-                        {
-                            "internalType": "uint256",
-                            "name": "totalSlashed",
-                            "type": "uint256",
-                        },
-                        {
-                            "internalType": "uint256",
-                            "name": "jailReleaseBlock",
-                            "type": "uint256",
-                        },
-                        {
-                            "internalType": "uint256",
-                            "name": "provableFaultCount",
-                            "type": "uint256",
-                        },
-                        {
-                            "internalType": "bytes",
-                            "name": "consensusKey",
-                            "type": "bytes",
-                        },
-                        {
-                            "internalType": "enum ValidatorState",
-                            "name": "state",
-                            "type": "uint8",
-                        },
-                    ],
-                    "internalType": "struct Autonity.Validator",
-                    "name": "_val",
-                    "type": "tuple",
-                }
-            ],
-            "name": "updateValidatorAndTransferSlashedFunds",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function",

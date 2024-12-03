@@ -1,17 +1,17 @@
 """Accountability contract binding and data structures."""
 
-# This module has been generated using pyabigen v0.2.9
+# This module has been generated using pyabigen v0.2.10
 
 import enum
 import typing
+from dataclasses import dataclass
 
 import eth_typing
 import hexbytes
 import web3
-from dataclasses import dataclass
 from web3.contract import base_contract, contract
 
-__version__ = "v0.14.0"
+__version__ = "v1.0.1-alpha"
 
 
 class Rule(enum.IntEnum):
@@ -38,24 +38,36 @@ class EventType(enum.IntEnum):
 
 
 @dataclass
+class BaseSlashingRates:
+    """Port of `struct BaseSlashingRates` on the Accountability contract."""
+
+    low: int
+    mid: int
+    high: int
+
+
+@dataclass
+class Factors:
+    """Port of `struct Factors` on the Accountability contract."""
+
+    collusion: int
+    history: int
+    jail: int
+
+
+@dataclass
 class Config:
     """Port of `struct Config` on the Accountability contract."""
 
     innocence_proof_submission_window: int
-    base_slashing_rate_low: int
-    base_slashing_rate_mid: int
-    collusion_factor: int
-    history_factor: int
-    jail_factor: int
-    slashing_rate_precision: int
+    base_slashing_rates: BaseSlashingRates
+    factors: Factors
 
 
 @dataclass
 class Event:
     """Port of `struct Event` on the Accountability contract."""
 
-    chunks: int
-    chunk_id: int
     event_type: EventType
     rule: Rule
     reporter: eth_typing.ChecksumAddress
@@ -195,25 +207,17 @@ class Accountability:
         return_value = self._contract.functions.config().call()
         return Config(
             int(return_value[0]),
-            int(return_value[1]),
-            int(return_value[2]),
-            int(return_value[3]),
-            int(return_value[4]),
-            int(return_value[5]),
-            int(return_value[6]),
+            BaseSlashingRates(
+                int(return_value[1][0]),
+                int(return_value[1][1]),
+                int(return_value[1][2]),
+            ),
+            Factors(
+                int(return_value[2][0]),
+                int(return_value[2][1]),
+                int(return_value[2][2]),
+            ),
         )
-
-    def epoch_period(
-        self,
-    ) -> int:
-        """Binding for `epochPeriod` on the Accountability contract.
-
-        Returns
-        -------
-        int
-        """
-        return_value = self._contract.functions.epochPeriod().call()
-        return int(return_value)
 
     def events(
         self,
@@ -233,18 +237,16 @@ class Accountability:
             key0,
         ).call()
         return Event(
-            int(return_value[0]),
-            int(return_value[1]),
-            EventType(return_value[2]),
-            Rule(return_value[3]),
-            eth_typing.ChecksumAddress(return_value[4]),
-            eth_typing.ChecksumAddress(return_value[5]),
-            hexbytes.HexBytes(return_value[6]),
+            EventType(return_value[0]),
+            Rule(return_value[1]),
+            eth_typing.ChecksumAddress(return_value[2]),
+            eth_typing.ChecksumAddress(return_value[3]),
+            hexbytes.HexBytes(return_value[4]),
+            int(return_value[5]),
+            int(return_value[6]),
             int(return_value[7]),
             int(return_value[8]),
             int(return_value[9]),
-            int(return_value[10]),
-            int(return_value[11]),
         )
 
     def get_validator_accusation(
@@ -265,18 +267,16 @@ class Accountability:
             _val,
         ).call()
         return Event(
-            int(return_value[0]),
-            int(return_value[1]),
-            EventType(return_value[2]),
-            Rule(return_value[3]),
-            eth_typing.ChecksumAddress(return_value[4]),
-            eth_typing.ChecksumAddress(return_value[5]),
-            hexbytes.HexBytes(return_value[6]),
+            EventType(return_value[0]),
+            Rule(return_value[1]),
+            eth_typing.ChecksumAddress(return_value[2]),
+            eth_typing.ChecksumAddress(return_value[3]),
+            hexbytes.HexBytes(return_value[4]),
+            int(return_value[5]),
+            int(return_value[6]),
             int(return_value[7]),
             int(return_value[8]),
             int(return_value[9]),
-            int(return_value[10]),
-            int(return_value[11]),
         )
 
     def get_validator_faults(
@@ -298,21 +298,118 @@ class Accountability:
         ).call()
         return [
             Event(
-                int(elem[0]),
-                int(elem[1]),
-                EventType(elem[2]),
-                Rule(elem[3]),
-                eth_typing.ChecksumAddress(elem[4]),
-                eth_typing.ChecksumAddress(elem[5]),
-                hexbytes.HexBytes(elem[6]),
-                int(elem[7]),
-                int(elem[8]),
-                int(elem[9]),
-                int(elem[10]),
-                int(elem[11]),
+                EventType(return_value_elem[0]),
+                Rule(return_value_elem[1]),
+                eth_typing.ChecksumAddress(return_value_elem[2]),
+                eth_typing.ChecksumAddress(return_value_elem[3]),
+                hexbytes.HexBytes(return_value_elem[4]),
+                int(return_value_elem[5]),
+                int(return_value_elem[6]),
+                int(return_value_elem[7]),
+                int(return_value_elem[8]),
+                int(return_value_elem[9]),
             )
-            for elem in return_value
+            for return_value_elem in return_value
         ]
+
+    def history(
+        self,
+        key0: eth_typing.ChecksumAddress,
+    ) -> int:
+        """Binding for `history` on the Accountability contract.
+
+        Parameters
+        ----------
+        key0 : eth_typing.ChecksumAddress
+
+        Returns
+        -------
+        int
+        """
+        return_value = self._contract.functions.history(
+            key0,
+        ).call()
+        return int(return_value)
+
+    def set_base_slashing_rates(
+        self,
+        _rates: BaseSlashingRates,
+    ) -> contract.ContractFunction:
+        """Binding for `setBaseSlashingRates` on the Accountability contract.
+
+        Parameters
+        ----------
+        _rates : BaseSlashingRates
+
+        Returns
+        -------
+        web3.contract.contract.ContractFunction
+            A contract function instance to be sent in a transaction.
+        """
+        return self._contract.functions.setBaseSlashingRates(
+            (_rates.low, _rates.mid, _rates.high),
+        )
+
+    def set_committee(
+        self,
+        _new_committee: typing.List[eth_typing.ChecksumAddress],
+    ) -> contract.ContractFunction:
+        """Binding for `setCommittee` on the Accountability contract.
+
+        setCommittee, called by the AC at epoch change, it removes stale committee from
+        the reporter set, then replace the last committee with current committee, and
+        set the current committee with the input new committee.
+
+        Parameters
+        ----------
+        _new_committee : typing.List[eth_typing.ChecksumAddress]
+
+        Returns
+        -------
+        web3.contract.contract.ContractFunction
+            A contract function instance to be sent in a transaction.
+        """
+        return self._contract.functions.setCommittee(
+            _new_committee,
+        )
+
+    def set_factors(
+        self,
+        _factors: Factors,
+    ) -> contract.ContractFunction:
+        """Binding for `setFactors` on the Accountability contract.
+
+        Parameters
+        ----------
+        _factors : Factors
+
+        Returns
+        -------
+        web3.contract.contract.ContractFunction
+            A contract function instance to be sent in a transaction.
+        """
+        return self._contract.functions.setFactors(
+            (_factors.collusion, _factors.history, _factors.jail),
+        )
+
+    def set_innocence_proof_submission_window(
+        self,
+        _window: int,
+    ) -> contract.ContractFunction:
+        """Binding for `setInnocenceProofSubmissionWindow` on the Accountability contract.
+
+        Parameters
+        ----------
+        _window : int
+
+        Returns
+        -------
+        web3.contract.contract.ContractFunction
+            A contract function instance to be sent in a transaction.
+        """
+        return self._contract.functions.setInnocenceProofSubmissionWindow(
+            _window,
+        )
 
     def slashing_history(
         self,
@@ -355,34 +452,48 @@ ABI = typing.cast(
                             "type": "uint256",
                         },
                         {
-                            "internalType": "uint256",
-                            "name": "baseSlashingRateLow",
-                            "type": "uint256",
+                            "components": [
+                                {
+                                    "internalType": "uint256",
+                                    "name": "low",
+                                    "type": "uint256",
+                                },
+                                {
+                                    "internalType": "uint256",
+                                    "name": "mid",
+                                    "type": "uint256",
+                                },
+                                {
+                                    "internalType": "uint256",
+                                    "name": "high",
+                                    "type": "uint256",
+                                },
+                            ],
+                            "internalType": "struct Accountability.BaseSlashingRates",
+                            "name": "baseSlashingRates",
+                            "type": "tuple",
                         },
                         {
-                            "internalType": "uint256",
-                            "name": "baseSlashingRateMid",
-                            "type": "uint256",
-                        },
-                        {
-                            "internalType": "uint256",
-                            "name": "collusionFactor",
-                            "type": "uint256",
-                        },
-                        {
-                            "internalType": "uint256",
-                            "name": "historyFactor",
-                            "type": "uint256",
-                        },
-                        {
-                            "internalType": "uint256",
-                            "name": "jailFactor",
-                            "type": "uint256",
-                        },
-                        {
-                            "internalType": "uint256",
-                            "name": "slashingRatePrecision",
-                            "type": "uint256",
+                            "components": [
+                                {
+                                    "internalType": "uint256",
+                                    "name": "collusion",
+                                    "type": "uint256",
+                                },
+                                {
+                                    "internalType": "uint256",
+                                    "name": "history",
+                                    "type": "uint256",
+                                },
+                                {
+                                    "internalType": "uint256",
+                                    "name": "jail",
+                                    "type": "uint256",
+                                },
+                            ],
+                            "internalType": "struct Accountability.Factors",
+                            "name": "factors",
+                            "type": "tuple",
                         },
                     ],
                     "internalType": "struct Accountability.Config",
@@ -456,6 +567,12 @@ ABI = typing.cast(
                     "indexed": False,
                     "internalType": "uint256",
                     "name": "_id",
+                    "type": "uint256",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "uint256",
+                    "name": "_epoch",
                     "type": "uint256",
                 },
             ],
@@ -549,26 +666,32 @@ ABI = typing.cast(
                     "type": "uint256",
                 },
                 {
-                    "internalType": "uint256",
-                    "name": "baseSlashingRateLow",
-                    "type": "uint256",
+                    "components": [
+                        {"internalType": "uint256", "name": "low", "type": "uint256"},
+                        {"internalType": "uint256", "name": "mid", "type": "uint256"},
+                        {"internalType": "uint256", "name": "high", "type": "uint256"},
+                    ],
+                    "internalType": "struct Accountability.BaseSlashingRates",
+                    "name": "baseSlashingRates",
+                    "type": "tuple",
                 },
                 {
-                    "internalType": "uint256",
-                    "name": "baseSlashingRateMid",
-                    "type": "uint256",
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "collusionFactor",
-                    "type": "uint256",
-                },
-                {"internalType": "uint256", "name": "historyFactor", "type": "uint256"},
-                {"internalType": "uint256", "name": "jailFactor", "type": "uint256"},
-                {
-                    "internalType": "uint256",
-                    "name": "slashingRatePrecision",
-                    "type": "uint256",
+                    "components": [
+                        {
+                            "internalType": "uint256",
+                            "name": "collusion",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "history",
+                            "type": "uint256",
+                        },
+                        {"internalType": "uint256", "name": "jail", "type": "uint256"},
+                    ],
+                    "internalType": "struct Accountability.Factors",
+                    "name": "factors",
+                    "type": "tuple",
                 },
             ],
             "stateMutability": "view",
@@ -576,7 +699,7 @@ ABI = typing.cast(
         },
         {
             "inputs": [
-                {"internalType": "address", "name": "_validator", "type": "address"},
+                {"internalType": "address", "name": "_offender", "type": "address"},
                 {"internalType": "uint256", "name": "_ntnReward", "type": "uint256"},
             ],
             "name": "distributeRewards",
@@ -585,18 +708,9 @@ ABI = typing.cast(
             "type": "function",
         },
         {
-            "inputs": [],
-            "name": "epochPeriod",
-            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-            "stateMutability": "view",
-            "type": "function",
-        },
-        {
             "inputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
             "name": "events",
             "outputs": [
-                {"internalType": "uint8", "name": "chunks", "type": "uint8"},
-                {"internalType": "uint8", "name": "chunkId", "type": "uint8"},
                 {
                     "internalType": "enum Accountability.EventType",
                     "name": "eventType",
@@ -636,8 +750,6 @@ ABI = typing.cast(
             "outputs": [
                 {
                     "components": [
-                        {"internalType": "uint8", "name": "chunks", "type": "uint8"},
-                        {"internalType": "uint8", "name": "chunkId", "type": "uint8"},
                         {
                             "internalType": "enum Accountability.EventType",
                             "name": "eventType",
@@ -687,8 +799,6 @@ ABI = typing.cast(
             "outputs": [
                 {
                     "components": [
-                        {"internalType": "uint8", "name": "chunks", "type": "uint8"},
-                        {"internalType": "uint8", "name": "chunkId", "type": "uint8"},
                         {
                             "internalType": "enum Accountability.EventType",
                             "name": "eventType",
@@ -736,8 +846,6 @@ ABI = typing.cast(
             "inputs": [
                 {
                     "components": [
-                        {"internalType": "uint8", "name": "chunks", "type": "uint8"},
-                        {"internalType": "uint8", "name": "chunkId", "type": "uint8"},
                         {
                             "internalType": "enum Accountability.EventType",
                             "name": "eventType",
@@ -778,16 +886,178 @@ ABI = typing.cast(
                     "type": "tuple",
                 }
             ],
-            "name": "handleEvent",
+            "name": "handleAccusation",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function",
         },
         {
             "inputs": [
-                {"internalType": "uint256", "name": "_newPeriod", "type": "uint256"}
+                {
+                    "components": [
+                        {
+                            "internalType": "enum Accountability.EventType",
+                            "name": "eventType",
+                            "type": "uint8",
+                        },
+                        {
+                            "internalType": "enum Accountability.Rule",
+                            "name": "rule",
+                            "type": "uint8",
+                        },
+                        {
+                            "internalType": "address",
+                            "name": "reporter",
+                            "type": "address",
+                        },
+                        {
+                            "internalType": "address",
+                            "name": "offender",
+                            "type": "address",
+                        },
+                        {"internalType": "bytes", "name": "rawProof", "type": "bytes"},
+                        {"internalType": "uint256", "name": "id", "type": "uint256"},
+                        {"internalType": "uint256", "name": "block", "type": "uint256"},
+                        {"internalType": "uint256", "name": "epoch", "type": "uint256"},
+                        {
+                            "internalType": "uint256",
+                            "name": "reportingBlock",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "messageHash",
+                            "type": "uint256",
+                        },
+                    ],
+                    "internalType": "struct Accountability.Event",
+                    "name": "_event",
+                    "type": "tuple",
+                }
             ],
-            "name": "setEpochPeriod",
+            "name": "handleInnocenceProof",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {
+                    "components": [
+                        {
+                            "internalType": "enum Accountability.EventType",
+                            "name": "eventType",
+                            "type": "uint8",
+                        },
+                        {
+                            "internalType": "enum Accountability.Rule",
+                            "name": "rule",
+                            "type": "uint8",
+                        },
+                        {
+                            "internalType": "address",
+                            "name": "reporter",
+                            "type": "address",
+                        },
+                        {
+                            "internalType": "address",
+                            "name": "offender",
+                            "type": "address",
+                        },
+                        {"internalType": "bytes", "name": "rawProof", "type": "bytes"},
+                        {"internalType": "uint256", "name": "id", "type": "uint256"},
+                        {"internalType": "uint256", "name": "block", "type": "uint256"},
+                        {"internalType": "uint256", "name": "epoch", "type": "uint256"},
+                        {
+                            "internalType": "uint256",
+                            "name": "reportingBlock",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "messageHash",
+                            "type": "uint256",
+                        },
+                    ],
+                    "internalType": "struct Accountability.Event",
+                    "name": "_event",
+                    "type": "tuple",
+                }
+            ],
+            "name": "handleMisbehaviour",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [{"internalType": "address", "name": "", "type": "address"}],
+            "name": "history",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {
+                    "components": [
+                        {"internalType": "uint256", "name": "low", "type": "uint256"},
+                        {"internalType": "uint256", "name": "mid", "type": "uint256"},
+                        {"internalType": "uint256", "name": "high", "type": "uint256"},
+                    ],
+                    "internalType": "struct Accountability.BaseSlashingRates",
+                    "name": "_rates",
+                    "type": "tuple",
+                }
+            ],
+            "name": "setBaseSlashingRates",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address[]",
+                    "name": "_newCommittee",
+                    "type": "address[]",
+                }
+            ],
+            "name": "setCommittee",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {
+                    "components": [
+                        {
+                            "internalType": "uint256",
+                            "name": "collusion",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "history",
+                            "type": "uint256",
+                        },
+                        {"internalType": "uint256", "name": "jail", "type": "uint256"},
+                    ],
+                    "internalType": "struct Accountability.Factors",
+                    "name": "_factors",
+                    "type": "tuple",
+                }
+            ],
+            "name": "setFactors",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "uint256", "name": "_window", "type": "uint256"}
+            ],
+            "name": "setInnocenceProofSubmissionWindow",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function",

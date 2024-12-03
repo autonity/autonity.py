@@ -1,15 +1,27 @@
 """Oracle contract binding and data structures."""
 
-# This module has been generated using pyabigen v0.2.9
+# This module has been generated using pyabigen v0.2.10
 
 import typing
+from dataclasses import dataclass
 
 import eth_typing
 import web3
-from dataclasses import dataclass
 from web3.contract import base_contract, contract
 
-__version__ = "v0.14.0"
+__version__ = "v1.0.1-alpha"
+
+
+@dataclass
+class Config:
+    """Port of `struct Config` on the Oracle contract."""
+
+    autonity: eth_typing.ChecksumAddress
+    operator: eth_typing.ChecksumAddress
+    vote_period: int
+    outlier_detection_threshold: int
+    outlier_slashing_threshold: int
+    base_slashing_rate: int
 
 
 @dataclass
@@ -24,6 +36,9 @@ class RoundData:
 
 class Oracle:
     """Oracle contract binding.
+
+    This contract implements the Oracle for the Autonity Protocol, allowing voters to
+    submit price reports and aggregate them while detecting outliers.
 
     Parameters
     ----------
@@ -55,22 +70,103 @@ class Oracle:
         return self._contract.events.NewSymbols
 
     @property
+    def Penalized(self) -> typing.Type[base_contract.BaseContractEvent]:
+        """Binding for `event Penalized` on the Oracle contract."""
+        return self._contract.events.Penalized
+
+    @property
     def Voted(self) -> typing.Type[base_contract.BaseContractEvent]:
         """Binding for `event Voted` on the Oracle contract."""
         return self._contract.events.Voted
 
-    def get_precision(
+    def config(
+        self,
+    ) -> Config:
+        """Binding for `config` on the Oracle contract.
+
+        Returns
+        -------
+        Config
+        """
+        return_value = self._contract.functions.config().call()
+        return Config(
+            eth_typing.ChecksumAddress(return_value[0]),
+            eth_typing.ChecksumAddress(return_value[1]),
+            int(return_value[2]),
+            int(return_value[3]),
+            int(return_value[4]),
+            int(return_value[5]),
+        )
+
+    def distribute_rewards(
+        self,
+        _ntn: int,
+    ) -> contract.ContractFunction:
+        """Binding for `distributeRewards` on the Oracle contract.
+
+        Parameters
+        ----------
+        _ntn : int
+
+        Returns
+        -------
+        web3.contract.contract.ContractFunction
+            A contract function instance to be sent in a transaction.
+        """
+        return self._contract.functions.distributeRewards(
+            _ntn,
+        )
+
+    def get_decimals(
         self,
     ) -> int:
-        """Binding for `getPrecision` on the Oracle contract.
+        """Binding for `getDecimals` on the Oracle contract.
 
-        Precision to be used with price reports
+        Decimal places to be used with price reports
 
         Returns
         -------
         int
         """
-        return_value = self._contract.functions.getPrecision().call()
+        return_value = self._contract.functions.getDecimals().call()
+        return int(return_value)
+
+    def get_new_voters(
+        self,
+    ) -> typing.List[eth_typing.ChecksumAddress]:
+        """Binding for `getNewVoters` on the Oracle contract.
+
+        Retrieve the list of new participants in the Oracle process.
+
+        Returns
+        -------
+        typing.List[eth_typing.ChecksumAddress]
+        """
+        return_value = self._contract.functions.getNewVoters().call()
+        return [
+            eth_typing.ChecksumAddress(return_value_elem)
+            for return_value_elem in return_value
+        ]
+
+    def get_reward_period_performance(
+        self,
+        _voter: eth_typing.ChecksumAddress,
+    ) -> int:
+        """Binding for `getRewardPeriodPerformance` on the Oracle contract.
+
+        Retrieve the performance for a voter in this reward (epoch) period.
+
+        Parameters
+        ----------
+        _voter : eth_typing.ChecksumAddress
+
+        Returns
+        -------
+        int
+        """
+        return_value = self._contract.functions.getRewardPeriodPerformance(
+            _voter,
+        ).call()
         return int(return_value)
 
     def get_round(
@@ -123,22 +219,21 @@ class Oracle:
     ) -> typing.List[str]:
         """Binding for `getSymbols` on the Oracle contract.
 
-        Retrieve the lists of symbols to be voted on. Need to be called by the Oracle
-        Server as part of the init.
+        Retrieve the lists of symbols to be voted on.
 
         Returns
         -------
         typing.List[str]
         """
         return_value = self._contract.functions.getSymbols().call()
-        return [str(elem) for elem in return_value]
+        return [str(return_value_elem) for return_value_elem in return_value]
 
     def get_vote_period(
         self,
     ) -> int:
         """Binding for `getVotePeriod` on the Oracle contract.
 
-        vote period to be used for price voting and aggregation
+        Retrieve the vote period.
 
         Returns
         -------
@@ -152,14 +247,17 @@ class Oracle:
     ) -> typing.List[eth_typing.ChecksumAddress]:
         """Binding for `getVoters` on the Oracle contract.
 
-        Retrieve the current voters in the committee.
+        Retrieve the list of participants in the Oracle process.
 
         Returns
         -------
         typing.List[eth_typing.ChecksumAddress]
         """
         return_value = self._contract.functions.getVoters().call()
-        return [eth_typing.ChecksumAddress(elem) for elem in return_value]
+        return [
+            eth_typing.ChecksumAddress(return_value_elem)
+            for return_value_elem in return_value
+        ]
 
     def last_round_block(
         self,
@@ -171,18 +269,6 @@ class Oracle:
         int
         """
         return_value = self._contract.functions.lastRoundBlock().call()
-        return int(return_value)
-
-    def last_voter_update_round(
-        self,
-    ) -> int:
-        """Binding for `lastVoterUpdateRound` on the Oracle contract.
-
-        Returns
-        -------
-        int
-        """
-        return_value = self._contract.functions.lastVoterUpdateRound().call()
         return int(return_value)
 
     def latest_round_data(
@@ -212,30 +298,11 @@ class Oracle:
             bool(return_value[3]),
         )
 
-    def new_symbols(
-        self,
-        key0: int,
-    ) -> str:
-        """Binding for `newSymbols` on the Oracle contract.
-
-        Parameters
-        ----------
-        key0 : int
-
-        Returns
-        -------
-        str
-        """
-        return_value = self._contract.functions.newSymbols(
-            key0,
-        ).call()
-        return str(return_value)
-
     def reports(
         self,
         key0: str,
         key1: eth_typing.ChecksumAddress,
-    ) -> int:
+    ) -> typing.Tuple[int, int]:
         """Binding for `reports` on the Oracle contract.
 
         Parameters
@@ -246,24 +313,43 @@ class Oracle:
         Returns
         -------
         int
+        int
         """
         return_value = self._contract.functions.reports(
             key0,
             key1,
         ).call()
-        return int(return_value)
+        return (
+            int(return_value[0]),
+            int(return_value[1]),
+        )
 
-    def round(
+    def set_slashing_config(
         self,
-    ) -> int:
-        """Binding for `round` on the Oracle contract.
+        _outlier_slashing_threshold: int,
+        _outlier_detection_threshold: int,
+        _base_slashing_rate: int,
+    ) -> contract.ContractFunction:
+        """Binding for `setSlashingConfig` on the Oracle contract.
+
+        Setter for the internal slashing and outlier detection configuration.
+
+        Parameters
+        ----------
+        _outlier_slashing_threshold : int
+        _outlier_detection_threshold : int
+        _base_slashing_rate : int
 
         Returns
         -------
-        int
+        web3.contract.contract.ContractFunction
+            A contract function instance to be sent in a transaction.
         """
-        return_value = self._contract.functions.round().call()
-        return int(return_value)
+        return self._contract.functions.setSlashingConfig(
+            _outlier_slashing_threshold,
+            _outlier_detection_threshold,
+            _base_slashing_rate,
+        )
 
     def set_symbols(
         self,
@@ -277,6 +363,7 @@ class Oracle:
         Parameters
         ----------
         _symbols : typing.List[str]
+            list of string symbols to be used. E.g. "ATN-USD"
 
         Returns
         -------
@@ -285,6 +372,27 @@ class Oracle:
         """
         return self._contract.functions.setSymbols(
             _symbols,
+        )
+
+    def set_vote_period(
+        self,
+        _vote_period: int,
+    ) -> contract.ContractFunction:
+        """Binding for `setVotePeriod` on the Oracle contract.
+
+        Setter for the vote period.
+
+        Parameters
+        ----------
+        _vote_period : int
+
+        Returns
+        -------
+        web3.contract.contract.ContractFunction
+            A contract function instance to be sent in a transaction.
+        """
+        return self._contract.functions.setVotePeriod(
+            _vote_period,
         )
 
     def symbol_updated_round(
@@ -299,42 +407,25 @@ class Oracle:
         return_value = self._contract.functions.symbolUpdatedRound().call()
         return int(return_value)
 
-    def symbols(
+    def update_voters(
         self,
-        key0: int,
-    ) -> str:
-        """Binding for `symbols` on the Oracle contract.
+    ) -> contract.ContractFunction:
+        """Binding for `updateVoters` on the Oracle contract.
 
-        Parameters
-        ----------
-        key0 : int
+        Called when the previous round is ended. Updates the voter info for new voters.
 
         Returns
         -------
-        str
+        web3.contract.contract.ContractFunction
+            A contract function instance to be sent in a transaction.
         """
-        return_value = self._contract.functions.symbols(
-            key0,
-        ).call()
-        return str(return_value)
+        return self._contract.functions.updateVoters()
 
-    def vote_period(
-        self,
-    ) -> int:
-        """Binding for `votePeriod` on the Oracle contract.
-
-        Returns
-        -------
-        int
-        """
-        return_value = self._contract.functions.votePeriod().call()
-        return int(return_value)
-
-    def voting_info(
+    def voter_info(
         self,
         key0: eth_typing.ChecksumAddress,
-    ) -> typing.Tuple[int, int, bool]:
-        """Binding for `votingInfo` on the Oracle contract.
+    ) -> typing.Tuple[int, int, int, bool, bool]:
+        """Binding for `voterInfo` on the Oracle contract.
 
         Parameters
         ----------
@@ -344,16 +435,58 @@ class Oracle:
         -------
         int
         int
+        int
+        bool
         bool
         """
-        return_value = self._contract.functions.votingInfo(
+        return_value = self._contract.functions.voterInfo(
             key0,
         ).call()
         return (
             int(return_value[0]),
             int(return_value[1]),
-            bool(return_value[2]),
+            int(return_value[2]),
+            bool(return_value[3]),
+            bool(return_value[4]),
         )
+
+    def voter_treasuries(
+        self,
+        key0: eth_typing.ChecksumAddress,
+    ) -> eth_typing.ChecksumAddress:
+        """Binding for `voterTreasuries` on the Oracle contract.
+
+        Parameters
+        ----------
+        key0 : eth_typing.ChecksumAddress
+
+        Returns
+        -------
+        eth_typing.ChecksumAddress
+        """
+        return_value = self._contract.functions.voterTreasuries(
+            key0,
+        ).call()
+        return eth_typing.ChecksumAddress(return_value)
+
+    def voter_validators(
+        self,
+        key0: eth_typing.ChecksumAddress,
+    ) -> eth_typing.ChecksumAddress:
+        """Binding for `voterValidators` on the Oracle contract.
+
+        Parameters
+        ----------
+        key0 : eth_typing.ChecksumAddress
+
+        Returns
+        -------
+        eth_typing.ChecksumAddress
+        """
+        return_value = self._contract.functions.voterValidators(
+            key0,
+        ).call()
+        return eth_typing.ChecksumAddress(return_value)
 
 
 ABI = typing.cast(
@@ -362,10 +495,54 @@ ABI = typing.cast(
         {
             "inputs": [
                 {"internalType": "address[]", "name": "_voters", "type": "address[]"},
-                {"internalType": "address", "name": "_autonity", "type": "address"},
-                {"internalType": "address", "name": "_operator", "type": "address"},
+                {
+                    "internalType": "address[]",
+                    "name": "_nodeAddresses",
+                    "type": "address[]",
+                },
+                {
+                    "internalType": "address[]",
+                    "name": "_treasuries",
+                    "type": "address[]",
+                },
                 {"internalType": "string[]", "name": "_symbols", "type": "string[]"},
-                {"internalType": "uint256", "name": "_votePeriod", "type": "uint256"},
+                {
+                    "components": [
+                        {
+                            "internalType": "contract Autonity",
+                            "name": "autonity",
+                            "type": "address",
+                        },
+                        {
+                            "internalType": "address",
+                            "name": "operator",
+                            "type": "address",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "votePeriod",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "int256",
+                            "name": "outlierDetectionThreshold",
+                            "type": "int256",
+                        },
+                        {
+                            "internalType": "int256",
+                            "name": "outlierSlashingThreshold",
+                            "type": "int256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "baseSlashingRate",
+                            "type": "uint256",
+                        },
+                    ],
+                    "internalType": "struct Oracle.Config",
+                    "name": "_config",
+                    "type": "tuple",
+                },
             ],
             "stateMutability": "nonpayable",
             "type": "constructor",
@@ -426,6 +603,37 @@ ABI = typing.cast(
                 {
                     "indexed": True,
                     "internalType": "address",
+                    "name": "_participant",
+                    "type": "address",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "string",
+                    "name": "_symbol",
+                    "type": "string",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "int256",
+                    "name": "_median",
+                    "type": "int256",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "uint120",
+                    "name": "_reported",
+                    "type": "uint120",
+                },
+            ],
+            "name": "Penalized",
+            "type": "event",
+        },
+        {
+            "anonymous": False,
+            "inputs": [
+                {
+                    "indexed": True,
+                    "internalType": "address",
                     "name": "_voter",
                     "type": "address",
                 },
@@ -442,6 +650,43 @@ ABI = typing.cast(
         {"stateMutability": "payable", "type": "fallback"},
         {
             "inputs": [],
+            "name": "config",
+            "outputs": [
+                {
+                    "internalType": "contract Autonity",
+                    "name": "autonity",
+                    "type": "address",
+                },
+                {"internalType": "address", "name": "operator", "type": "address"},
+                {"internalType": "uint256", "name": "votePeriod", "type": "uint256"},
+                {
+                    "internalType": "int256",
+                    "name": "outlierDetectionThreshold",
+                    "type": "int256",
+                },
+                {
+                    "internalType": "int256",
+                    "name": "outlierSlashingThreshold",
+                    "type": "int256",
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "baseSlashingRate",
+                    "type": "uint256",
+                },
+            ],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [{"internalType": "uint256", "name": "_ntn", "type": "uint256"}],
+            "name": "distributeRewards",
+            "outputs": [],
+            "stateMutability": "payable",
+            "type": "function",
+        },
+        {
+            "inputs": [],
             "name": "finalize",
             "outputs": [{"internalType": "bool", "name": "", "type": "bool"}],
             "stateMutability": "nonpayable",
@@ -449,9 +694,25 @@ ABI = typing.cast(
         },
         {
             "inputs": [],
-            "name": "getPrecision",
+            "name": "getDecimals",
+            "outputs": [{"internalType": "uint8", "name": "", "type": "uint8"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [],
+            "name": "getNewVoters",
+            "outputs": [{"internalType": "address[]", "name": "", "type": "address[]"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "address", "name": "_voter", "type": "address"}
+            ],
+            "name": "getRewardPeriodPerformance",
             "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-            "stateMutability": "pure",
+            "stateMutability": "view",
             "type": "function",
         },
         {
@@ -471,7 +732,7 @@ ABI = typing.cast(
                 {
                     "components": [
                         {"internalType": "uint256", "name": "round", "type": "uint256"},
-                        {"internalType": "int256", "name": "price", "type": "int256"},
+                        {"internalType": "uint256", "name": "price", "type": "uint256"},
                         {
                             "internalType": "uint256",
                             "name": "timestamp",
@@ -516,20 +777,13 @@ ABI = typing.cast(
             "type": "function",
         },
         {
-            "inputs": [],
-            "name": "lastVoterUpdateRound",
-            "outputs": [{"internalType": "int256", "name": "", "type": "int256"}],
-            "stateMutability": "view",
-            "type": "function",
-        },
-        {
             "inputs": [{"internalType": "string", "name": "_symbol", "type": "string"}],
             "name": "latestRoundData",
             "outputs": [
                 {
                     "components": [
                         {"internalType": "uint256", "name": "round", "type": "uint256"},
-                        {"internalType": "int256", "name": "price", "type": "int256"},
+                        {"internalType": "uint256", "name": "price", "type": "uint256"},
                         {
                             "internalType": "uint256",
                             "name": "timestamp",
@@ -546,26 +800,15 @@ ABI = typing.cast(
             "type": "function",
         },
         {
-            "inputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-            "name": "newSymbols",
-            "outputs": [{"internalType": "string", "name": "", "type": "string"}],
-            "stateMutability": "view",
-            "type": "function",
-        },
-        {
             "inputs": [
                 {"internalType": "string", "name": "", "type": "string"},
                 {"internalType": "address", "name": "", "type": "address"},
             ],
             "name": "reports",
-            "outputs": [{"internalType": "int256", "name": "", "type": "int256"}],
-            "stateMutability": "view",
-            "type": "function",
-        },
-        {
-            "inputs": [],
-            "name": "round",
-            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "outputs": [
+                {"internalType": "uint120", "name": "price", "type": "uint120"},
+                {"internalType": "uint8", "name": "confidence", "type": "uint8"},
+            ],
             "stateMutability": "view",
             "type": "function",
         },
@@ -574,6 +817,29 @@ ABI = typing.cast(
                 {"internalType": "address", "name": "_operator", "type": "address"}
             ],
             "name": "setOperator",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "int256",
+                    "name": "_outlierSlashingThreshold",
+                    "type": "int256",
+                },
+                {
+                    "internalType": "int256",
+                    "name": "_outlierDetectionThreshold",
+                    "type": "int256",
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "_baseSlashingRate",
+                    "type": "uint256",
+                },
+            ],
+            "name": "setSlashingConfig",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function",
@@ -589,7 +855,26 @@ ABI = typing.cast(
         },
         {
             "inputs": [
-                {"internalType": "address[]", "name": "_newVoters", "type": "address[]"}
+                {"internalType": "uint256", "name": "_votePeriod", "type": "uint256"}
+            ],
+            "name": "setVotePeriod",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address[]",
+                    "name": "_newVoters",
+                    "type": "address[]",
+                },
+                {"internalType": "address[]", "name": "_treasury", "type": "address[]"},
+                {
+                    "internalType": "address[]",
+                    "name": "_validator",
+                    "type": "address[]",
+                },
             ],
             "name": "setVoters",
             "outputs": [],
@@ -604,17 +889,30 @@ ABI = typing.cast(
             "type": "function",
         },
         {
-            "inputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-            "name": "symbols",
-            "outputs": [{"internalType": "string", "name": "", "type": "string"}],
-            "stateMutability": "view",
+            "inputs": [],
+            "name": "updateVoters",
+            "outputs": [],
+            "stateMutability": "nonpayable",
             "type": "function",
         },
         {
             "inputs": [
                 {"internalType": "uint256", "name": "_commit", "type": "uint256"},
-                {"internalType": "int256[]", "name": "_reports", "type": "int256[]"},
+                {
+                    "components": [
+                        {"internalType": "uint120", "name": "price", "type": "uint120"},
+                        {
+                            "internalType": "uint8",
+                            "name": "confidence",
+                            "type": "uint8",
+                        },
+                    ],
+                    "internalType": "struct IOracle.Report[]",
+                    "name": "_reports",
+                    "type": "tuple[]",
+                },
                 {"internalType": "uint256", "name": "_salt", "type": "uint256"},
+                {"internalType": "uint8", "name": "_extra", "type": "uint8"},
             ],
             "name": "vote",
             "outputs": [],
@@ -622,20 +920,29 @@ ABI = typing.cast(
             "type": "function",
         },
         {
-            "inputs": [],
-            "name": "votePeriod",
-            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "inputs": [{"internalType": "address", "name": "", "type": "address"}],
+            "name": "voterInfo",
+            "outputs": [
+                {"internalType": "uint256", "name": "round", "type": "uint256"},
+                {"internalType": "uint256", "name": "commit", "type": "uint256"},
+                {"internalType": "uint256", "name": "performance", "type": "uint256"},
+                {"internalType": "bool", "name": "isVoter", "type": "bool"},
+                {"internalType": "bool", "name": "reportAvailable", "type": "bool"},
+            ],
             "stateMutability": "view",
             "type": "function",
         },
         {
             "inputs": [{"internalType": "address", "name": "", "type": "address"}],
-            "name": "votingInfo",
-            "outputs": [
-                {"internalType": "uint256", "name": "round", "type": "uint256"},
-                {"internalType": "uint256", "name": "commit", "type": "uint256"},
-                {"internalType": "bool", "name": "isVoter", "type": "bool"},
-            ],
+            "name": "voterTreasuries",
+            "outputs": [{"internalType": "address", "name": "", "type": "address"}],
+            "stateMutability": "view",
+            "type": "function",
+        },
+        {
+            "inputs": [{"internalType": "address", "name": "", "type": "address"}],
+            "name": "voterValidators",
+            "outputs": [{"internalType": "address", "name": "", "type": "address"}],
             "stateMutability": "view",
             "type": "function",
         },

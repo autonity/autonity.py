@@ -1,16 +1,16 @@
 """Stabilization contract binding and data structures."""
 
-# This module has been generated using pyabigen v0.2.9
+# This module has been generated using pyabigen v0.2.10
 
 import typing
+from dataclasses import dataclass
 
 import eth_typing
 import web3
-from dataclasses import dataclass
 from plum import dispatch
 from web3.contract import base_contract, contract
 
-__version__ = "v0.14.0"
+__version__ = "v1.0.1-alpha"
 
 
 @dataclass
@@ -143,7 +143,10 @@ class Stabilization:
             Array of CDP account addresses
         """
         return_value = self._contract.functions.accounts().call()
-        return [eth_typing.ChecksumAddress(elem) for elem in return_value]
+        return [
+            eth_typing.ChecksumAddress(return_value_elem)
+            for return_value_elem in return_value
+        ]
 
     def borrow(
         self,
@@ -460,6 +463,20 @@ class Stabilization:
         ).call()
         return int(return_value)
 
+    def remove_cdp_restrictions(
+        self,
+    ) -> contract.ContractFunction:
+        """Binding for `removeCDPRestrictions` on the Stabilization contract.
+
+        Transition out of the restricted state.
+
+        Returns
+        -------
+        web3.contract.contract.ContractFunction
+            A contract function instance to be sent in a transaction.
+        """
+        return self._contract.functions.removeCDPRestrictions()
+
     def repay(
         self,
     ) -> contract.ContractFunction:
@@ -475,6 +492,27 @@ class Stabilization:
             A contract function instance to be sent in a transaction.
         """
         return self._contract.functions.repay()
+
+    def set_atn_supply_operator(
+        self,
+        atn_supply_operator: eth_typing.ChecksumAddress,
+    ) -> contract.ContractFunction:
+        """Binding for `setAtnSupplyOperator` on the Stabilization contract.
+
+        Set the _atnSupplyOperator address.
+
+        Parameters
+        ----------
+        atn_supply_operator : eth_typing.ChecksumAddress
+
+        Returns
+        -------
+        web3.contract.contract.ContractFunction
+            A contract function instance to be sent in a transaction.
+        """
+        return self._contract.functions.setAtnSupplyOperator(
+            atn_supply_operator,
+        )
 
     def set_liquidation_ratio(
         self,
@@ -980,9 +1018,29 @@ ABI = typing.cast(
         },
         {
             "inputs": [],
+            "name": "removeCDPRestrictions",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [],
             "name": "repay",
             "outputs": [],
             "stateMutability": "payable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "atnSupplyOperator",
+                    "type": "address",
+                }
+            ],
+            "name": "setAtnSupplyOperator",
+            "outputs": [],
+            "stateMutability": "nonpayable",
             "type": "function",
         },
         {

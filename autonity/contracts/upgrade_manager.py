@@ -1,6 +1,6 @@
 """UpgradeManager contract binding and data structures."""
 
-# This module has been generated using pyabigen v0.2.9
+# This module has been generated using pyabigen v0.2.10
 
 import typing
 
@@ -8,7 +8,7 @@ import eth_typing
 import web3
 from web3.contract import contract
 
-__version__ = "v0.14.0"
+__version__ = "v1.0.1-alpha"
 
 
 class UpgradeManager:
