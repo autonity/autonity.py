@@ -16,30 +16,30 @@ all: $(OUTDIR)/accountability.py \
 	 $(OUTDIR)/acu.py \
 	 $(OUTDIR)/autonity.py \
 	 $(OUTDIR)/inflation_controller.py \
-	 $(OUTDIR)/liquid.py \
-	 $(OUTDIR)/non_stakable_vesting.py \
+	 $(OUTDIR)/liquid_logic.py \
+	 $(OUTDIR)/omission_accountability.py \
 	 $(OUTDIR)/oracle.py \
 	 $(OUTDIR)/stabilization.py \
 	 $(OUTDIR)/supply_control.py \
 	 $(OUTDIR)/upgrade_manager.py
 
 $(OUTDIR)/accountability.py: $(call gentargets,Accountability)
-	$(call abigen,$^) --exclude distributeRewards,finalize,handleEvent,setEpochPeriod >$@
+	$(call abigen,$^) --exclude distributeRewards,finalize,handleAccusation,handleEvent,handleInnocenceProof,handleMisbehaviour,setEpochPeriod >$@
 
 $(OUTDIR)/acu.py: $(call gentargets,ACU)
 	$(call abigen,$^) --exclude setOperator,setOracle,update >$@
 
 $(OUTDIR)/autonity.py: $(call gentargets,Autonity)
-	$(call abigen,$^) --exclude computeCommittee,finalize,finalizeInitialization,updateValidatorAndTransferSlashedFunds >$@
+	$(call abigen,$^) --exclude autobond,computeCommittee,finalize,finalizeInitialization,jail,jailbound,slash,slashAndJail >$@
 
 $(OUTDIR)/inflation_controller.py: $(call gentargets,InflationController)
 	$(call abigen,$^) >$@
 
-$(OUTDIR)/liquid.py: $(call gentargets,Liquid)
+$(OUTDIR)/liquid_logic.py: $(call gentargets,LiquidLogic)
 	$(call abigen,$^) --exclude burn,lock,mint,redistribute,setCommissionRate,unlock >$@
 
-$(OUTDIR)/non_stakable_vesting.py: $(call gentargets,NonStakableVesting)
-	$(call abigen,$^) --exclude unlockTokens >$@
+$(OUTDIR)/omission_accountability.py: $(call gentargets,OmissionAccountability)
+	$(call abigen,$^) --exclude finalize,setCommittee,setEpochBlock,setOperator >$@
 
 $(OUTDIR)/oracle.py: $(call gentargets,Oracle)
 	$(call abigen,$^) --exclude finalize,setOperator,setVoters,vote >$@
