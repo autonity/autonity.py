@@ -1,13 +1,13 @@
 """OmissionAccountability contract binding and data structures."""
 
-# This module has been generated using pyabigen v0.2.10
+# This module has been generated using pyabigen v0.2.11
 
 import typing
 from dataclasses import dataclass
 
 import eth_typing
 import web3
-from web3.contract import base_contract, contract
+from web3.contract import contract
 
 __version__ = "v1.0.1-alpha"
 
@@ -48,12 +48,12 @@ class OmissionAccountability:
         )
 
     @property
-    def InactivityJailingEvent(self) -> typing.Type[base_contract.BaseContractEvent]:
+    def InactivityJailingEvent(self) -> contract.ContractEvent:
         """Binding for `event InactivityJailingEvent` on the OmissionAccountability contract."""
         return self._contract.events.InactivityJailingEvent
 
     @property
-    def InactivitySlashingEvent(self) -> typing.Type[base_contract.BaseContractEvent]:
+    def InactivitySlashingEvent(self) -> contract.ContractEvent:
         """Binding for `event InactivitySlashingEvent` on the OmissionAccountability contract."""
         return self._contract.events.InactivitySlashingEvent
 

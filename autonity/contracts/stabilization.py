@@ -1,6 +1,6 @@
 """Stabilization contract binding and data structures."""
 
-# This module has been generated using pyabigen v0.2.10
+# This module has been generated using pyabigen v0.2.11
 
 import typing
 from dataclasses import dataclass
@@ -8,7 +8,7 @@ from dataclasses import dataclass
 import eth_typing
 import web3
 from plum import dispatch
-from web3.contract import base_contract, contract
+from web3.contract import contract
 
 __version__ = "v1.0.1-alpha"
 
@@ -49,7 +49,7 @@ class Stabilization:
         )
 
     @property
-    def Borrow(self) -> typing.Type[base_contract.BaseContractEvent]:
+    def Borrow(self) -> contract.ContractEvent:
         """Binding for `event Borrow` on the Stabilization contract.
 
         Auton was borrowed from a CDP
@@ -57,7 +57,7 @@ class Stabilization:
         return self._contract.events.Borrow
 
     @property
-    def Deposit(self) -> typing.Type[base_contract.BaseContractEvent]:
+    def Deposit(self) -> contract.ContractEvent:
         """Binding for `event Deposit` on the Stabilization contract.
 
         Collateral Token was deposited into a CDP
@@ -65,7 +65,7 @@ class Stabilization:
         return self._contract.events.Deposit
 
     @property
-    def Liquidate(self) -> typing.Type[base_contract.BaseContractEvent]:
+    def Liquidate(self) -> contract.ContractEvent:
         """Binding for `event Liquidate` on the Stabilization contract.
 
         A CDP was liquidated
@@ -73,7 +73,7 @@ class Stabilization:
         return self._contract.events.Liquidate
 
     @property
-    def Repay(self) -> typing.Type[base_contract.BaseContractEvent]:
+    def Repay(self) -> contract.ContractEvent:
         """Binding for `event Repay` on the Stabilization contract.
 
         Auton debt was paid into a CDP
@@ -81,7 +81,7 @@ class Stabilization:
         return self._contract.events.Repay
 
     @property
-    def Withdraw(self) -> typing.Type[base_contract.BaseContractEvent]:
+    def Withdraw(self) -> contract.ContractEvent:
         """Binding for `event Withdraw` on the Stabilization contract.
 
         Collateral Token was withdrawn from a CDP

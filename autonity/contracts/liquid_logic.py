@@ -1,12 +1,12 @@
 """LiquidLogic contract binding and data structures."""
 
-# This module has been generated using pyabigen v0.2.10
+# This module has been generated using pyabigen v0.2.11
 
 import typing
 
 import eth_typing
 import web3
-from web3.contract import base_contract, contract
+from web3.contract import contract
 
 __version__ = "v1.0.1-alpha"
 
@@ -34,12 +34,12 @@ class LiquidLogic:
         )
 
     @property
-    def Approval(self) -> typing.Type[base_contract.BaseContractEvent]:
+    def Approval(self) -> contract.ContractEvent:
         """Binding for `event Approval` on the LiquidLogic contract."""
         return self._contract.events.Approval
 
     @property
-    def Transfer(self) -> typing.Type[base_contract.BaseContractEvent]:
+    def Transfer(self) -> contract.ContractEvent:
         """Binding for `event Transfer` on the LiquidLogic contract."""
         return self._contract.events.Transfer
 

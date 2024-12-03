@@ -1,12 +1,12 @@
 """ACU contract binding and data structures."""
 
-# This module has been generated using pyabigen v0.2.10
+# This module has been generated using pyabigen v0.2.11
 
 import typing
 
 import eth_typing
 import web3
-from web3.contract import base_contract, contract
+from web3.contract import contract
 
 __version__ = "v1.0.1-alpha"
 
@@ -37,7 +37,7 @@ class ACU:
         )
 
     @property
-    def BasketModified(self) -> typing.Type[base_contract.BaseContractEvent]:
+    def BasketModified(self) -> contract.ContractEvent:
         """Binding for `event BasketModified` on the ACU contract.
 
         The ACU symbols, quantites, or scale were modified.
@@ -45,7 +45,7 @@ class ACU:
         return self._contract.events.BasketModified
 
     @property
-    def Updated(self) -> typing.Type[base_contract.BaseContractEvent]:
+    def Updated(self) -> contract.ContractEvent:
         """Binding for `event Updated` on the ACU contract.
 
         The ACU value was updated.

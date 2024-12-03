@@ -1,12 +1,12 @@
 """SupplyControl contract binding and data structures."""
 
-# This module has been generated using pyabigen v0.2.10
+# This module has been generated using pyabigen v0.2.11
 
 import typing
 
 import eth_typing
 import web3
-from web3.contract import base_contract, contract
+from web3.contract import contract
 
 __version__ = "v1.0.1-alpha"
 
@@ -36,7 +36,7 @@ class SupplyControl:
         )
 
     @property
-    def Burn(self) -> typing.Type[base_contract.BaseContractEvent]:
+    def Burn(self) -> contract.ContractEvent:
         """Binding for `event Burn` on the SupplyControl contract.
 
         Auton was burned.
@@ -44,7 +44,7 @@ class SupplyControl:
         return self._contract.events.Burn
 
     @property
-    def Mint(self) -> typing.Type[base_contract.BaseContractEvent]:
+    def Mint(self) -> contract.ContractEvent:
         """Binding for `event Mint` on the SupplyControl contract.
 
         Auton was minted.

@@ -1,6 +1,6 @@
 """Accountability contract binding and data structures."""
 
-# This module has been generated using pyabigen v0.2.10
+# This module has been generated using pyabigen v0.2.11
 
 import enum
 import typing
@@ -9,7 +9,7 @@ from dataclasses import dataclass
 import eth_typing
 import hexbytes
 import web3
-from web3.contract import base_contract, contract
+from web3.contract import contract
 
 __version__ = "v1.0.1-alpha"
 
@@ -103,22 +103,22 @@ class Accountability:
         )
 
     @property
-    def InnocenceProven(self) -> typing.Type[base_contract.BaseContractEvent]:
+    def InnocenceProven(self) -> contract.ContractEvent:
         """Binding for `event InnocenceProven` on the Accountability contract."""
         return self._contract.events.InnocenceProven
 
     @property
-    def NewAccusation(self) -> typing.Type[base_contract.BaseContractEvent]:
+    def NewAccusation(self) -> contract.ContractEvent:
         """Binding for `event NewAccusation` on the Accountability contract."""
         return self._contract.events.NewAccusation
 
     @property
-    def NewFaultProof(self) -> typing.Type[base_contract.BaseContractEvent]:
+    def NewFaultProof(self) -> contract.ContractEvent:
         """Binding for `event NewFaultProof` on the Accountability contract."""
         return self._contract.events.NewFaultProof
 
     @property
-    def SlashingEvent(self) -> typing.Type[base_contract.BaseContractEvent]:
+    def SlashingEvent(self) -> contract.ContractEvent:
         """Binding for `event SlashingEvent` on the Accountability contract."""
         return self._contract.events.SlashingEvent
 

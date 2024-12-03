@@ -9,7 +9,7 @@ from eth_typing import ChecksumAddress
 from hexbytes import HexBytes
 from web3 import Web3, HTTPProvider
 from web3.exceptions import ContractLogicError, ContractPanicError
-from web3.contract.contract import ContractFunction
+from web3.contract.contract import ContractFunction, ContractEvent
 
 import autonity
 from autonity.contracts.accountability import BaseSlashingRates, Factors
@@ -58,7 +58,7 @@ def pytest_generate_tests(metafunc):
                 continue
             attr = getattr(contract, attr_name)
             if isinstance(attr, Callable):
-                if isclass(attr):  # ContractEvent
+                if isinstance(attr, ContractEvent):
                     test_inputs.append((attr, tuple()))
                     ids.append(f"{binding.__name__}.{attr_name}")
                 elif hasattr(attr, "_f"):  # multimethod

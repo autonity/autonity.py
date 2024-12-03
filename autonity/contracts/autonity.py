@@ -1,6 +1,6 @@
 """Autonity contract binding and data structures."""
 
-# This module has been generated using pyabigen v0.2.10
+# This module has been generated using pyabigen v0.2.11
 
 import enum
 import typing
@@ -9,7 +9,7 @@ from dataclasses import dataclass
 import eth_typing
 import hexbytes
 import web3
-from web3.contract import base_contract, contract
+from web3.contract import contract
 
 __version__ = "v1.0.1-alpha"
 
@@ -155,27 +155,27 @@ class Autonity:
         )
 
     @property
-    def ActivatedValidator(self) -> typing.Type[base_contract.BaseContractEvent]:
+    def ActivatedValidator(self) -> contract.ContractEvent:
         """Binding for `event ActivatedValidator` on the Autonity contract."""
         return self._contract.events.ActivatedValidator
 
     @property
-    def Approval(self) -> typing.Type[base_contract.BaseContractEvent]:
+    def Approval(self) -> contract.ContractEvent:
         """Binding for `event Approval` on the Autonity contract."""
         return self._contract.events.Approval
 
     @property
-    def BondingRejected(self) -> typing.Type[base_contract.BaseContractEvent]:
+    def BondingRejected(self) -> contract.ContractEvent:
         """Binding for `event BondingRejected` on the Autonity contract."""
         return self._contract.events.BondingRejected
 
     @property
-    def BurnedStake(self) -> typing.Type[base_contract.BaseContractEvent]:
+    def BurnedStake(self) -> contract.ContractEvent:
         """Binding for `event BurnedStake` on the Autonity contract."""
         return self._contract.events.BurnedStake
 
     @property
-    def CallFailed(self) -> typing.Type[base_contract.BaseContractEvent]:
+    def CallFailed(self) -> contract.ContractEvent:
         """Binding for `event CallFailed` on the Autonity contract.
 
         This event is emitted when a call to an address fails in a protocol function
@@ -184,27 +184,27 @@ class Autonity:
         return self._contract.events.CallFailed
 
     @property
-    def CommissionRateChange(self) -> typing.Type[base_contract.BaseContractEvent]:
+    def CommissionRateChange(self) -> contract.ContractEvent:
         """Binding for `event CommissionRateChange` on the Autonity contract."""
         return self._contract.events.CommissionRateChange
 
     @property
-    def EpochPeriodUpdated(self) -> typing.Type[base_contract.BaseContractEvent]:
+    def EpochPeriodUpdated(self) -> contract.ContractEvent:
         """Binding for `event EpochPeriodUpdated` on the Autonity contract."""
         return self._contract.events.EpochPeriodUpdated
 
     @property
-    def MinimumBaseFeeUpdated(self) -> typing.Type[base_contract.BaseContractEvent]:
+    def MinimumBaseFeeUpdated(self) -> contract.ContractEvent:
         """Binding for `event MinimumBaseFeeUpdated` on the Autonity contract."""
         return self._contract.events.MinimumBaseFeeUpdated
 
     @property
-    def MintedStake(self) -> typing.Type[base_contract.BaseContractEvent]:
+    def MintedStake(self) -> contract.ContractEvent:
         """Binding for `event MintedStake` on the Autonity contract."""
         return self._contract.events.MintedStake
 
     @property
-    def NewBondingRequest(self) -> typing.Type[base_contract.BaseContractEvent]:
+    def NewBondingRequest(self) -> contract.ContractEvent:
         """Binding for `event NewBondingRequest` on the Autonity contract.
 
         This event is emitted when a bonding request to a validator node has been
@@ -215,17 +215,17 @@ class Autonity:
         return self._contract.events.NewBondingRequest
 
     @property
-    def NewEpoch(self) -> typing.Type[base_contract.BaseContractEvent]:
+    def NewEpoch(self) -> contract.ContractEvent:
         """Binding for `event NewEpoch` on the Autonity contract."""
         return self._contract.events.NewEpoch
 
     @property
-    def NewSchedule(self) -> typing.Type[base_contract.BaseContractEvent]:
+    def NewSchedule(self) -> contract.ContractEvent:
         """Binding for `event NewSchedule` on the Autonity contract."""
         return self._contract.events.NewSchedule
 
     @property
-    def NewUnbondingRequest(self) -> typing.Type[base_contract.BaseContractEvent]:
+    def NewUnbondingRequest(self) -> contract.ContractEvent:
         """Binding for `event NewUnbondingRequest` on the Autonity contract.
 
         This event is emitted when an unbonding request to a validator node has been
@@ -237,22 +237,22 @@ class Autonity:
         return self._contract.events.NewUnbondingRequest
 
     @property
-    def PausedValidator(self) -> typing.Type[base_contract.BaseContractEvent]:
+    def PausedValidator(self) -> contract.ContractEvent:
         """Binding for `event PausedValidator` on the Autonity contract."""
         return self._contract.events.PausedValidator
 
     @property
-    def RegisteredValidator(self) -> typing.Type[base_contract.BaseContractEvent]:
+    def RegisteredValidator(self) -> contract.ContractEvent:
         """Binding for `event RegisteredValidator` on the Autonity contract."""
         return self._contract.events.RegisteredValidator
 
     @property
-    def Rewarded(self) -> typing.Type[base_contract.BaseContractEvent]:
+    def Rewarded(self) -> contract.ContractEvent:
         """Binding for `event Rewarded` on the Autonity contract."""
         return self._contract.events.Rewarded
 
     @property
-    def Transfer(self) -> typing.Type[base_contract.BaseContractEvent]:
+    def Transfer(self) -> contract.ContractEvent:
         """Binding for `event Transfer` on the Autonity contract."""
         return self._contract.events.Transfer
 

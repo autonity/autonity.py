@@ -1,13 +1,13 @@
 """Oracle contract binding and data structures."""
 
-# This module has been generated using pyabigen v0.2.10
+# This module has been generated using pyabigen v0.2.11
 
 import typing
 from dataclasses import dataclass
 
 import eth_typing
 import web3
-from web3.contract import base_contract, contract
+from web3.contract import contract
 
 __version__ = "v1.0.1-alpha"
 
@@ -60,22 +60,22 @@ class Oracle:
         )
 
     @property
-    def NewRound(self) -> typing.Type[base_contract.BaseContractEvent]:
+    def NewRound(self) -> contract.ContractEvent:
         """Binding for `event NewRound` on the Oracle contract."""
         return self._contract.events.NewRound
 
     @property
-    def NewSymbols(self) -> typing.Type[base_contract.BaseContractEvent]:
+    def NewSymbols(self) -> contract.ContractEvent:
         """Binding for `event NewSymbols` on the Oracle contract."""
         return self._contract.events.NewSymbols
 
     @property
-    def Penalized(self) -> typing.Type[base_contract.BaseContractEvent]:
+    def Penalized(self) -> contract.ContractEvent:
         """Binding for `event Penalized` on the Oracle contract."""
         return self._contract.events.Penalized
 
     @property
-    def Voted(self) -> typing.Type[base_contract.BaseContractEvent]:
+    def Voted(self) -> contract.ContractEvent:
         """Binding for `event Voted` on the Oracle contract."""
         return self._contract.events.Voted
 
