@@ -11,6 +11,8 @@ from web3.exceptions import ContractLogicError, ContractPanicError
 from web3.contract.contract import ContractFunction
 
 import autonity
+from autonity.contracts.accountability import BaseSlashingRates, Factors
+from autonity.factory import LiquidLogic
 
 
 BINDINGS = [attr for attr in autonity.__dict__.values() if isinstance(attr, Callable)]
@@ -24,6 +26,8 @@ TEST_INPUTS = {
     List[int]: [1],
     List[str]: [""],
     List[ChecksumAddress]: ["0x0123456789abcDEF0123456789abCDef01234567"],
+    BaseSlashingRates: BaseSlashingRates(0, 0, 0),
+    Factors: Factors(0, 0, 0),
 }
 
 
@@ -37,10 +41,10 @@ def pytest_generate_tests(metafunc):
     for binding in BINDINGS:
         w3 = Web3(autonity.networks.piccadilly.http_provider)
 
-        if binding.__name__ == "Liquid":
+        if binding is LiquidLogic:
             aut = autonity.Autonity(w3)
             validator = aut.get_validator(aut.get_validators()[0])
-            contract = binding(w3, validator.liquid_contract)
+            contract = binding(w3, validator.liquid_state_contract)
         else:
             contract = binding(w3)
 

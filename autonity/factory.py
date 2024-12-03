@@ -15,8 +15,8 @@ from .contracts import (
     acu,
     autonity,
     inflation_controller,
-    liquid,
-    non_stakable_vesting,
+    liquid_logic,
+    omission_accountability,
     oracle,
     stabilization,
     supply_control,
@@ -113,8 +113,8 @@ def InflationController(w3: Web3) -> inflation_controller.InflationController:
     )
 
 
-def Liquid(w3: Web3, address: ChecksumAddress) -> liquid.Liquid:
-    """Liquid contract binding factory.
+def LiquidLogic(w3: Web3, address: ChecksumAddress) -> liquid_logic.LiquidLogic:
+    """LiquidLogic contract binding factory.
 
     Parameters
     ----------
@@ -125,15 +125,15 @@ def Liquid(w3: Web3, address: ChecksumAddress) -> liquid.Liquid:
 
     Returns
     -------
-    autonity.contracts.liquid.Liquid
+    autonity.contracts.liquid.LiquidLogic
         A contract binding instance.
     """
     assert _config(w3)
-    return liquid.Liquid(w3, address)
+    return liquid_logic.LiquidLogic(w3, address)
 
 
-def NonStakableVesting(w3: Web3) -> non_stakable_vesting.NonStakableVesting:
-    """NonStakableVesting contract binding factory.
+def OmissionAccountability(w3: Web3) -> omission_accountability.OmissionAccountability:
+    """OmissionAccountability contract binding factory.
 
     Parameters
     ----------
@@ -142,11 +142,11 @@ def NonStakableVesting(w3: Web3) -> non_stakable_vesting.NonStakableVesting:
 
     Returns
     -------
-    autonity.contracts.non_stakable_vesting.NonStakableVesting
+    autonity.contracts.non_stakable_vesting.OmissionAccountability
         A contract binding instance.
     """
-    return non_stakable_vesting.NonStakableVesting(
-        w3, _config(w3).contracts.non_stakable_vesting_contract
+    return omission_accountability.OmissionAccountability(
+        w3, _config(w3).contracts.omission_accountability_contract
     )
 
 
