@@ -1,12 +1,13 @@
 # type: ignore
 
+import os
 from enum import IntEnum
 from inspect import isclass, signature
 from typing import Callable, List
 
 from eth_typing import ChecksumAddress
 from hexbytes import HexBytes
-from web3 import Web3
+from web3 import Web3, HTTPProvider
 from web3.exceptions import ContractLogicError, ContractPanicError
 from web3.contract.contract import ContractFunction
 
@@ -14,6 +15,11 @@ import autonity
 from autonity.contracts.accountability import BaseSlashingRates, Factors
 from autonity.factory import LiquidLogic
 
+WEB3_PROVIDER = (
+    HTTPProvider(os.environ["RPC_URL"])
+    if "RPC_URL" in os.environ
+    else autonity.networks.piccadilly.http_provider
+)
 
 BINDINGS = [attr for attr in autonity.__dict__.values() if isinstance(attr, Callable)]
 
@@ -35,12 +41,11 @@ def pytest_generate_tests(metafunc):
     if "test_input" not in metafunc.fixturenames:
         return
 
+    w3 = Web3(WEB3_PROVIDER)
     test_inputs = []
     ids = []
 
     for binding in BINDINGS:
-        w3 = Web3(autonity.networks.piccadilly.http_provider)
-
         if binding is LiquidLogic:
             aut = autonity.Autonity(w3)
             validator = aut.get_validator(aut.get_validators()[0])
