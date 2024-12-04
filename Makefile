@@ -10,7 +10,9 @@ abigen = hatch run generate:pyabigen \
 	--devdoc $(word 2,$(1)) \
 	--userdoc $(word 3,$(1)) \
 	$(word 4,$(1))
-gentargets = $(shell find $(SRCDIR) -name $(1).sol) $(addprefix $(ABIDIR)/$(1),.docdev .docuser .abi)
+gentargets = $(shell find $(SRCDIR) -name $(1).sol) \
+	$(addprefix $(ABIDIR)/$(1),.docdev .docuser .abi) \
+	pyproject.toml
 
 all: $(OUTDIR)/accountability.py \
 	 $(OUTDIR)/acu.py \
