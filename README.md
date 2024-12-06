@@ -19,6 +19,22 @@ a virtualenv using pip or a compatible package manager:
 pip install autonity
 ```
 
+## Overview
+
+The `autonity` package consists of the following:
+
+- [`contracts` subpackage](./autonity/contracts/): modules for protocol
+  contracts. Each module consists of the contract binding class, the contract
+  ABI, and ports of Solidity structures and enumerations.
+- [`constants` module](./autonity/constants.py): protocol parameters.
+- [`networks` module](./autonity/networks.py): parameters of the available
+  Autonity networks.
+- [`factory` module](./autonity/factory.py): factory functions that return
+  instances of contract binding classes. They retrieve the contract address and
+  ensure that there is no version mismatch between the contract and the bindings.
+- The functions of the `factory` module are also available as top-level
+  `autonity` module variables.
+
 ## Usage
 
 Example usage:
