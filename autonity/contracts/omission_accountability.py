@@ -9,7 +9,7 @@ import eth_typing
 import web3
 from web3.contract import contract
 
-__version__ = "v1.0.1-alpha"
+__version__ = "v1.0.2-alpha"
 
 
 @dataclass
