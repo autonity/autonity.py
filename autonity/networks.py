@@ -1,4 +1,4 @@
-"""Parameters of the available Autonity networks."""
+"""Connection parameters for the available Autonity networks."""
 
 from dataclasses import dataclass
 
