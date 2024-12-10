@@ -23,17 +23,19 @@ pip install autonity
 
 The `autonity` package consists of the following:
 
-- [`contracts` subpackage](./autonity/contracts/): modules for protocol
-  contracts. Each module consists of the contract binding class, the contract
-  ABI, and ports of Solidity structures and enumerations.
-- [`constants` module](./autonity/constants.py): protocol parameters.
-- [`networks` module](./autonity/networks.py): parameters of the available
+- [`autonity.contracts.*`](./autonity/contracts/): Subpackage containing modules
+  for protocol contracts. Each module consists of the contract binding class,
+  the contract ABI, and ports of Solidity structures and enumerations.
+- [`autonity.constants`](./autonity/constants.py): Essential protocol parameters exposed as Python variables for convenience.
+- [`autonity.networks`](./autonity/networks.py): Connection parameters for the available
   Autonity networks.
-- [`factory` module](./autonity/factory.py): factory functions that return
+- [`autonity.factory`](./autonity/factory.py): Factory functions that return
   instances of contract binding classes. They retrieve the contract address and
-  ensure that there is no version mismatch between the contract and the bindings.
-- The functions of the `factory` module are also available as top-level
-  `autonity` module variables.
+  ensure that there is no version mismatch between the contract and the
+  bindings.
+
+For convenience, the functions of the `factory` module are also available as
+top-level `autonity` module variables.
 
 ## Usage
 
