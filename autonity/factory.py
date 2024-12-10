@@ -1,5 +1,10 @@
-"""Factory functions that find the addresses of Autonity protocol contracts and return
-the contract bindings.
+"""Factory functions that return instances of contract binding classes.
+
+They retrieve the contract address and ensure that there is no version mismatch between
+the contract and the bindings.
+
+For convenience, the functions of this module are also available as top-level
+`autonity` module variables.
 """
 
 from functools import lru_cache

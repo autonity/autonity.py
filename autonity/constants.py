@@ -1,4 +1,4 @@
-"""Protocol parameters."""
+"""Essential protocol parameters exposed as Python variables for convenience."""
 
 from typing import cast
 
