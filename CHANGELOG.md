@@ -1,6 +1,6 @@
 # Changelog
 
-## TBD
+## [v5.0.0] - 2024-12-11
 
 ### Changed
 
@@ -77,6 +77,7 @@
 
 _First release._
 
+[v5.0.0]: https://github.com/autonity/autonity.py/releases/tag/v5.0.0
 [v4.0.0]: https://github.com/autonity/autonity.py/releases/tag/v4.0.0
 [v3.0.0]: https://github.com/autonity/autonity.py/releases/tag/v3.0.0
 [v2.0.0]: https://github.com/autonity/autonity.py/releases/tag/v2.0.0
