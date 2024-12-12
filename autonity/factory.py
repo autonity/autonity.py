@@ -29,26 +29,6 @@ from .contracts import (
 )
 
 
-@lru_cache()
-def _config(w3: Web3) -> autonity.Config:
-    if w3.client_version.split("/")[1] != autonity.__version__:
-        warn(
-            f"Protocol version mismatch: autonity.py {__version__} supports "
-            f"version {autonity.__version__}, the RPC node is running "
-            f"version {w3.client_version}"
-        )
-
-    config = autonity.Autonity(w3, AUTONITY_CONTRACT_ADDRESS).config()
-    if config.contract_version != AUTONITY_CONTRACT_VERSION:
-        raise RuntimeError(
-            f"Contract version mismatch: autonity.py {__version__} supports "
-            f"version {AUTONITY_CONTRACT_VERSION}, the Autonity contract is "
-            f"version {config.contract_version}"
-        )
-
-    return config
-
-
 def Accountability(w3: Web3) -> accountability.Accountability:
     """Accountability contract binding factory.
 
@@ -221,3 +201,23 @@ def UpgradeManager(w3: Web3) -> upgrade_manager.UpgradeManager:
     return upgrade_manager.UpgradeManager(
         w3, _config(w3).contracts.upgrade_manager_contract
     )
+
+
+@lru_cache()
+def _config(w3: Web3) -> autonity.Config:
+    if w3.client_version.split("/")[1] != autonity.__version__:
+        warn(
+            f"Protocol version mismatch: autonity.py {__version__} supports "
+            f"version {autonity.__version__}, the RPC node is running "
+            f"version {w3.client_version}"
+        )
+
+    config = autonity.Autonity(w3, AUTONITY_CONTRACT_ADDRESS).config()
+    if config.contract_version != AUTONITY_CONTRACT_VERSION:
+        raise RuntimeError(
+            f"Contract version mismatch: autonity.py {__version__} supports "
+            f"version {AUTONITY_CONTRACT_VERSION}, the Autonity contract is "
+            f"version {config.contract_version}"
+        )
+
+    return config
