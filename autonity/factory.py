@@ -206,17 +206,21 @@ def UpgradeManager(w3: Web3) -> upgrade_manager.UpgradeManager:
 
 @lru_cache()
 def _config(w3: Web3) -> autonity.Config:
-    client_version = Version.parse(w3.client_version.split("/")[1])
-    binding_version = Version.parse(autonity.__version__)
-    if (
-        client_version.major != binding_version.major
-        or client_version.minor != binding_version.minor
-    ):
-        warn(
-            f"Protocol version mismatch: autonity.py {__version__} supports "
-            f"version {autonity.__version__}, the RPC node is running "
-            f"version {w3.client_version}"
-        )
+    try:
+        client_version = Version.parse(w3.client_version.split("/")[1])
+        binding_version = Version.parse(autonity.__version__)
+    except ValueError:
+        pass
+    else:
+        if (
+            client_version.major != binding_version.major
+            or client_version.minor != binding_version.minor
+        ):
+            warn(
+                f"Protocol version mismatch: autonity.py {__version__} supports "
+                f"version {autonity.__version__}, the RPC node is running "
+                f"version {w3.client_version}"
+            )
 
     config = autonity.Autonity(w3, AUTONITY_CONTRACT_ADDRESS).config()
     if config.contract_version != AUTONITY_CONTRACT_VERSION:
