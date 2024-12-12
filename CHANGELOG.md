@@ -1,5 +1,15 @@
 # Changelog
 
+## [v5.1.0] - 2024-12-12
+
+### Changed
+
+- Ignore patch releases when checking protocol version ([#78](https://github.com/autonity/autonity.py/pull/78))
+
+### Removed
+
+- Remove the `networks` module ([#79](https://github.com/autonity/autonity.py/pull/79))
+
 ## [v5.0.0] - 2024-12-11
 
 ### Changed
@@ -77,6 +87,7 @@
 
 _First release._
 
+[v5.1.0]: https://github.com/autonity/autonity.py/releases/tag/v5.1.0
 [v5.0.0]: https://github.com/autonity/autonity.py/releases/tag/v5.0.0
 [v4.0.0]: https://github.com/autonity/autonity.py/releases/tag/v4.0.0
 [v3.0.0]: https://github.com/autonity/autonity.py/releases/tag/v3.0.0
