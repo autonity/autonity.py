@@ -29,4 +29,6 @@ jobs:
       - name: Lint
         run: hatch run lint:check
       - name: Test
+        env:
+          RPC_URL: ${{ secrets.RPC_URL }}
         run: hatch run +py=${{ matrix.python-ver }} test:all
