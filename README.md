@@ -27,8 +27,6 @@ The `autonity` package consists of the following:
   for protocol contracts. Each module consists of the contract binding class,
   the contract ABI, and ports of Solidity structures and enumerations.
 - [`autonity.constants`](./autonity/constants.py): Essential protocol parameters exposed as Python variables for convenience.
-- [`autonity.networks`](./autonity/networks.py): Connection parameters for the available
-  Autonity networks.
 - [`autonity.factory`](./autonity/factory.py): Factory functions that return
   instances of contract binding classes. They retrieve the contract address and
   ensure that there is no version mismatch between the contract and the
@@ -42,11 +40,11 @@ top-level `autonity` module variables.
 Example usage:
 
 ```python
-from web3 import Web3
-from autonity import Autonity, LiquidLogic, networks
+from web3 import Web3, HTTPProvider
+from autonity import Autonity, LiquidLogic
 
-# Connect to the default RPC provider on the Autonity Piccadilly Testnet
-w3 = Web3(networks.piccadilly.http_provider)
+# Connect to an Autonity RPC provider; select one from Chainlist
+w3 = Web3(HTTPProvider("<RPC-URL>"))
 
 # Create the typed binding around the Autonity contract
 autonity = Autonity(w3)

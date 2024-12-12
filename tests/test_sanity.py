@@ -15,12 +15,6 @@ import autonity
 from autonity.contracts.accountability import BaseSlashingRates, Factors
 from autonity.factory import LiquidLogic
 
-WEB3_PROVIDER = (
-    HTTPProvider(os.environ["RPC_URL"])
-    if "RPC_URL" in os.environ
-    else autonity.networks.piccadilly.http_provider
-)
-
 BINDINGS = [attr for attr in autonity.__dict__.values() if isinstance(attr, Callable)]
 
 TEST_INPUTS = {
@@ -41,7 +35,7 @@ def pytest_generate_tests(metafunc):
     if "test_input" not in metafunc.fixturenames:
         return
 
-    w3 = Web3(WEB3_PROVIDER)
+    w3 = Web3(HTTPProvider(os.environ["RPC_URL"]))
     test_inputs = []
     ids = []
 
