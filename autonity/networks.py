@@ -27,6 +27,6 @@ class Network:
 piccadilly = Network(
     chain_id=65010004,
     network_name="Autonity Piccadilly (Tiber) Testnet",
-    http_provider=HTTPProvider("https://rpc1.piccadilly.autonity.org/"),
+    http_provider=HTTPProvider("https://autonity.rpc.web3cdn.network/testnet"),
 )
 """Network : Autonity Piccadilly (Tiber) Testnet parameters."""
