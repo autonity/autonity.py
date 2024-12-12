@@ -2,7 +2,7 @@
 
 """Package for interacting with the protocol contracts of the Autonity network."""
 
-from . import constants, contracts, networks
+from . import constants, contracts
 from .factory import (
     Accountability,
     ACU,
@@ -19,7 +19,6 @@ from .factory import (
 __all__ = (
     "constants",
     "contracts",
-    "networks",
     "Accountability",
     "ACU",
     "Autonity",
