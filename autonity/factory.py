@@ -11,6 +11,7 @@ from functools import lru_cache
 from warnings import warn
 
 from eth_typing import ChecksumAddress
+from semver import Version
 from web3 import Web3
 
 from .__version__ import __version__
@@ -205,7 +206,12 @@ def UpgradeManager(w3: Web3) -> upgrade_manager.UpgradeManager:
 
 @lru_cache()
 def _config(w3: Web3) -> autonity.Config:
-    if w3.client_version.split("/")[1] != autonity.__version__:
+    client_version = Version.parse(w3.client_version.split("/")[1])
+    binding_version = Version.parse(autonity.__version__)
+    if (
+        client_version.major != binding_version.major
+        or client_version.minor != binding_version.minor
+    ):
         warn(
             f"Protocol version mismatch: autonity.py {__version__} supports "
             f"version {autonity.__version__}, the RPC node is running "
