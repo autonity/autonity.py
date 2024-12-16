@@ -80,8 +80,10 @@ issue, and then self-assign the issue. Set the issue title to the
       `$RELEASE_NAME` as the commit message. This is the `RELEASE_COMMIT`.
 - [ ] _Tag the `$RELEASE_COMMIT`_. Add a Git tag to the `$RELEASE_COMMIT` with
       the release name: `git tag $RELEASE_NAME stable`.
-- [ ] _Push the Git tag_. As Git tags are not pushed by default, it needs an
-      explicit push: `git push origin stable:$RELEASE_NAME`.
+- [ ] _Push the `stable` branch_. Sync the final state of `stable` to the
+      remote: `git push origin stable:stable`.
+- [ ] _Push the Git tag_. As Git tags are not pushed by default, it needs a
+      separate explicit push: `git push origin tag $RELEASE_NAME`.
 - [ ] _Build the release artifacts_. Build in a clean environment by recreating
       it with `hatch env prune`. Then `hatch build --clean`.
 - [ ] _Publish to PyPI_. Push the release artifacts to the
