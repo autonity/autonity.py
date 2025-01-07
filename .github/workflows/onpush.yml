@@ -15,7 +15,7 @@ jobs:
         python-ver: ["3.9", "3.10", "3.11", "3.12", "3.13"]
         os: [ubuntu-22.04, macos-latest]
 
-    runs-on: ${{matrix.os }}
+    runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v3
@@ -29,6 +29,4 @@ jobs:
       - name: Lint
         run: hatch run lint:check
       - name: Test
-        env:
-          RPC_URL: ${{ secrets.RPC_URL }}
         run: hatch run +py=${{ matrix.python-ver }} test:all

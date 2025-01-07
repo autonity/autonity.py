@@ -39,13 +39,17 @@ detached = true
 dependencies = ["pyabigen@git+https://github.com/clearmatics/pyabigen@v0.2.12"]
 
 [tool.hatch.envs.test]
-dependencies = ["pytest"]
+dependencies = [
+    "pytest",
+    "pytest-xdist[psutil]",
+    "pytest-autonity@git+https://github.com/autonity/pytest-autonity"
+]
 
 [[tool.hatch.envs.test.matrix]]
 python = ["3.9", "3.10", "3.11", "3.12", "3.13"]
 
 [tool.hatch.envs.test.scripts]
-all = "pytest -v {args:tests}"
+all = "pytest -v -n auto --autonity-bin build/autonity/build/bin/autonity {args:tests}"
 
 [tool.hatch.envs.lint]
 dependencies = ["black", "ruff", "mypy", "pyright"]
