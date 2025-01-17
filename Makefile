@@ -1,5 +1,6 @@
 VERSION := $(shell cat AUTONITY_VERSION)
 AUTONITY := build/autonity
+AGC_BINARY := $(AUTONITY)/build/bin/autonity
 ABIDIR := $(AUTONITY)/params/generated
 SRCDIR := $(AUTONITY)/autonity/solidity/contracts
 OUTDIR := autonity/contracts
@@ -60,6 +61,12 @@ $(ABIDIR)/%.abi $(ABIDIR)/%.docdev $(ABIDIR)/%.docuser: $(AUTONITY) AUTONITY_VER
 	git fetch origin && \
 	git checkout $(VERSION) && \
 	make contracts
+
+$(AGC_BINARY): $(AUTONITY) AUTONITY_VERSION
+	cd $< && \
+	git fetch origin && \
+	git checkout $(VERSION) && \
+	make autonity
 
 $(AUTONITY):
 	git clone git@github.com:autonity/autonity.git $@

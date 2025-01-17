@@ -103,28 +103,6 @@ Installed pypy3.10 @ /home/develop/.local/share/hatch/pythons/pypy3.10
 ⚠️ Hatch will modify your shell configuration to add these directories to your
 `$PATH`.
 
-### Building and testing
-
-To launch the tests across all supported Python versions, run:
-
-```sh
-hatch run test:all
-```
-
-To limit the tests to a specific Python version, add a
-[`hatch run`](https://hatch.pypa.io/latest/cli/reference/#hatch-run) `+`
-argument:
-
-```sh
-hatch run +py=3.12 test:all
-```
-
-To lint the code base, use the command:
-
-```sh
-hatch run lint:check
-```
-
 ### Updating the contract bindings
 
 To update contract bindings for a new version of the Autonity protocol, add the
@@ -143,6 +121,34 @@ The generated Python bindings include the contract ABIs as Python dictionaries.
 
 If there is a new contract to include, add a new target to `Makefile` and a new
 factory function to `autonity/factory.py` and `autonity/__init__.py`.
+
+### Building and testing
+
+First build the Autonity Go Client:
+
+```sh
+make build/autonity/build/bin/autonity
+```
+
+To launch the tests across all supported Python versions, run:
+
+```sh
+hatch run test:local
+```
+
+To limit the tests to a specific Python version, add a
+[`hatch run`](https://hatch.pypa.io/latest/cli/reference/#hatch-run) `+`
+argument:
+
+```sh
+hatch run +py=3.12 test:local
+```
+
+To lint the code base, use the command:
+
+```sh
+hatch run lint:check
+```
 
 ## Contributing
 
