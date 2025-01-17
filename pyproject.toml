@@ -49,7 +49,8 @@ dependencies = [
 python = ["3.9", "3.10", "3.11", "3.12", "3.13"]
 
 [tool.hatch.envs.test.scripts]
-all = "pytest -v -n auto --autonity-bin build/autonity/build/bin/autonity {args:tests}"
+local = "pytest -v -n auto --autonity-bin build/autonity/build/bin/autonity {args:tests}"
+ci = "pytest -v -n auto --autonity-bin build/autonity tests"
 
 [tool.hatch.envs.lint]
 dependencies = ["black", "ruff", "mypy", "pyright"]
