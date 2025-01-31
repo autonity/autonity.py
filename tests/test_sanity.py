@@ -1,21 +1,30 @@
 # type: ignore
 
-import os
 from enum import IntEnum
 from inspect import isclass, signature
-from typing import Callable, List
+from typing import List
 
 from eth_typing import ChecksumAddress
 from hexbytes import HexBytes
-from web3 import Web3, HTTPProvider
 from web3.exceptions import ContractLogicError, ContractPanicError
 from web3.contract.contract import ContractFunction, ContractEvent
 
 import autonity
+from autonity import contracts
 from autonity.contracts.accountability import BaseSlashingRates, Factors
-from autonity.factory import LiquidLogic
 
-BINDINGS = [attr for attr in autonity.__dict__.values() if isinstance(attr, Callable)]
+BINDINGS = [
+    contracts.accountability.Accountability,
+    contracts.acu.ACU,
+    contracts.autonity.Autonity,
+    contracts.inflation_controller.InflationController,
+    contracts.liquid_logic.LiquidLogic,
+    contracts.omission_accountability.OmissionAccountability,
+    contracts.oracle.Oracle,
+    contracts.stabilization.Stabilization,
+    contracts.supply_control.SupplyControl,
+    contracts.upgrade_manager.UpgradeManager,
+]
 
 TEST_INPUTS = {
     bool: True,
@@ -32,38 +41,19 @@ TEST_INPUTS = {
 
 
 def pytest_generate_tests(metafunc):
-    if "test_input" not in metafunc.fixturenames:
+    if "test_case" not in metafunc.fixturenames:
         return
 
-    w3 = Web3(HTTPProvider(os.environ["RPC_URL"]))
-    test_inputs = []
+    test_cases = []
     ids = []
 
     for binding in BINDINGS:
-        if binding is LiquidLogic:
-            aut = autonity.Autonity(w3)
-            validator = aut.get_validator(aut.get_validators()[0])
-            contract = binding(w3, validator.liquid_state_contract)
-        else:
-            contract = binding(w3)
+        for attr_name in dir(binding):
+            if not attr_name.startswith("_"):
+                test_cases.append((binding.__name__, attr_name))
+                ids.append(f"{binding.__name__}.{attr_name}")
 
-        for attr_name in dir(contract):
-            if attr_name.startswith("_"):
-                continue
-            attr = getattr(contract, attr_name)
-            if isinstance(attr, Callable):
-                if isinstance(attr, ContractEvent):
-                    test_inputs.append((attr, tuple()))
-                    ids.append(f"{binding.__name__}.{attr_name}")
-                elif hasattr(attr, "_f"):  # multimethod
-                    for i, method in enumerate(attr._f.methods, 1):
-                        test_inputs.append((attr, get_test_args(method.implementation)))
-                        ids.append(f"{binding.__name__}.{attr_name}/{i}")
-                else:
-                    test_inputs.append((attr, get_test_args(attr)))
-                    ids.append(f"{binding.__name__}.{attr_name}")
-
-    metafunc.parametrize("test_input", test_inputs, ids=ids)
+    metafunc.parametrize("test_case", test_cases, ids=ids)
 
 
 def get_test_args(function):
@@ -87,10 +77,22 @@ def _get_arg_value(type_):
     return TEST_INPUTS[type_]
 
 
-def test_bindings_with_arbitrary_inputs(test_input):
-    binding, args = test_input
+def test_bindings_with_arbitrary_inputs(w3, test_case):
+    binding_name, attr_name = test_case
+    factory_function = getattr(autonity, binding_name)
+
+    if factory_function is autonity.LiquidLogic:
+        aut = autonity.Autonity(w3)
+        validator = aut.get_validator(aut.get_validators()[0])
+        binding = factory_function(w3, validator.liquid_state_contract)
+    else:
+        binding = factory_function(w3)
+
+    attr = getattr(binding, attr_name)
+    args = () if isinstance(attr, ContractEvent) else get_test_args(attr)
+
     try:
-        return_value = binding(*args)
+        return_value = attr(*args)
         assert return_value is not None
         if isinstance(return_value, ContractFunction):
             assert return_value.build_transaction()
