@@ -1,6 +1,6 @@
 """Accountability contract binding and data structures."""
 
-# This module has been generated using pyabigen v0.2.11
+# This module has been generated using pyabigen v0.2.12
 
 import enum
 import typing
@@ -222,7 +222,7 @@ class Accountability:
     def events(
         self,
         key0: int,
-    ) -> Event:
+    ) -> typing.List[Event]:
         """Binding for `events` on the Accountability contract.
 
         Parameters
@@ -231,23 +231,26 @@ class Accountability:
 
         Returns
         -------
-        Event
+        typing.List[Event]
         """
         return_value = self._contract.functions.events(
             key0,
         ).call()
-        return Event(
-            EventType(return_value[0]),
-            Rule(return_value[1]),
-            eth_typing.ChecksumAddress(return_value[2]),
-            eth_typing.ChecksumAddress(return_value[3]),
-            hexbytes.HexBytes(return_value[4]),
-            int(return_value[5]),
-            int(return_value[6]),
-            int(return_value[7]),
-            int(return_value[8]),
-            int(return_value[9]),
-        )
+        return [
+            Event(
+                EventType(return_value_elem[0]),
+                Rule(return_value_elem[1]),
+                eth_typing.ChecksumAddress(return_value_elem[2]),
+                eth_typing.ChecksumAddress(return_value_elem[3]),
+                hexbytes.HexBytes(return_value_elem[4]),
+                int(return_value_elem[5]),
+                int(return_value_elem[6]),
+                int(return_value_elem[7]),
+                int(return_value_elem[8]),
+                int(return_value_elem[9]),
+            )
+            for return_value_elem in return_value
+        ]
 
     def get_validator_accusation(
         self,
