@@ -13,20 +13,45 @@ jobs:
     strategy:
       matrix:
         python-ver: ["3.9", "3.10", "3.11", "3.12", "3.13"]
-        os: [ubuntu-22.04, macos-latest]
 
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Clone autonity.py
+        uses: actions/checkout@v4
+
+      # This step won't be needed after pytest-autonity is available from PyPI
+      - name: Clone pytest-autonity
+        uses: actions/checkout@v4
         with:
-          submodules: recursive
+          repository: autonity/pytest-autonity
+          path: build/pytest-autonity
+          ref: v0.1.0
+          token: ${{ secrets.ACCESS_TOKEN }}
+
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-ver }}
+
       - name: Install Hatch
         run: pip install --upgrade hatch
+
+      - name: Get Autonity run ID
+        id: get_run_id
+        run: echo run_id=$(cat AUTONITY_RUN_ID) >> $GITHUB_OUTPUT
+
+      - name: Download Autonity build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: build/autonity
+          repository: clearmatics/autonity
+          github-token: ${{ secrets.ACCESS_TOKEN }}
+          run-id: ${{ steps.get_run_id.outputs.run_id }}
+
       - name: Lint
         run: hatch run lint:check
+
       - name: Test
-        run: hatch run +py=${{ matrix.python-ver }} test:all
+        run: hatch run +py=${{ env.PYTHON_VERSION }} test:all
+        env:
+          PYTEST_AUTONITY_URL: file:///home/runner/work/autonity.py/autonity.py/build/pytest-autonity
