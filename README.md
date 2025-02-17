@@ -105,6 +105,13 @@ Installed pypy3.10 @ /home/develop/.local/share/hatch/pythons/pypy3.10
 
 ### Building and testing
 
+First clone [Autonity](https://github.com/autonity/autonity) and build the
+Autonity Go Client binary with:
+
+```sh
+make autonity
+```
+
 To launch the tests across all supported Python versions, run:
 
 ```sh
