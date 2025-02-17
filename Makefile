@@ -4,6 +4,7 @@ AUTONITY_BIN := $(AUTONITY_DIR)/build/bin/autonity
 ABIDIR := $(AUTONITY_DIR)/params/generated
 SRCDIR := $(AUTONITY_DIR)/autonity/solidity/contracts
 OUTDIR := autonity/contracts
+CI := ${CI}
 
 abigen = hatch run generate:pyabigen \
 	--version $(VERSION) \
@@ -57,6 +58,9 @@ $(OUTDIR)/supply_control.py: $(call gentargets,SupplyControl)
 $(OUTDIR)/upgrade_manager.py: $(call gentargets,UpgradeManager)
 	$(call abigen,$^) --exclude setOperator >$@
 
+# -- The targets below are not available in GitHub workflows --
+ifneq ($(CI),true)
+
 $(ABIDIR)/%.abi $(ABIDIR)/%.docdev $(ABIDIR)/%.docuser: $(AUTONITY_DIR) AUTONITY_VERSION
 	cd $< && \
 	git fetch origin && \
@@ -78,3 +82,5 @@ clean:
 	rm -rf $(AUTONITY_DIR)
 
 .PHONY = autonity clean
+
+endif
