@@ -114,6 +114,7 @@ jobs:
 
       - name: Commit changes to new branch & create pull request
         if: github.event.action == 'new_autonity_release'
+        id: create_pull_request
         run: |
           git checkout -b $BRANCH
           git add autonity/contracts/*.py AUTONITY_*
@@ -126,6 +127,7 @@ jobs:
             --head $BRANCH \
             --title 'Update bindings for Autonity ${{ steps.get_autonity_tag.outputs.tag }}' \
             --body 'Merge `develop` into `master`.'
+          echo link=$(gh pr view --json title,url --jq '"[\(.title)](\(.url))"') >> $GITHUB_OUTPUT
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: autonity-${{ steps.get_autonity_tag.outputs.tag }}
@@ -144,3 +146,29 @@ jobs:
             {
               "sha": "${{ steps.get_latest_commit.outputs.sha }}"
             }
+
+      - name: Send Slack pull request notification
+        if: success() && github.event.action == 'new_autonity_release'
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_CHANNEL: '#tbd'
+          SLACK_USERNAME: GitHub Actions Bot
+          SLACK_ICON_EMOJI: ':github:'
+          SLACK_MESSAGE: |
+            :github-merged: A new automated pull request has been opened.
+
+            ${{ steps.create_pull_request.outputs.link }}
+
+      - name: Send Slack failure notification
+        if: failure()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_CHANNEL: '#tbd'
+          SLACK_USERNAME: GitHub Actions Bot
+          SLACK_ICON_EMOJI: ':github:'
+          SLACK_MESSAGE: |
+            :warning: Workflow run failed.
+
+            [Upstream commit](https://github.com/autonity/autonity/commit/${{ github.event.client_payload.sha }})
