@@ -152,7 +152,7 @@ jobs:
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-          SLACK_CHANNEL: '#tbd'
+          SLACK_CHANNEL: '#pydev-alerts'
           SLACK_USERNAME: GitHub Actions Bot
           SLACK_ICON_EMOJI: ':github:'
           SLACK_MESSAGE: |
@@ -165,7 +165,7 @@ jobs:
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-          SLACK_CHANNEL: '#tbd'
+          SLACK_CHANNEL: '#pydev-alerts'
           SLACK_USERNAME: GitHub Actions Bot
           SLACK_ICON_EMOJI: ':github:'
           SLACK_MESSAGE: |
