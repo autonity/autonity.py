@@ -1,4 +1,4 @@
-name: Upstream Trigger
+name: Update Bindings
 
 on:
   repository_dispatch:
