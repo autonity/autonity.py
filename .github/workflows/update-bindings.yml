@@ -6,6 +6,19 @@ on:
       - new_autonity_push
       - new_autonity_release
 
+# SUMMARY
+# 1. Clone autonity.py and autonity repositories
+# 2. Install & configure dependencies
+# 3. Download Autonity build artifacts (for new Autonity push) or
+#    release artifacts (for new Autonity release)
+# 4. Update contract bindings
+# 5. Run tests
+# 6. Commit and push changes to develop (for new Autonity push) or
+#    to a new branch created from develop (for new Autonity release)
+# 7. Open a pull request to master (for new Autonity release)
+# 8. Trigger downstream workflow in autonity-cli repository
+# 9. Send Slack notification
+
 env:
   PYTHON_VERSION: 3.13
 
