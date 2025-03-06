@@ -35,17 +35,21 @@ jobs:
       - name: Install Hatch
         run: pip install --upgrade hatch
 
-      - name: Get Autonity run ID
-        id: get_run_id
-        run: echo run_id=$(cat AUTONITY_RUN_ID) >> $GITHUB_OUTPUT
+      - name: Get Autonity tag
+        id: get_autonity_tag
+        # AUTONITY_VERSION should always be the tag of the most recent release
+        # on master & stable branches
+        run: echo tag=$(cat AUTONITY_VERSION) >> $GITHUB_OUTPUT
 
-      - name: Download Autonity build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: build/autonity
-          repository: clearmatics/autonity
-          github-token: ${{ secrets.ACCESS_TOKEN }}
-          run-id: ${{ steps.get_run_id.outputs.run_id }}
+      - name: Download Autonity Go Client binary
+        run: |
+          gh release download ${{ steps.get_autonity_tag.outputs.tag }} \
+            --dir build \
+            --repo autonity/autonity
+          mkdir -p build/autonity/build/bin
+          tar -zxf build/autonity-linux-amd64-*.tar.gz -C build/autonity/build/bin
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_CLEARMATICSROBOT_PAT }}
 
       - name: Lint
         run: hatch run lint:check

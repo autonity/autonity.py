@@ -60,17 +60,6 @@ jobs:
       - name: Install Hatch
         run: pip install --upgrade hatch
 
-      - name: Download Autonity build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: build/autonity
-          repository: autonity/autonity
-          github-token: ${{ secrets.GH_CLEARMATICSROBOT_PAT }}
-          run-id: ${{ github.event.client_payload.run_id }}
-
-      - name: Set Autonity permissions
-        run: chmod +x build/autonity/build/bin/autonity
-
       - name: Configure Git
         run: |
           git config user.name 'GitHub Actions Bot'
@@ -85,6 +74,30 @@ jobs:
         id: get_autonity_tag
         run: echo tag=$(git describe --tags) >> $GITHUB_OUTPUT
         working-directory: build/autonity
+
+      - name: Download Autonity build artifacts
+        if: github.event.action == 'new_autonity_push'
+        uses: actions/download-artifact@v4
+        with:
+          path: build/autonity
+          repository: autonity/autonity
+          github-token: ${{ secrets.GH_CLEARMATICSROBOT_PAT }}
+          run-id: ${{ github.event.client_payload.run_id }}
+
+      - name: Download Autonity release artifacts
+        if: github.event.action == 'new_autonity_release'
+        run: |
+          gh release download ${{ steps.get_autonity_tag.outputs.tag }} \
+            --dir build \
+            --repo autonity/autonity
+          mkdir -p build/autonity/build/bin build/autonity/params/generated
+          tar -zxf build/autonity-linux-amd64-*.tar.gz -C build/autonity/build/bin
+          tar -zxf build/protocol-contracts-abi-*.tar.gz -C build/autonity/params/generated
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_CLEARMATICSROBOT_PAT }}
+
+      - name: Set Autonity permissions
+        run: chmod +x build/autonity/build/bin/autonity
 
       - name: Update Autonity version
         run: |
