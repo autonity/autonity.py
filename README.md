@@ -76,6 +76,14 @@ using [pipx](https://pipx.pypa.io/):
 pipx install hatch
 ```
 
+### Branches
+
+The repository has the following permanent branches:
+
+- `master`: Compatible with the upcoming Autonity release.
+- `stable`: Compatible with the most recent Autonity release.
+- `develop`: Compatible with the head of Autonity's `develop` branch.
+
 ### Installing Python interpreters (optional)
 
 This project aims to be compatible with all the officially-supported versions of
@@ -105,6 +113,13 @@ Installed pypy3.10 @ /home/develop/.local/share/hatch/pythons/pypy3.10
 
 ### Building and testing
 
+First clone [Autonity](https://github.com/autonity/autonity) and build the
+Autonity Go Client binary with:
+
+```sh
+make autonity
+```
+
 To launch the tests across all supported Python versions, run:
 
 ```sh
@@ -127,12 +142,17 @@ hatch run lint:check
 
 ### Updating the contract bindings
 
+Contract bindings are kept in sync with the Autonity protocol contracts via
+GitHub Actions workflows. However bindings might need to be re-generated
+manually in case contracts are being renamed or added or removed.
+
 To update contract bindings for a new version of the Autonity protocol, add the
-new [AGC](https://github.com/autonity/autonity) version (Git tag or commit ID)
-to `AUTONITY_VERSION`, then generate the contract bindings with `make`:
+new [AGC](https://github.com/autonity/autonity) Git tag (the output of
+`git describe --tags`) to `AUTONITY_VERSION`, then generate the contract
+bindings with `make`:
 
 ```console
-echo v0.14.0 > AUTONITY_VERSION
+echo v1.0.2-alpha > AUTONITY_VERSION
 make
 ```
 

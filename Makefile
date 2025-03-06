@@ -1,8 +1,10 @@
 VERSION := $(shell cat AUTONITY_VERSION)
-AUTONITY := build/autonity
-ABIDIR := $(AUTONITY)/params/generated
-SRCDIR := $(AUTONITY)/autonity/solidity/contracts
+AUTONITY_DIR := build/autonity
+AUTONITY_BIN := $(AUTONITY_DIR)/build/bin/autonity
+ABIDIR := $(AUTONITY_DIR)/params/generated
+SRCDIR := $(AUTONITY_DIR)/autonity/solidity/contracts
 OUTDIR := autonity/contracts
+CI := ${CI}
 
 abigen = hatch run generate:pyabigen \
 	--version $(VERSION) \
@@ -10,6 +12,7 @@ abigen = hatch run generate:pyabigen \
 	--devdoc $(word 2,$(1)) \
 	--userdoc $(word 3,$(1)) \
 	$(word 4,$(1))
+
 gentargets = $(shell find $(SRCDIR) -name $(1).sol) \
 	$(addprefix $(ABIDIR)/$(1),.docdev .docuser .abi) \
 	pyproject.toml
@@ -55,16 +58,29 @@ $(OUTDIR)/supply_control.py: $(call gentargets,SupplyControl)
 $(OUTDIR)/upgrade_manager.py: $(call gentargets,UpgradeManager)
 	$(call abigen,$^) --exclude setOperator >$@
 
-$(ABIDIR)/%.abi $(ABIDIR)/%.docdev $(ABIDIR)/%.docuser: $(AUTONITY) AUTONITY_VERSION
+# -- The targets below are not available in GitHub workflows --
+ifneq ($(CI),true)
+
+$(ABIDIR)/%.abi $(ABIDIR)/%.docdev $(ABIDIR)/%.docuser: $(AUTONITY_DIR) AUTONITY_VERSION
 	cd $< && \
 	git fetch origin && \
-	git checkout $(VERSION) && \
+	git checkout -d $(VERSION) && \
 	make contracts
 
-$(AUTONITY):
+$(AUTONITY_BIN): $(AUTONITY_DIR) AUTONITY_VERSION
+	cd $< && \
+	git fetch origin && \
+	git checkout -d $(VERSION) && \
+	make autonity
+
+$(AUTONITY_DIR):
 	git clone git@github.com:autonity/autonity.git $@
 
-clean:
-	rm -rf $(AUTONITY)
+autonity: $(AUTONITY_BIN)
 
-.PHONY = clean
+clean:
+	rm -rf $(AUTONITY_DIR)
+
+.PHONY = autonity clean
+
+endif

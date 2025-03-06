@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+      - stable
+  pull_request:
+
+jobs:
+  ci:
+    strategy:
+      matrix:
+        python-ver: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone autonity.py
+        uses: actions/checkout@v4
+
+      # This step won't be needed after pytest-autonity is available from PyPI
+      - name: Clone pytest-autonity
+        uses: actions/checkout@v4
+        with:
+          repository: autonity/pytest-autonity
+          path: build/pytest-autonity
+          ref: v0.1.0
+          token: ${{ secrets.ACCESS_TOKEN }}
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-ver }}
+
+      - name: Install Hatch
+        run: pip install --upgrade hatch
+
+      - name: Get Autonity tag
+        id: get_autonity_tag
+        # AUTONITY_VERSION should always be the tag of the most recent release
+        # on master & stable branches
+        run: echo tag=$(cat AUTONITY_VERSION) >> $GITHUB_OUTPUT
+
+      - name: Download Autonity Go Client binary
+        run: |
+          gh release download ${{ steps.get_autonity_tag.outputs.tag }} \
+            --dir build \
+            --repo autonity/autonity
+          mkdir -p build/autonity/build/bin
+          tar -zxf build/autonity-linux-amd64-*.tar.gz -C build/autonity/build/bin
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_CLEARMATICSROBOT_PAT }}
+
+      - name: Lint
+        run: hatch run lint:check
+
+      - name: Test
+        run: hatch run +py=${{ env.PYTHON_VERSION }} test:all
+        env:
+          PYTEST_AUTONITY_URL: file:///home/runner/work/autonity.py/autonity.py/build/pytest-autonity

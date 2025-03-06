@@ -1,0 +1,200 @@
+name: Update Bindings
+
+on:
+  repository_dispatch:
+    types:
+      - new_autonity_push
+      - new_autonity_release
+
+# SUMMARY
+# 1. Clone autonity.py and autonity repositories
+# 2. Install & configure dependencies
+# 3. Download Autonity build artifacts (for new Autonity push) or
+#    release artifacts (for new Autonity release)
+# 4. Update contract bindings
+# 5. Run tests
+# 6. Commit and push changes to develop (for new Autonity push) or
+#    to a new branch created from develop (for new Autonity release)
+# 7. Open a pull request to master (for new Autonity release)
+# 8. Trigger downstream workflow in autonity-cli repository
+# 9. Send Slack notification
+
+env:
+  PYTHON_VERSION: 3.13
+
+jobs:
+  update-bindings:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write  # For `git push`
+      pull-requests: write  # For `gh pr create`
+
+    steps:
+      - name: Log triggering event
+        run: echo '${{ toJSON(github.event) }}'
+
+      - name: Clone autonity.py
+        uses: actions/checkout@v4
+        with:
+          ref: develop
+
+      - name: Clone autonity
+        uses: actions/checkout@v4
+        with:
+          repository: autonity/autonity
+          path: build/autonity
+          ref: ${{ github.event.client_payload.sha }}
+          fetch-depth: 0  # To be able to get the most recent tag for AUTONITY_VERSION
+
+      # This step won't be needed after pyabigen is available from PyPI
+      - name: Clone pyabigen
+        uses: actions/checkout@v4
+        with:
+          repository: clearmatics/pyabigen
+          path: build/pyabigen
+          ref: v0.2.13
+          token: ${{ secrets.GH_CLEARMATICSROBOT_PAT }}
+
+      # This step won't be needed after pytest-autonity is available from PyPI
+      - name: Clone pytest-autonity
+        uses: actions/checkout@v4
+        with:
+          repository: autonity/pytest-autonity
+          path: build/pytest-autonity
+          ref: v0.1.0
+          token: ${{ secrets.GH_CLEARMATICSROBOT_PAT }}
+
+      - name: Install Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install Hatch
+        run: pip install --upgrade hatch
+
+      - name: Configure Git
+        run: |
+          git config user.name 'GitHub Actions Bot'
+          git config user.email 'github-actions-bot@users.noreply.github.com'
+
+      - name: Get Autonity short commit hash
+        id: get_autonity_commit
+        run: echo sha=$(git rev-parse --short HEAD) >> $GITHUB_OUTPUT
+        working-directory: build/autonity
+
+      - name: Get Autonity tag
+        id: get_autonity_tag
+        run: echo tag=$(git describe --tags) >> $GITHUB_OUTPUT
+        working-directory: build/autonity
+
+      - name: Download Autonity build artifacts
+        if: github.event.action == 'new_autonity_push'
+        uses: actions/download-artifact@v4
+        with:
+          path: build/autonity
+          repository: autonity/autonity
+          github-token: ${{ secrets.GH_CLEARMATICSROBOT_PAT }}
+          run-id: ${{ github.event.client_payload.run_id }}
+
+      - name: Download Autonity release artifacts
+        if: github.event.action == 'new_autonity_release'
+        run: |
+          gh release download ${{ steps.get_autonity_tag.outputs.tag }} \
+            --dir build \
+            --repo autonity/autonity
+          mkdir -p build/autonity/build/bin build/autonity/params/generated
+          tar -zxf build/autonity-linux-amd64-*.tar.gz -C build/autonity/build/bin
+          tar -zxf build/protocol-contracts-abi-*.tar.gz -C build/autonity/params/generated
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_CLEARMATICSROBOT_PAT }}
+
+      - name: Set Autonity permissions
+        run: chmod +x build/autonity/build/bin/autonity
+
+      - name: Update Autonity version
+        run: |
+          echo ${{ steps.get_autonity_tag.outputs.tag }} > AUTONITY_VERSION
+
+      - name: Update bindings
+        run: make
+        env:
+          PYABIGEN_URL: file:///home/runner/work/autonity.py/autonity.py/build/pyabigen
+
+      - name: Lint code
+        run: hatch run lint:check
+
+      - name: Run tests
+        run: hatch run +py=${{ env.PYTHON_VERSION }} test:all
+        env:
+          PYTEST_AUTONITY_URL: file:///home/runner/work/autonity.py/autonity.py/build/pytest-autonity
+
+      - name: Commit changes to develop
+        if: github.event.action == 'new_autonity_push'
+        run: |
+          git add autonity/contracts/*.py AUTONITY_*
+          git commit \
+            -m 'Update for Autonity commit ${{ steps.get_autonity_commit.outputs.sha }}' \
+            -m 'Triggered by https://github.com/autonity/autonity/commit/${{ steps.get_autonity_commit.outputs.sha }}'
+          git push
+
+      - name: Commit changes to new branch & create pull request
+        if: github.event.action == 'new_autonity_release'
+        id: create_pull_request
+        run: |
+          git checkout -b $BRANCH
+          git add autonity/contracts/*.py AUTONITY_*
+          git commit \
+            -m 'Update for Autonity release ${{ steps.get_autonity_tag.outputs.tag }}' \
+            -m 'Triggered by https://github.com/autonity/autonity/releases/tag/${{ steps.get_autonity_tag.outputs.tag }}'
+          git push origin $BRANCH
+          gh pr create \
+            --base master \
+            --head $BRANCH \
+            --title 'Update bindings for Autonity ${{ steps.get_autonity_tag.outputs.tag }}' \
+            --body 'Merge `develop` into `master`.'
+          echo link=$(gh pr view --json title,url --jq '"[\(.title)](\(.url))"') >> $GITHUB_OUTPUT
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: autonity-${{ steps.get_autonity_tag.outputs.tag }}
+
+      - name: Get hash of latest commit
+        id: get_latest_commit
+        run: echo sha=$(git rev-parse HEAD) >> $GITHUB_OUTPUT
+
+      - name: Trigger autonity-cli build
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.GH_CLEARMATICSROBOT_PAT }}
+          repository: autonity/autonity-cli
+          event-type: new_autonity_bindings
+          client-payload: >
+            {
+              "sha": "${{ steps.get_latest_commit.outputs.sha }}"
+            }
+
+      - name: Send Slack pull request notification
+        if: success() && github.event.action == 'new_autonity_release'
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_CHANNEL: '#pydev-alerts'
+          SLACK_USERNAME: GitHub Actions Bot
+          SLACK_ICON_EMOJI: ':github:'
+          SLACK_MESSAGE: |
+            :github-merged: A new automated pull request has been opened.
+
+            ${{ steps.create_pull_request.outputs.link }}
+
+      - name: Send Slack failure notification
+        if: failure()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_CHANNEL: '#pydev-alerts'
+          SLACK_USERNAME: GitHub Actions Bot
+          SLACK_ICON_EMOJI: ':github:'
+          SLACK_MESSAGE: |
+            :warning: Workflow run failed.
+
+            [Upstream commit](https://github.com/autonity/autonity/commit/${{ github.event.client_payload.sha }})
