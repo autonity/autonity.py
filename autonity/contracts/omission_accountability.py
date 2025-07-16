@@ -115,25 +115,6 @@ class OmissionAccountability:
         return_value = self._contract.functions.SCALE_FACTOR().call()
         return int(return_value)
 
-    def distribute_proposer_rewards(
-        self,
-        _ntn_reward: int,
-    ) -> contract.ContractFunction:
-        """Binding for `distributeProposerRewards` on the OmissionAccountability contract.
-
-        Parameters
-        ----------
-        _ntn_reward : int
-
-        Returns
-        -------
-        web3.contract.contract.ContractFunction
-            A contract function instance to be sent in a transaction.
-        """
-        return self._contract.functions.distributeProposerRewards(
-            _ntn_reward,
-        )
-
     def get_absentees_last_height(
         self,
     ) -> typing.List[eth_typing.ChecksumAddress]:

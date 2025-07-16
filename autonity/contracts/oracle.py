@@ -205,29 +205,6 @@ class Oracle:
         """
         return self._contract.events.TotalOracleRewards
 
-    def distribute_rewards(
-        self,
-        _ntn: int,
-    ) -> contract.ContractFunction:
-        """Binding for `distributeRewards` on the Oracle contract.
-
-        Distributes oracle rewards to voters based on their performance. Called by
-        Autonity at finalize().
-
-        Parameters
-        ----------
-        _ntn : int
-            , the amount of ntn to redistribute
-
-        Returns
-        -------
-        web3.contract.contract.ContractFunction
-            A contract function instance to be sent in a transaction.
-        """
-        return self._contract.functions.distributeRewards(
-            _ntn,
-        )
-
     def get_config(
         self,
     ) -> Config:
@@ -666,21 +643,6 @@ class Oracle:
         return self._contract.functions.setVotePeriod(
             _vote_period,
         )
-
-    def update_voters_and_symbol(
-        self,
-    ) -> contract.ContractFunction:
-        """Binding for `updateVotersAndSymbol` on the Oracle contract.
-
-        updates voters and symbols, taking into account boundary edge cases.
-        Called by Autonity at the start of a new Oracle round
-
-        Returns
-        -------
-        web3.contract.contract.ContractFunction
-            A contract function instance to be sent in a transaction.
-        """
-        return self._contract.functions.updateVotersAndSymbol()
 
 
 ABI = typing.cast(

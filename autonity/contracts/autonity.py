@@ -1,4 +1,4 @@
-"""Autonaty contract binding and data structures."""
+"""Autonity contract binding and data structures."""
 
 # This module has been generated using pyabigen v0.2.15
 

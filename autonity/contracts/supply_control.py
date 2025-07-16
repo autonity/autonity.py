@@ -122,28 +122,6 @@ class SupplyControl:
         return_value = self._contract.functions.getTotalSupply().call()
         return int(return_value)
 
-    def set_stabilizer(
-        self,
-        stabilizer_: eth_typing.ChecksumAddress,
-    ) -> contract.ContractFunction:
-        """Binding for `setStabilizer` on the SupplyControl contract.
-
-        Update the stabilizer that is authorized to mint and burn.
-
-        Parameters
-        ----------
-        stabilizer_ : eth_typing.ChecksumAddress
-            The new stabilizer account
-
-        Returns
-        -------
-        web3.contract.contract.ContractFunction
-            A contract function instance to be sent in a transaction.
-        """
-        return self._contract.functions.setStabilizer(
-            stabilizer_,
-        )
-
 
 ABI = typing.cast(
     eth_typing.ABI,

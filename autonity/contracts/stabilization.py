@@ -656,38 +656,6 @@ class Stabilization:
             int(return_value[3]),
         )
 
-    def liquidate(
-        self,
-        account: eth_typing.ChecksumAddress,
-        collateral_sold: int,
-        bidder: eth_typing.ChecksumAddress,
-    ) -> contract.ContractFunction:
-        """Binding for `liquidate` on the Stabilization contract.
-
-        Liquidate a CDP that is undercollateralized. The liquidator must pay all the CDP
-        debt outstanding. As a reward, the liquidator will receive the collateral that
-        is held in the CDP. The transaction value is the payment amount. After covering
-        the CDP's debt, any surplus is refunded to the liquidator.
-
-        Parameters
-        ----------
-        account : eth_typing.ChecksumAddress
-            The CDP account address to liquidate
-        collateral_sold : int
-        bidder : eth_typing.ChecksumAddress
-            The address of the bidder
-
-        Returns
-        -------
-        web3.contract.contract.ContractFunction
-            A contract function instance to be sent in a transaction.
-        """
-        return self._contract.functions.liquidate(
-            account,
-            collateral_sold,
-            bidder,
-        )
-
     def liquidation_ratio(
         self,
     ) -> int:
@@ -801,28 +769,6 @@ class Stabilization:
         """
         return self._contract.functions.repay()
 
-    def set_acu(
-        self,
-        acu: eth_typing.ChecksumAddress,
-    ) -> contract.ContractFunction:
-        """Binding for `setACU` on the Stabilization contract.
-
-        Set the ACU contract address.
-
-        Parameters
-        ----------
-        acu : eth_typing.ChecksumAddress
-            Address of the new ACU Contract
-
-        Returns
-        -------
-        web3.contract.contract.ContractFunction
-            A contract function instance to be sent in a transaction.
-        """
-        return self._contract.functions.setACU(
-            acu,
-        )
-
     def set_atn_supply_operator(
         self,
         atn_supply_operator: eth_typing.ChecksumAddress,
@@ -842,28 +788,6 @@ class Stabilization:
         """
         return self._contract.functions.setAtnSupplyOperator(
             atn_supply_operator,
-        )
-
-    def set_auctioneer(
-        self,
-        auctioneer: eth_typing.ChecksumAddress,
-    ) -> contract.ContractFunction:
-        """Binding for `setAuctioneer` on the Stabilization contract.
-
-        Set the Auctioneer Contract address.
-
-        Parameters
-        ----------
-        auctioneer : eth_typing.ChecksumAddress
-            Address of the new Auctioneer Contract
-
-        Returns
-        -------
-        web3.contract.contract.ContractFunction
-            A contract function instance to be sent in a transaction.
-        """
-        return self._contract.functions.setAuctioneer(
-            auctioneer,
         )
 
     def set_default_acuusd_price(
@@ -949,27 +873,6 @@ class Stabilization:
         """
         return self._contract.functions.setMinDebtRequirement(
             amount,
-        )
-
-    def set_supply_control(
-        self,
-        supply_control: eth_typing.ChecksumAddress,
-    ) -> contract.ContractFunction:
-        """Binding for `setSupplyControl` on the Stabilization contract.
-
-        Set the SupplyControl Contract address.
-
-        Parameters
-        ----------
-        supply_control : eth_typing.ChecksumAddress
-
-        Returns
-        -------
-        web3.contract.contract.ContractFunction
-            A contract function instance to be sent in a transaction.
-        """
-        return self._contract.functions.setSupplyControl(
-            supply_control,
         )
 
     def under_collateralized(

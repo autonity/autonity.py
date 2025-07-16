@@ -498,29 +498,6 @@ class Accountability:
             (_rates.low, _rates.mid, _rates.high),
         )
 
-    def set_committee(
-        self,
-        _new_committee: typing.List[eth_typing.ChecksumAddress],
-    ) -> contract.ContractFunction:
-        """Binding for `setCommittee` on the Accountability contract.
-
-        setCommittee, called by the AC at epoch change, it removes stale committee from
-        the reporter set, then replace the last committee with current committee, and
-        set the current committee with the input new committee.
-
-        Parameters
-        ----------
-        _new_committee : typing.List[eth_typing.ChecksumAddress]
-
-        Returns
-        -------
-        web3.contract.contract.ContractFunction
-            A contract function instance to be sent in a transaction.
-        """
-        return self._contract.functions.setCommittee(
-            _new_committee,
-        )
-
     def set_delta(
         self,
         _delta: int,

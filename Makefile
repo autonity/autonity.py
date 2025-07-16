@@ -27,13 +27,13 @@ all: $(OUTDIR)/accountability.py \
 	 $(OUTDIR)/upgrade_manager.py
 
 $(OUTDIR)/accountability.py: $(call gentargets,Accountability)
-	$(call abigen,$^) --exclude distributeRewards,finalize,handleAccusation,handleEvent,handleInnocenceProof,handleMisbehaviour,setEpochPeriod >$@
+	$(call abigen,$^) --exclude distributeRewards,finalize,handleAccusation,handleEvent,handleInnocenceProof,handleMisbehaviour,setCommittee,setEpochPeriod >$@
 
 $(OUTDIR)/acu.py: $(call gentargets,ACU)
 	$(call abigen,$^) --exclude setOperator,setOracle,update >$@
 
 $(OUTDIR)/auctioneer.py: $(call gentargets,Auctioneer)
-	$(call abigen,$^) --exclude paidInterest,setOperator,setStabilization,setOracle >$@
+	$(call abigen,$^) --exclude paidInterest,setOperator,setOracle,setStabilization >$@
 
 $(OUTDIR)/autonity.py: $(call gentargets,Autonity)
 	$(call abigen,$^) --exclude autobond,computeCommittee,finalize,finalizeInitialization,jail,jailbound,slash,slashAndJail >$@
@@ -45,16 +45,16 @@ $(OUTDIR)/liquid_logic.py: $(call gentargets,LiquidLogic)
 	$(call abigen,$^) --exclude burn,lock,mint,redistribute,setCommissionRate,unlock >$@
 
 $(OUTDIR)/omission_accountability.py: $(call gentargets,OmissionAccountability)
-	$(call abigen,$^) --exclude finalize,setCommittee,setEpochBlock,setOperator >$@
+	$(call abigen,$^) --exclude distributeProposerRewards,finalize,setCommittee,setEpochBlock,setOperator >$@
 
 $(OUTDIR)/oracle.py: $(call gentargets,Oracle)
-	$(call abigen,$^) --exclude finalize,setOperator,setVoters,vote >$@
+	$(call abigen,$^) --exclude distributeRewards,finalize,setOperator,setVoters,updateVotersAndSymbol,vote >$@
 
 $(OUTDIR)/stabilization.py: $(call gentargets,Stabilization)
-	$(call abigen,$^) --exclude setOperator,setOracle >$@
+	$(call abigen,$^) --exclude liquidate,setACU,setAuctioneer,setOperator,setOracle,setSupplyControl >$@
 
 $(OUTDIR)/supply_control.py: $(call gentargets,SupplyControl)
-	$(call abigen,$^) --exclude burn,mint,setOperator >$@
+	$(call abigen,$^) --exclude burn,mint,setOperator,setStabilizer >$@
 
 $(OUTDIR)/upgrade_manager.py: $(call gentargets,UpgradeManager)
 	$(call abigen,$^) --exclude setOperator >$@
