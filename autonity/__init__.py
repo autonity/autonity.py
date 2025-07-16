@@ -4,6 +4,7 @@ from . import constants, contracts
 from .factory import (
     Accountability,
     ACU,
+    Auctioneer,
     Autonity,
     InflationController,
     LiquidLogic,
@@ -19,6 +20,7 @@ __all__ = (
     "contracts",
     "Accountability",
     "ACU",
+    "Auctioneer",
     "Autonity",
     "InflationController",
     "LiquidLogic",

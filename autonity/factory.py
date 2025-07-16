@@ -19,6 +19,7 @@ from .constants import AUTONITY_CONTRACT_ADDRESS, AUTONITY_CONTRACT_VERSION
 from .contracts import (
     accountability,
     acu,
+    auctioneer,
     autonity,
     inflation_controller,
     liquid_logic,
@@ -62,6 +63,22 @@ def ACU(w3: Web3) -> acu.ACU:
         A contract binding instance.
     """
     return acu.ACU(w3, _config(w3).contracts.acu_contract)
+
+
+def Auctioneer(w3: Web3) -> auctioneer.Auctioneer:
+    """Auctioneer contract binding factory.
+
+    Parameters
+    ----------
+    w3 : web3.Web3
+        A `web3.Web3` instance with a provider connected to an Autonity network.
+
+    Returns
+    -------
+    autonity.contracts.auctioneer.Auctioneer
+        A contract binding instance.
+    """
+    return auctioneer.Auctioneer(w3, _config(w3).contracts.auctioneer_contract)
 
 
 def Autonity(w3: Web3) -> autonity.Autonity:
