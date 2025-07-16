@@ -1,6 +1,6 @@
 """InflationController contract binding and data structures."""
 
-# This module has been generated using pyabigen v0.2.12
+# This module has been generated using pyabigen v0.2.15
 
 import typing
 from dataclasses import dataclass
@@ -9,7 +9,7 @@ import eth_typing
 import web3
 from web3.contract import contract
 
-__version__ = "v1.0.2-alpha"
+__version__ = "b0e1080d6fce220c9b3daefb57a35835d194695a"
 
 
 @dataclass
@@ -75,16 +75,17 @@ class InflationController:
         ).call()
         return int(return_value)
 
-    def params(
+    def get_params(
         self,
     ) -> Params:
-        """Binding for `params` on the InflationController contract.
+        """Binding for `getParams` on the InflationController contract.
 
         Returns
         -------
         Params
+            the current parameters of the inflation controller
         """
-        return_value = self._contract.functions.params().call()
+        return_value = self._contract.functions.getParams().call()
         return Params(
             int(return_value[0]),
             int(return_value[1]),
@@ -220,33 +221,40 @@ ABI = typing.cast(
         },
         {
             "inputs": [],
-            "name": "params",
+            "name": "getParams",
             "outputs": [
                 {
-                    "internalType": "SD59x18",
-                    "name": "inflationRateInitial",
-                    "type": "int256",
-                },
-                {
-                    "internalType": "SD59x18",
-                    "name": "inflationRateTransition",
-                    "type": "int256",
-                },
-                {
-                    "internalType": "SD59x18",
-                    "name": "inflationCurveConvexity",
-                    "type": "int256",
-                },
-                {
-                    "internalType": "SD59x18",
-                    "name": "inflationTransitionPeriod",
-                    "type": "int256",
-                },
-                {
-                    "internalType": "SD59x18",
-                    "name": "inflationReserveDecayRate",
-                    "type": "int256",
-                },
+                    "components": [
+                        {
+                            "internalType": "SD59x18",
+                            "name": "inflationRateInitial",
+                            "type": "int256",
+                        },
+                        {
+                            "internalType": "SD59x18",
+                            "name": "inflationRateTransition",
+                            "type": "int256",
+                        },
+                        {
+                            "internalType": "SD59x18",
+                            "name": "inflationCurveConvexity",
+                            "type": "int256",
+                        },
+                        {
+                            "internalType": "SD59x18",
+                            "name": "inflationTransitionPeriod",
+                            "type": "int256",
+                        },
+                        {
+                            "internalType": "SD59x18",
+                            "name": "inflationReserveDecayRate",
+                            "type": "int256",
+                        },
+                    ],
+                    "internalType": "struct InflationController.Params",
+                    "name": "",
+                    "type": "tuple",
+                }
             ],
             "stateMutability": "view",
             "type": "function",

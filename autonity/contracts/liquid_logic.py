@@ -1,6 +1,6 @@
 """LiquidLogic contract binding and data structures."""
 
-# This module has been generated using pyabigen v0.2.12
+# This module has been generated using pyabigen v0.2.15
 
 import typing
 
@@ -8,7 +8,7 @@ import eth_typing
 import web3
 from web3.contract import contract
 
-__version__ = "v1.0.2-alpha"
+__version__ = "b0e1080d6fce220c9b3daefb57a35835d194695a"
 
 
 class LiquidLogic:
@@ -177,7 +177,7 @@ class LiquidLogic:
     ) -> contract.ContractFunction:
         """Binding for `claimTreasuryATN` on the LiquidLogic contract.
 
-        Send the unclaimed ATN entitled to treasury to treasury account
+        Send the unclaimed ATN entitled to treasury account
 
         Returns
         -------
@@ -204,6 +204,8 @@ class LiquidLogic:
     ) -> int:
         """Binding for `getCommissionRate` on the LiquidLogic contract.
 
+        Returns the current commission rate
+
         Returns
         -------
         int
@@ -215,6 +217,8 @@ class LiquidLogic:
         self,
     ) -> eth_typing.ChecksumAddress:
         """Binding for `getTreasury` on the LiquidLogic contract.
+
+        Returns the treasury of the validator associated with this liquid contract
 
         Returns
         -------
@@ -242,6 +246,8 @@ class LiquidLogic:
         self,
     ) -> eth_typing.ChecksumAddress:
         """Binding for `getValidator` on the LiquidLogic contract.
+
+        Returns the validator associated with this liquid contract
 
         Returns
         -------
@@ -276,6 +282,8 @@ class LiquidLogic:
     ) -> str:
         """Binding for `name` on the LiquidLogic contract.
 
+        Returns the name of this liquid contract token
+
         Returns
         -------
         str
@@ -287,6 +295,8 @@ class LiquidLogic:
         self,
     ) -> str:
         """Binding for `symbol` on the LiquidLogic contract.
+
+        Returns the symbol of this liquid contract token
 
         Returns
         -------

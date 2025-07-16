@@ -17,6 +17,7 @@ gentargets = $(shell find $(SRCDIR) -name $(1).sol) \
 all: $(OUTDIR)/accountability.py \
 	 $(OUTDIR)/acu.py \
 	 $(OUTDIR)/autonity.py \
+	 $(OUTDIR)/auctioneer.py \
 	 $(OUTDIR)/inflation_controller.py \
 	 $(OUTDIR)/liquid_logic.py \
 	 $(OUTDIR)/omission_accountability.py \
@@ -30,6 +31,9 @@ $(OUTDIR)/accountability.py: $(call gentargets,Accountability)
 
 $(OUTDIR)/acu.py: $(call gentargets,ACU)
 	$(call abigen,$^) --exclude setOperator,setOracle,update >$@
+
+$(OUTDIR)/auctioneer.py: $(call gentargets,Auctioneer)
+	$(call abigen,$^) --exclude paidInterest,setOperator,setStabilization,setOracle >$@
 
 $(OUTDIR)/autonity.py: $(call gentargets,Autonity)
 	$(call abigen,$^) --exclude autobond,computeCommittee,finalize,finalizeInitialization,jail,jailbound,slash,slashAndJail >$@
