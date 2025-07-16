@@ -239,7 +239,7 @@ def _config(w3: Web3) -> autonity.Config:
                 f"version {w3.client_version}"
             )
 
-    config = autonity.Autonity(w3, AUTONITY_CONTRACT_ADDRESS).config()
+    config = autonity.Autonity(w3, AUTONITY_CONTRACT_ADDRESS).get_config()
     if config.contract_version != AUTONITY_CONTRACT_VERSION:
         raise RuntimeError(
             f"Contract version mismatch: autonity.py {__version__} supports "
