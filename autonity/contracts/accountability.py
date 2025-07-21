@@ -11,7 +11,7 @@ import hexbytes
 import web3
 from web3.contract import contract
 
-__version__ = "b0e1080d6fce220c9b3daefb57a35835d194695a"
+__version__ = "v1.1.0-internal"
 
 
 class Rule(enum.IntEnum):

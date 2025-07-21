@@ -11,7 +11,7 @@ import hexbytes
 import web3
 from web3.contract import contract
 
-__version__ = "b0e1080d6fce220c9b3daefb57a35835d194695a"
+__version__ = "v1.1.0-internal"
 
 
 class ValidatorState(enum.IntEnum):
@@ -95,6 +95,7 @@ class Protocol:
     max_schedule_duration: int
     gas_limit: int
     gas_limit_bound_divisor: int
+    clustering_threshold: int
 
 
 @dataclass
@@ -143,6 +144,7 @@ class ClientAwareConfig:
     epoch_period: int
     block_period: int
     gas_limit: int
+    clustering_threshold: int
     accountability: Accountability
     eip1559: Eip1559
 
@@ -228,6 +230,15 @@ class Autonity:
     def Approval(self) -> contract.ContractEvent:
         """Binding for `event Approval` on the Autonity contract."""
         return self._contract.events.Approval
+
+    @property
+    def BondingApproval(self) -> contract.ContractEvent:
+        """Binding for `event BondingApproval` on the Autonity contract.
+
+        Emitted when the bonding-allowance (NTN) of a `_caller` for an `_owner` is set
+        by a call to `approveBonding`. `_value` is the new `bondingAllowance` (NTN).
+        """
+        return self._contract.events.BondingApproval
 
     @property
     def BondingRejected(self) -> contract.ContractEvent:
@@ -479,6 +490,32 @@ class Autonity:
             amount,
         )
 
+    def approve_bonding(
+        self,
+        _caller: eth_typing.ChecksumAddress,
+        _amount: int,
+    ) -> contract.ContractFunction:
+        """Binding for `approveBonding` on the Autonity contract.
+
+        Sets `_amount` as the bonding-allowance (NTN) of `_caller` over the caller's
+        tokens. Returns a boolean value indicating whether the operation succeeded.
+        Emits an {BondingApproval} event.
+
+        Parameters
+        ----------
+        _caller : eth_typing.ChecksumAddress
+        _amount : int
+
+        Returns
+        -------
+        web3.contract.contract.ContractFunction
+            A contract function instance to be sent in a transaction.
+        """
+        return self._contract.functions.approveBonding(
+            _caller,
+            _amount,
+        )
+
     def balance_of(
         self,
         _addr: eth_typing.ChecksumAddress,
@@ -507,10 +544,7 @@ class Autonity:
     ) -> contract.ContractFunction:
         """Binding for `bond` on the Autonity contract.
 
-        Create a bonding(delegation) request with the caller as delegator. In case the
-        caller is a contract, it needs to send some gas so autonity can notify the
-        caller about staking operations. In case autonity fails to notify the caller
-        (contract), the applied request is reverted.
+        Create a bonding(delegation) request with the caller as delegator.
 
         Parameters
         ----------
@@ -528,6 +562,62 @@ class Autonity:
             _validator,
             _amount,
         )
+
+    def bond_from(
+        self,
+        _account: eth_typing.ChecksumAddress,
+        _validator: eth_typing.ChecksumAddress,
+        _amount: int,
+    ) -> contract.ContractFunction:
+        """Binding for `bondFrom` on the Autonity contract.
+
+        Create a bonding(delegation) request with the `_account` as delegator. The
+        caller needs to have required bonding-allowance (NTN) from the `_account`.
+
+        Parameters
+        ----------
+        _account : eth_typing.ChecksumAddress
+            address of the delegator.
+        _validator : eth_typing.ChecksumAddress
+            address of the validator to delegate stake to.
+        _amount : int
+            total amount of NTN to bond.
+
+        Returns
+        -------
+        web3.contract.contract.ContractFunction
+            A contract function instance to be sent in a transaction.
+        """
+        return self._contract.functions.bondFrom(
+            _account,
+            _validator,
+            _amount,
+        )
+
+    def bonding_allowance(
+        self,
+        _owner: eth_typing.ChecksumAddress,
+        _caller: eth_typing.ChecksumAddress,
+    ) -> int:
+        """Binding for `bondingAllowance` on the Autonity contract.
+
+        Returns the remaining number of NTN that `_caller` will be allowed to bond on
+        behalf of `_owner` through `bondFrom`. This is zero by default.
+
+        Parameters
+        ----------
+        _owner : eth_typing.ChecksumAddress
+        _caller : eth_typing.ChecksumAddress
+
+        Returns
+        -------
+        int
+        """
+        return_value = self._contract.functions.bondingAllowance(
+            _owner,
+            _caller,
+        ).call()
+        return int(return_value)
 
     def burn(
         self,
@@ -710,16 +800,17 @@ class Autonity:
             int(return_value[0]),
             int(return_value[1]),
             int(return_value[2]),
+            int(return_value[3]),
             Accountability(
-                int(return_value[3][0]),
-                int(return_value[3][1]),
-                int(return_value[3][2]),
-            ),
-            Eip1559(
                 int(return_value[4][0]),
                 int(return_value[4][1]),
                 int(return_value[4][2]),
-                int(return_value[4][3]),
+            ),
+            Eip1559(
+                int(return_value[5][0]),
+                int(return_value[5][1]),
+                int(return_value[5][2]),
+                int(return_value[5][3]),
             ),
         )
 
@@ -804,6 +895,7 @@ class Autonity:
                 int(return_value[2][4]),
                 int(return_value[2][5]),
                 int(return_value[2][6]),
+                int(return_value[2][7]),
             ),
             int(return_value[3]),
         )
@@ -1577,6 +1669,25 @@ class Autonity:
             _address,
         )
 
+    def set_clustering_threshold(
+        self,
+        _threshold: int,
+    ) -> contract.ContractFunction:
+        """Binding for `setClusteringThreshold` on the Autonity contract.
+
+        Parameters
+        ----------
+        _threshold : int
+
+        Returns
+        -------
+        web3.contract.contract.ContractFunction
+            A contract function instance to be sent in a transaction.
+        """
+        return self._contract.functions.setClusteringThreshold(
+            _threshold,
+        )
+
     def set_committee_size(
         self,
         _size: int,
@@ -2087,10 +2198,7 @@ class Autonity:
     ) -> contract.ContractFunction:
         """Binding for `unbond` on the Autonity contract.
 
-        Create an unbonding request with the caller as delegator. In case the caller is
-        a contract, it needs to send some gas so autonity can notify the caller about
-        staking operations. In case autonity fails to notify the caller (contract), the
-        applied request is reverted.
+        Create an unbonding request with the caller as delegator.
 
         Parameters
         ----------
@@ -2105,6 +2213,37 @@ class Autonity:
             A contract function instance to be sent in a transaction.
         """
         return self._contract.functions.unbond(
+            _validator,
+            _amount,
+        )
+
+    def unbond_from(
+        self,
+        _account: eth_typing.ChecksumAddress,
+        _validator: eth_typing.ChecksumAddress,
+        _amount: int,
+    ) -> contract.ContractFunction:
+        """Binding for `unbondFrom` on the Autonity contract.
+
+        Create an unbonding request with the `_account` as delegator. The caller needs
+        to have required unbonding-allowance to unbond LNTN from the `_account`.
+
+        Parameters
+        ----------
+        _account : eth_typing.ChecksumAddress
+            address of the delegator.
+        _validator : eth_typing.ChecksumAddress
+            address of the validator to unbond stake to.
+        _amount : int
+            total amount of LNTN (or NTN if self delegated) to unbond.
+
+        Returns
+        -------
+        web3.contract.contract.ContractFunction
+            A contract function instance to be sent in a transaction.
+        """
+        return self._contract.functions.unbondFrom(
+            _account,
             _validator,
             _amount,
         )
@@ -2428,6 +2567,11 @@ ABI = typing.cast(
                                     "name": "gasLimitBoundDivisor",
                                     "type": "uint256",
                                 },
+                                {
+                                    "internalType": "uint256",
+                                    "name": "clusteringThreshold",
+                                    "type": "uint256",
+                                },
                             ],
                             "internalType": "struct IAutonity.Protocol",
                             "name": "protocol",
@@ -2495,6 +2639,31 @@ ABI = typing.cast(
                 },
             ],
             "name": "Approval",
+            "type": "event",
+        },
+        {
+            "anonymous": False,
+            "inputs": [
+                {
+                    "indexed": True,
+                    "internalType": "address",
+                    "name": "_owner",
+                    "type": "address",
+                },
+                {
+                    "indexed": True,
+                    "internalType": "address",
+                    "name": "_caller",
+                    "type": "address",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "uint256",
+                    "name": "_value",
+                    "type": "uint256",
+                },
+            ],
+            "name": "BondingApproval",
             "type": "event",
         },
         {
@@ -2857,6 +3026,12 @@ ABI = typing.cast(
                     "type": "address",
                 },
                 {
+                    "indexed": True,
+                    "internalType": "address",
+                    "name": "caller",
+                    "type": "address",
+                },
+                {
                     "indexed": False,
                     "internalType": "bool",
                     "name": "selfBonded",
@@ -2947,6 +3122,12 @@ ABI = typing.cast(
                     "indexed": True,
                     "internalType": "address",
                     "name": "delegator",
+                    "type": "address",
+                },
+                {
+                    "indexed": True,
+                    "internalType": "address",
+                    "name": "caller",
                     "type": "address",
                 },
                 {
@@ -3141,6 +3322,16 @@ ABI = typing.cast(
         },
         {
             "inputs": [
+                {"internalType": "address", "name": "_caller", "type": "address"},
+                {"internalType": "uint256", "name": "_amount", "type": "uint256"},
+            ],
+            "name": "approveBonding",
+            "outputs": [{"internalType": "bool", "name": "", "type": "bool"}],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
                 {"internalType": "address", "name": "_validator", "type": "address"},
                 {"internalType": "uint256", "name": "_selfBond", "type": "uint256"},
                 {"internalType": "uint256", "name": "_delegated", "type": "uint256"},
@@ -3165,6 +3356,27 @@ ABI = typing.cast(
             "name": "bond",
             "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
             "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "address", "name": "_account", "type": "address"},
+                {"internalType": "address", "name": "_validator", "type": "address"},
+                {"internalType": "uint256", "name": "_amount", "type": "uint256"},
+            ],
+            "name": "bondFrom",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "address", "name": "_owner", "type": "address"},
+                {"internalType": "address", "name": "_caller", "type": "address"},
+            ],
+            "name": "bondingAllowance",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "view",
             "type": "function",
         },
         {
@@ -3334,6 +3546,11 @@ ABI = typing.cast(
                                     "type": "uint256",
                                 },
                                 {
+                                    "internalType": "uint256",
+                                    "name": "clusteringThreshold",
+                                    "type": "uint256",
+                                },
+                                {
                                     "components": [
                                         {
                                             "internalType": "uint256",
@@ -3466,6 +3683,11 @@ ABI = typing.cast(
                         {
                             "internalType": "uint256",
                             "name": "gasLimit",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "clusteringThreshold",
                             "type": "uint256",
                         },
                         {
@@ -3719,6 +3941,11 @@ ABI = typing.cast(
                                 {
                                     "internalType": "uint256",
                                     "name": "gasLimitBoundDivisor",
+                                    "type": "uint256",
+                                },
+                                {
+                                    "internalType": "uint256",
+                                    "name": "clusteringThreshold",
                                     "type": "uint256",
                                 },
                             ],
@@ -4423,6 +4650,15 @@ ABI = typing.cast(
             "type": "function",
         },
         {
+            "inputs": [
+                {"internalType": "uint256", "name": "_threshold", "type": "uint256"}
+            ],
+            "name": "setClusteringThreshold",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
             "inputs": [{"internalType": "uint256", "name": "_size", "type": "uint256"}],
             "name": "setCommitteeSize",
             "outputs": [],
@@ -4757,6 +4993,17 @@ ABI = typing.cast(
                 {"internalType": "uint256", "name": "_amount", "type": "uint256"},
             ],
             "name": "unbond",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "address", "name": "_account", "type": "address"},
+                {"internalType": "address", "name": "_validator", "type": "address"},
+                {"internalType": "uint256", "name": "_amount", "type": "uint256"},
+            ],
+            "name": "unbondFrom",
             "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
             "stateMutability": "nonpayable",
             "type": "function",

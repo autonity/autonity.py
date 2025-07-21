@@ -8,7 +8,7 @@ import eth_typing
 import web3
 from web3.contract import contract
 
-__version__ = "b0e1080d6fce220c9b3daefb57a35835d194695a"
+__version__ = "v1.1.0-internal"
 
 
 class LiquidLogic:
@@ -42,6 +42,15 @@ class LiquidLogic:
     def Transfer(self) -> contract.ContractEvent:
         """Binding for `event Transfer` on the LiquidLogic contract."""
         return self._contract.events.Transfer
+
+    @property
+    def UnbondingApproval(self) -> contract.ContractEvent:
+        """Binding for `event UnbondingApproval` on the LiquidLogic contract.
+
+        Emitted when the unbond-allowance (LNTN) of a `_caller` for an `_owner` is set
+        by a call to `approveUnbonding`. `_value` is the new unbond-allowance (LNTN).
+        """
+        return self._contract.events.UnbondingApproval
 
     def commission_rate_decimals(
         self,
@@ -134,6 +143,32 @@ class LiquidLogic:
         """
         return self._contract.functions.approve(
             _spender,
+            _amount,
+        )
+
+    def approve_unbonding(
+        self,
+        _caller: eth_typing.ChecksumAddress,
+        _amount: int,
+    ) -> contract.ContractFunction:
+        """Binding for `approveUnbonding` on the LiquidLogic contract.
+
+        Sets `_amount` as the unbond-allowance (LNTN) of `_caller` over the caller's
+        tokens. Returns a boolean value indicating whether the operation succeeded.
+        Emits an {UnbondingApproval} event.
+
+        Parameters
+        ----------
+        _caller : eth_typing.ChecksumAddress
+        _amount : int
+
+        Returns
+        -------
+        web3.contract.contract.ContractFunction
+            A contract function instance to be sent in a transaction.
+        """
+        return self._contract.functions.approveUnbonding(
+            _caller,
             _amount,
         )
 
@@ -256,6 +291,34 @@ class LiquidLogic:
         return_value = self._contract.functions.getValidator().call()
         return eth_typing.ChecksumAddress(return_value)
 
+    def lock_from(
+        self,
+        _account: eth_typing.ChecksumAddress,
+        _caller: eth_typing.ChecksumAddress,
+        _amount: int,
+    ) -> contract.ContractFunction:
+        """Binding for `lockFrom` on the LiquidLogic contract.
+
+        Lock LNTN from `_account` to unbond at the epoch end. `_caller` is the caller
+        and must have enough `unbondingAllowance`.
+
+        Parameters
+        ----------
+        _account : eth_typing.ChecksumAddress
+        _caller : eth_typing.ChecksumAddress
+        _amount : int
+
+        Returns
+        -------
+        web3.contract.contract.ContractFunction
+            A contract function instance to be sent in a transaction.
+        """
+        return self._contract.functions.lockFrom(
+            _account,
+            _caller,
+            _amount,
+        )
+
     def locked_balance_of(
         self,
         _delegator: eth_typing.ChecksumAddress,
@@ -368,6 +431,31 @@ class LiquidLogic:
             _amount,
         )
 
+    def unbonding_allowance(
+        self,
+        _owner: eth_typing.ChecksumAddress,
+        _caller: eth_typing.ChecksumAddress,
+    ) -> int:
+        """Binding for `unbondingAllowance` on the LiquidLogic contract.
+
+        Returns the remaining number of LNTN that `_caller` will be allowed to unbond on
+        behalf of `_owner` through `unbondFrom`. This is zero by default.
+
+        Parameters
+        ----------
+        _owner : eth_typing.ChecksumAddress
+        _caller : eth_typing.ChecksumAddress
+
+        Returns
+        -------
+        int
+        """
+        return_value = self._contract.functions.unbondingAllowance(
+            _owner,
+            _caller,
+        ).call()
+        return int(return_value)
+
     def unclaimed_rewards(
         self,
         _account: eth_typing.ChecksumAddress,
@@ -466,6 +554,31 @@ ABI = typing.cast(
             "name": "Transfer",
             "type": "event",
         },
+        {
+            "anonymous": False,
+            "inputs": [
+                {
+                    "indexed": True,
+                    "internalType": "address",
+                    "name": "_owner",
+                    "type": "address",
+                },
+                {
+                    "indexed": True,
+                    "internalType": "address",
+                    "name": "_caller",
+                    "type": "address",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "uint256",
+                    "name": "_value",
+                    "type": "uint256",
+                },
+            ],
+            "name": "UnbondingApproval",
+            "type": "event",
+        },
         {"stateMutability": "payable", "type": "fallback"},
         {
             "inputs": [],
@@ -511,6 +624,16 @@ ABI = typing.cast(
                 {"internalType": "uint256", "name": "_amount", "type": "uint256"},
             ],
             "name": "approve",
+            "outputs": [{"internalType": "bool", "name": "", "type": "bool"}],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "address", "name": "_caller", "type": "address"},
+                {"internalType": "uint256", "name": "_amount", "type": "uint256"},
+            ],
+            "name": "approveUnbonding",
             "outputs": [{"internalType": "bool", "name": "", "type": "bool"}],
             "stateMutability": "nonpayable",
             "type": "function",
@@ -595,6 +718,17 @@ ABI = typing.cast(
         },
         {
             "inputs": [
+                {"internalType": "address", "name": "_account", "type": "address"},
+                {"internalType": "address", "name": "_caller", "type": "address"},
+                {"internalType": "uint256", "name": "_amount", "type": "uint256"},
+            ],
+            "name": "lockFrom",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
                 {"internalType": "address", "name": "_delegator", "type": "address"}
             ],
             "name": "lockedBalanceOf",
@@ -668,6 +802,16 @@ ABI = typing.cast(
             "name": "transferFrom",
             "outputs": [{"internalType": "bool", "name": "", "type": "bool"}],
             "stateMutability": "nonpayable",
+            "type": "function",
+        },
+        {
+            "inputs": [
+                {"internalType": "address", "name": "_owner", "type": "address"},
+                {"internalType": "address", "name": "_caller", "type": "address"},
+            ],
+            "name": "unbondingAllowance",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "stateMutability": "view",
             "type": "function",
         },
         {
