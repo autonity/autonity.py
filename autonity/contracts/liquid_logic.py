@@ -8,8 +8,6 @@ import eth_typing
 import web3
 from web3.contract import contract
 
-__version__ = "v1.1.0-internal"
-
 
 class LiquidLogic:
     """LiquidLogic contract binding.

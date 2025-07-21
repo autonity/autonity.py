@@ -5,7 +5,6 @@ SRCDIR := $(AUTONITY)/autonity/solidity/contracts
 OUTDIR := autonity/contracts
 
 abigen = hatch run generate:pyabigen \
-	--version $(VERSION) \
 	--src $(word 1,$(1)) \
 	--devdoc $(word 2,$(1)) \
 	--userdoc $(word 3,$(1)) \
@@ -36,7 +35,8 @@ $(OUTDIR)/auctioneer.py: $(call gentargets,Auctioneer)
 	$(call abigen,$^) --exclude paidInterest,setOperator,setOracle,setStabilization >$@
 
 $(OUTDIR)/autonity.py: $(call gentargets,Autonity)
-	$(call abigen,$^) --exclude autobond,computeCommittee,finalize,finalizeInitialization,jail,jailbound,slash,slashAndJail >$@
+	$(call abigen,$^) --version $(VERSION) \
+		--exclude autobond,computeCommittee,finalize,finalizeInitialization,jail,jailbound,slash,slashAndJail >$@
 
 $(OUTDIR)/inflation_controller.py: $(call gentargets,InflationController)
 	$(call abigen,$^) >$@
