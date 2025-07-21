@@ -291,34 +291,6 @@ class LiquidLogic:
         return_value = self._contract.functions.getValidator().call()
         return eth_typing.ChecksumAddress(return_value)
 
-    def lock_from(
-        self,
-        _account: eth_typing.ChecksumAddress,
-        _caller: eth_typing.ChecksumAddress,
-        _amount: int,
-    ) -> contract.ContractFunction:
-        """Binding for `lockFrom` on the LiquidLogic contract.
-
-        Lock LNTN from `_account` to unbond at the epoch end. `_caller` is the caller
-        and must have enough `unbondingAllowance`.
-
-        Parameters
-        ----------
-        _account : eth_typing.ChecksumAddress
-        _caller : eth_typing.ChecksumAddress
-        _amount : int
-
-        Returns
-        -------
-        web3.contract.contract.ContractFunction
-            A contract function instance to be sent in a transaction.
-        """
-        return self._contract.functions.lockFrom(
-            _account,
-            _caller,
-            _amount,
-        )
-
     def locked_balance_of(
         self,
         _delegator: eth_typing.ChecksumAddress,

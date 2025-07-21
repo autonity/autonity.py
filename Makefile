@@ -42,7 +42,7 @@ $(OUTDIR)/inflation_controller.py: $(call gentargets,InflationController)
 	$(call abigen,$^) >$@
 
 $(OUTDIR)/liquid_logic.py: $(call gentargets,LiquidLogic)
-	$(call abigen,$^) --exclude burn,lock,mint,redistribute,setCommissionRate,unlock >$@
+	$(call abigen,$^) --exclude burn,lock,lockFrom,mint,redistribute,setCommissionRate,unlock >$@
 
 $(OUTDIR)/omission_accountability.py: $(call gentargets,OmissionAccountability)
 	$(call abigen,$^) --exclude distributeProposerRewards,finalize,setCommittee,setEpochBlock,setOperator >$@
