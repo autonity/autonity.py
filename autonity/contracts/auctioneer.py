@@ -112,9 +112,12 @@ class Auctioneer:
     ) -> contract.ContractFunction:
         """Binding for `bidDebt` on the Auctioneer contract.
 
+        Place a bid to liquidate a CDP that is undercollateralized
+
         Parameters
         ----------
         debtor : eth_typing.ChecksumAddress
+            The address of the CDP owner
         liquidatable_round : int
         ntn_amount : int
 
@@ -136,9 +139,12 @@ class Auctioneer:
     ) -> contract.ContractFunction:
         """Binding for `bidInterest` on the Auctioneer contract.
 
+        Place a bid on an interest auction
+
         Parameters
         ----------
         auction : int
+            The ID of the auction
         ntn_amount : int
 
         Returns
@@ -157,9 +163,12 @@ class Auctioneer:
     ) -> Auction:
         """Binding for `getAuction` on the Auctioneer contract.
 
+        Get an auction by ID
+
         Parameters
         ----------
         auction : int
+            The ID of the auction
 
         Returns
         -------
@@ -180,9 +189,12 @@ class Auctioneer:
     ) -> eth_typing.ChecksumAddress:
         """Binding for `getCollateralToken` on the Auctioneer contract.
 
+        Get the address of the collateral token
+
         Returns
         -------
         eth_typing.ChecksumAddress
+            the address of the collateral token
         """
         return_value = self._contract.functions.getCollateralToken().call()
         return eth_typing.ChecksumAddress(return_value)
@@ -192,9 +204,12 @@ class Auctioneer:
     ) -> Config:
         """Binding for `getConfig` on the Auctioneer contract.
 
+        Get the current Auctioneer configuration
+
         Returns
         -------
         Config
+            the current configuration
         """
         return_value = self._contract.functions.getConfig().call()
         return Config(
@@ -209,9 +224,12 @@ class Auctioneer:
     ) -> eth_typing.ChecksumAddress:
         """Binding for `getProceedAddress` on the Auctioneer contract.
 
+        Get the proceed address
+
         Returns
         -------
         eth_typing.ChecksumAddress
+            the proceed address
         """
         return_value = self._contract.functions.getProceedAddress().call()
         return eth_typing.ChecksumAddress(return_value)
@@ -223,9 +241,13 @@ class Auctioneer:
     ) -> int:
         """Binding for `maxLiquidationReturn` on the Auctioneer contract.
 
+        Get the maximum amount of NTN that can be returned to a liquidator for a given
+        CDP
+
         Parameters
         ----------
         debtor : eth_typing.ChecksumAddress
+            The address of the CDP owner
         liquidatable_round : int
 
         Returns
@@ -244,9 +266,12 @@ class Auctioneer:
     ) -> int:
         """Binding for `minInterestPayment` on the Auctioneer contract.
 
+        Get the minimum amount of NTN that can be paid for an interest auction
+
         Parameters
         ----------
         auction : int
+            The ID of the auction
 
         Returns
         -------
@@ -262,9 +287,12 @@ class Auctioneer:
     ) -> typing.List[Auction]:
         """Binding for `openAuctions` on the Auctioneer contract.
 
+        Get all open interest auctions
+
         Returns
         -------
         typing.List[Auction]
+            An array of all open interest auctions
         """
         return_value = self._contract.functions.openAuctions().call()
         return [
@@ -283,9 +311,12 @@ class Auctioneer:
     ) -> contract.ContractFunction:
         """Binding for `setInterestAuctionDiscount` on the Auctioneer contract.
 
+        Set the interest auction discount
+
         Parameters
         ----------
         discount : int
+            The discount applied to the interest auction
 
         Returns
         -------
@@ -302,9 +333,12 @@ class Auctioneer:
     ) -> contract.ContractFunction:
         """Binding for `setInterestAuctionDuration` on the Auctioneer contract.
 
+        Set the interest auction duration
+
         Parameters
         ----------
         duration : int
+            The duration of the interest auction
 
         Returns
         -------
@@ -321,9 +355,12 @@ class Auctioneer:
     ) -> contract.ContractFunction:
         """Binding for `setInterestAuctionThreshold` on the Auctioneer contract.
 
+        Set the interest auction threshold
+
         Parameters
         ----------
         threshold : int
+            The threshold for starting an interest auction
 
         Returns
         -------
@@ -340,9 +377,12 @@ class Auctioneer:
     ) -> contract.ContractFunction:
         """Binding for `setLiquidationAuctionDuration` on the Auctioneer contract.
 
+        Set the liquidation auction duration
+
         Parameters
         ----------
         duration : int
+            The duration of the liquidation auction
 
         Returns
         -------
@@ -358,6 +398,8 @@ class Auctioneer:
         proceed_address_: eth_typing.ChecksumAddress,
     ) -> contract.ContractFunction:
         """Binding for `setProceedAddress` on the Auctioneer contract.
+
+        Set the proceeds address
 
         Parameters
         ----------
@@ -666,7 +708,7 @@ ABI = typing.cast(
                 {
                     "indexed": False,
                     "internalType": "uint256",
-                    "name": "startRound",
+                    "name": "startTimestamp",
                     "type": "uint256",
                 },
             ],

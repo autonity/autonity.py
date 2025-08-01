@@ -11,7 +11,7 @@ import hexbytes
 import web3
 from web3.contract import contract
 
-__version__ = "v1.1.0-internal"
+__version__ = "v1.1.1"
 
 
 class ValidatorState(enum.IntEnum):
