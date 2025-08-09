@@ -1,5 +1,25 @@
 # Changelog
 
+<!--
+----------------------------
+      Common Changelog
+----------------------------
+https://common-changelog.org
+----------------------------
+
+Template:
+
+## [vX.Y.Z] - YYYY-MM-DD
+
+### Changed
+
+### Added
+
+### Removed
+
+### Fixed
+-->
+
 ## [v5.1.0] - 2024-12-12
 
 ### Changed
@@ -87,6 +107,7 @@
 
 _First release._
 
+<!-- [vX.Y.Z]: https://github.com/autonity/autonity.py/releases/tag/vX.Y.Z -->
 [v5.1.0]: https://github.com/autonity/autonity.py/releases/tag/v5.1.0
 [v5.0.0]: https://github.com/autonity/autonity.py/releases/tag/v5.0.0
 [v4.0.0]: https://github.com/autonity/autonity.py/releases/tag/v4.0.0
