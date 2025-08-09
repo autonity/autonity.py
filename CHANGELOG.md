@@ -20,6 +20,19 @@ Template:
 ### Fixed
 -->
 
+## [v6.0.0] - 2025-08-09
+
+### Changed
+
+- Support the Autonity Nile protocol ([#87](https://github.com/autonity/autonity.py/pull/87))
+- Track contract version in Autonity contract binding ([`2c25fd6`](https://github.com/autonity/autonity.py/commit/2c25fd6))
+- Update web3.py version to `7.12.0` ([`bab382f`](https://github.com/autonity/autonity.py/commit/bab382f))
+
+### Fixed
+
+- Fix return type & value of `Accountability.events()` ([#82](https://github.com/autonity/autonity.py/pull/82))
+- Drop Python 3.8 support properly ([`ec5eb9d`](https://github.com/autonity/autonity.py/commit/ec5eb9d))
+
 ## [v5.1.0] - 2024-12-12
 
 ### Changed
@@ -108,6 +121,7 @@ Template:
 _First release._
 
 <!-- [vX.Y.Z]: https://github.com/autonity/autonity.py/releases/tag/vX.Y.Z -->
+[v6.0.0]: https://github.com/autonity/autonity.py/releases/tag/v6.0.0
 [v5.1.0]: https://github.com/autonity/autonity.py/releases/tag/v5.1.0
 [v5.0.0]: https://github.com/autonity/autonity.py/releases/tag/v5.0.0
 [v4.0.0]: https://github.com/autonity/autonity.py/releases/tag/v4.0.0
