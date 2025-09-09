@@ -144,6 +144,10 @@ The generated Python bindings include the contract ABIs as Python dictionaries.
 If there is a new contract to include, add a new target to `Makefile` and a new
 factory function to `autonity/factory.py` and `autonity/__init__.py`.
 
+If an external/public function has an `only*` modifier that restricts usage by
+end-users, then add an exclusion in the Makefile. Examples of such modifiers are
+`onlyAutonity`, `onlyProtocol`, `onlyAccountability`, `onlyStabilizer`, etc.
+
 ## Contributing
 
 To contribute a non-critical bug fix, please open a pull request against the
